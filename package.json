@@ -1,0 +1,23 @@
+{
+  "name": "bmw.aoc.starter",
+  "version": "0.0.1",
+  "description": "AoC Code",
+  "main": "index.js",
+  "author": "some author <some.author@bmw.de>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "solve": "node src/util/solve"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "https-proxy-agent": "^5.0.0",
+    "line-reader": "^0.4.0",
+    "lodash": "^4.17.20",
+    "lodash.product": "^18.9.19",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}

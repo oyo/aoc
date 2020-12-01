@@ -1,0 +1,19 @@
+const _ = require('lodash');
+
+const puzzle = {
+
+    prepareInput: (input) => _.map(input.split('\n'), (line) => line.split(',')),
+
+    part_1: (input) => {
+        const p = puzzle.prepareInput(input)
+        return input.length
+    },
+
+    part_2: (input) => {
+        const p = puzzle.prepareInput(input)
+        return p.length
+    }
+
+}
+
+exports.puzzle = puzzle
