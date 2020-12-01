@@ -1,45 +1,63 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# BMW AoC Node.js starter
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+JavaScript helper utils for AoC
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
 
----
+### Setup
 
-## Edit a file
+Install node and yarn then use yarn to install the required packages.
+Show the help message and run the mocked example 01/2000 and check the tests.
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+    brew install node yarn
+    yarn install
+    yarn solve help
+    yarn solve 0 1 2000
+    yarn test
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
 
----
+### Prepare automatic download
 
-## Create a file
+In order to run a real example with automatic input download follow these steps.
+Sign in from your browser and use the developer tools to retrieve your AoC session cookie.
+In Chrome open https://adventofcode.com/ an sign in, press "Ctrl-Shift-I" or "Command-Option-I" (Mac),
+select "network", reload the page, select the first entry and scroll down to the "Request Headers"
+section and find the value for "cookie". There you copy the string starting with "session=" until the
+next semicolon. Set this as environment variable AOC_COOKIE.
 
-Next, you’ll add a new file to this repository.
+    export AOC_COOKIE='session=34543c7465645f5fdf...4e436254bca92710;'
+    curl https://adventofcode.com/2015/day/1/input --cookie $AOC_COOKIE
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+You should receive a lengthy text of characters '(' and ')'. If this works you are set to start.
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
 
----
+### Run
 
-## Clone a repository
+Run the solver for any valid date. In case you are solving the puzzle on the same day you can omit
+the parameters and it will try to load from the current year and/or day.
+Also try the tests and check out the skeleton code.
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+    yarn solve 0 1 2015
+    yarn test 2015/01
+    vi src/2015/01/puzzle.js
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+### Submit Solution
+
+If you are confident your code calculates the correct puzzle solution you can directly submit the answer.
+Here for example first part of Dec 1 in 2020
+
+    yarn solve 1 1 2020
+
+
+### Troubleshooting
+
+In case you keep receiving the input
+
+    Puzzle inputs differ by user.  Please log in to get your puzzle input.
+
+Make sure you have set the AOC session cookie like described above AND also remove that input from the day folder
+because the utils will only try to download when there is no input already present.
+
+    echo $AOC_COOKIE    
+    rm src/2015/01/input
+    yarn solve 1 2015
