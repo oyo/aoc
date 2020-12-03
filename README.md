@@ -60,4 +60,4 @@ because the utils will only try to download when there is no input already prese
 
     echo $AOC_COOKIE    
     rm src/2015/01/input
-    yarn solve 1 2015
+    yarn solve 0 1 2015
