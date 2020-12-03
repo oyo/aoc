@@ -1,39 +1,36 @@
-const { multiply } = require('lodash');
 const _ = require('lodash');
 
-const puzzle = {
+const P = {
 
-    parse: (input) => _.map(input.trim().split('\n'), line => line.split('x').map(m => parseInt(m))),
+    prep: T => T.split('\n').map(L => L.split('x').map(m => parseInt(m))),
 
-    getPaper: (box) => { 
+    paper: B => { 
         const a = [
-            box[0] * box[1],
-            box[1] * box[2],
-            box[0] * box[2]
+            B[0] * B[1],
+            B[1] * B[2],
+            B[0] * B[2]
         ]
         return 2 * (a[0] + a[1] + a[2]) + _.min(a)
     },
 
-    getRibbon: (box) => {
-        const slack = box.reduce((a, b) => a * b)
-        const sbox = _.sortBy(box)
+    ribbon: B => {
+        const slack = B.reduce((a, b) => a * b)
+        const sbox = _.sortBy(B)
         return 2 * (sbox[0] + sbox[1]) + slack
     },
 
-    part_1: (input) => {
-        const boxes = puzzle.parse(input)
+    part_1: T => {
         let paper = 0
-        _.each(boxes, (box) => paper += puzzle.getPaper(box))
+        P.prep(T).forEach(B => paper += P.paper(B))
         return paper
     },
 
-    part_2: (input) => {
-        const boxes = puzzle.parse(input)
+    part_2: T => {
         let ribbon = 0
-        _.each(boxes, (box) => ribbon += puzzle.getRibbon(box))
+        P.prep(T).forEach(B => ribbon += P.ribbon(B))
         return ribbon
     }
 
 }
 
-exports.puzzle = puzzle
+exports.puzzle = P

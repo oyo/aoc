@@ -1,24 +1,23 @@
-const _ = require('lodash');
 const crypto = require('crypto');
 
-const puzzle = {
+const P = {
 
-    hashWithLeading0: (input, l) => {
-        const h = (v) => crypto.createHash('md5').update(v).digest('hex')
-        const cmp = new Array(l).fill('0').join('')
+    hash: (T, l) => {
+        const h = v => crypto.createHash('md5').update(v).digest('hex')
+        const z = new Array(l).fill('0').join('')
         let n = 0
         while (true) {
-            const m = h(input + (++n))
-            if (m.substr(0,l) === cmp)
+            const m = h(T + ++n)
+            if (m.substr(0,l) === z)
                 break;
         }
         return n;
     },
 
-    part_1: (input) => puzzle.hashWithLeading0(input, 5),
+    part_1: T => P.hash(T, 5),
 
-    part_2: (input) => puzzle.hashWithLeading0(input, 6)
+    part_2: T => P.hash(T, 6)
 
 }
 
-exports.puzzle = puzzle
+exports.puzzle = P

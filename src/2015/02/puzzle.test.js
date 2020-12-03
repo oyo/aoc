@@ -1,13 +1,13 @@
 const { puzzle } = require('./puzzle.js');
 
 it ('calculates paper', () => {
-    expect(puzzle.getPaper([2,3,4])).toEqual(58)
+    expect(puzzle.paper([2,3,4])).toEqual(58)
 })
 
 it ('calculates ribbon', () => {
-    expect(puzzle.getRibbon([20,3,11])).toEqual(688)
-    expect(puzzle.getRibbon([2,3,4])).toEqual(34)
-    expect(puzzle.getRibbon([1,1,10])).toEqual(14)
+    expect(puzzle.ribbon([20,3,11])).toEqual(688)
+    expect(puzzle.ribbon([2,3,4])).toEqual(34)
+    expect(puzzle.ribbon([1,1,10])).toEqual(14)
 })
 
 it ('solves part_2', () => {
