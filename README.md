@@ -6,12 +6,12 @@ Helper utils and solutions for AoC
 ### Setup
 
 Install node and yarn then use yarn to install the required packages.
-Show the help message and run the mocked example 01/2000 and check the tests.
+Show the help message and try to run the first example 01/2015 and check the tests.
 
     brew install node yarn
     yarn install
     yarn solve help
-    yarn solve 0 1 2000
+    yarn solve 0 1 2015
     yarn test
 
 
