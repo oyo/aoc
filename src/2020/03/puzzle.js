@@ -4,27 +4,16 @@ const P = {
 
     slope: (R, d) => {
         let count = 0
-        for (
-            let x = d[0], y = d[1];
-            y < R.length;
-            x = (x + d[0]) % R[y].length, y += d[1]
-        ) {
-            count += R[y][x]==='#' ? 1 : 0
-            //console.log([R[y][x], x, y].join(' '))
-        }
+        let x = -d[0]
+        R.forEach( (r,y) => count += !(y%d[1]) && r[x=(x+d[0])%r.length] === '#' ? 1 : 0 )
         return count
     },
 
-    part_1: T => {
-        return P.slope(P.prep(T), [3,1])
-    },
+    part_1: T => P.slope(P.prep(T), [3,1]),
 
-    part_2: T => {
-        const p = P.prep(T)
-        return [ [1,1], [3,1], [5,1], [7,1], [1,2] ]
-            .map( s => P.slope(p, s) )
-            .reduce( (a, b) => a * b )
-    }
+    part_2: T => [ [1,1], [3,1], [5,1], [7,1], [1,2] ]
+        .map( s => P.slope(P.prep(T), s) )
+        .reduce( (a, b) => a * b )
 
 }
 
