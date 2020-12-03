@@ -1,6 +1,6 @@
-# AoC Node.js starter
+# Advent of Code in Node.js and Javascript
 
-JavaScript helper utils for AoC
+Helper utils and solutions for AoC
 
 
 ### Setup
