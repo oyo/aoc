@@ -5,7 +5,7 @@ const path = util.getDailyPath(date)
 const submit = process.argv[2] ? parseInt(process.argv[2]) : 0
 if (isNaN(submit)) {
     console.log(
-        'AOC NODEJS TOOL\n' +
+        'AoC Node.js Runner\n' +
         '\n' +
         'Download AoC input and create a skeleton for puzzle code plus optionally submit the result\n' +
         '\n' +
@@ -18,7 +18,7 @@ if (isNaN(submit)) {
         '   year   = (none) | {2015-x}\n' +
         '\n' +
         'Environment variable with session cookie from browser login must be set!\n' +
-        '   export AOC_COOKIE=\'session=a1b2...x8y9;\'' +
+        '   export AOC_COOKIE=\'session=a1b2...x8y9;\'\n' +
         '\n' +
         'Examples\n' +
         '   yarn solve help       -> show this message\n' +
