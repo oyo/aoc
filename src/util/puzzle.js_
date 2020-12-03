@@ -6,7 +6,7 @@ const P = {
 
     part_1: T => {
         const p = P.prep(T)
-        return input.length
+        return T.length
     },
 
     part_2: T => {
