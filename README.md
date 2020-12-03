@@ -1,4 +1,4 @@
-# BMW AoC Node.js starter
+# AoC Node.js starter
 
 JavaScript helper utils for AoC
 
