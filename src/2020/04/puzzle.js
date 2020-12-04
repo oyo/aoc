@@ -27,9 +27,9 @@ const P = {
         && _.inRange(o.eyr, 2020, 2031)
         && (o.hgtu === 'cm' && _.inRange(o.hgtv, 150, 194) ||
             o.hgtu === 'in' && _.inRange(o.hgtv, 59, 77))
-        && !!o.hcl.match(/^#[a-f0-9]{6}$/)
-        && !!o.ecl.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/)
-        && !!o.pid.match(/^[0-9]{9}$/),
+        && o.hcl.match(/^#[a-f0-9]{6}$/)
+        && o.ecl.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/)
+        && o.pid.match(/^[0-9]{9}$/),
 
     part_1: T => P.prep(T).map(
             L => _.uniq(L.map(C => C.split(':')[0])).filter(R => R !== 'cid')
