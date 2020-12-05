@@ -1,5 +1,17 @@
 const DEBUG = false
 
+const permutate = str => {
+    if (str.length <= 2)
+        return str.length === 2 ? [str, str[1] + str[0]] : [str]
+    return str
+        .split('')
+        .reduce(
+            (acc, letter, i) =>
+            acc.concat(permutate(str.slice(0, i) + str.slice(i + 1)).map(val => letter + val)),
+            []
+        )
+}
+
 const P = {
 
     parse: T => T.split(',').map(n => 1*n),
@@ -47,6 +59,8 @@ const P = {
             {
                 const val = state.inp.shift()
                 log('RED ' + val)
+                if (val===undefined)
+                    return false
                 c[c[state.p++]] = val
             } break;
             case 4: // WRT
@@ -115,9 +129,17 @@ const P = {
         return P.state.out
     },
 
-    part_1: T => P.run(P.parse(T), [1]).pop(),
+    part_1: T => Math.max(...permutate('01234').map(s =>
+            s.split('').reduce((a,b,c,d) =>
+                P.run(P.parse(T).slice(),[b*1,a*1]).pop(), 0
+            )
+        )),
 
-    part_2: T => P.run(P.parse(T), [5]).pop(),
+    part_2: T => 0/*TODO: permutate('56789').map(s =>
+        s.split('').reduce((a,b,c,d) =>
+            P.run(P.parse(T).slice(),[b*1,a*1,2,4,8,16,32,64,128,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]).pop(), 0
+        )
+    )*/
 
 }
 
