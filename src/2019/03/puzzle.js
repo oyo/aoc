@@ -4,7 +4,7 @@ const P = {
 
     F: 10000,
 
-    prep: T => T.split('\n').map(L => L.split(',')),
+    prep: T => T.split('\n').map(L => L.split(',')).map(w => P.wire(w,[])),
 
     wire: (w, ci) => {
         let c = 0;
@@ -22,19 +22,13 @@ const P = {
         return ci
     },
 
-    part_1: T => {
-        const W = P.prep(T).map(w => P.wire(w,[]))
-        const I = _.intersection(W[0], W[1])
-        const D = I.map(c => Math.abs(c)%P.F + (~~(Math.abs(c)/P.F)))
-        return _.min(D)
-    },
+    part_1: T => (W => Math.min(...
+            _.intersection(W[0], W[1]).map(c => Math.abs(c)%P.F + (~~(Math.abs(c)/P.F)))
+        ))(P.prep(T)),
 
-    part_2: T => {
-        const W = P.prep(T).map(w => P.wire(w,[]))
-        const I = _.intersection(W[0], W[1])
-        const L = I.map(i => W[0].indexOf(i) + W[1].indexOf(i))
-        return _.min(L) + 2
-    }
+    part_2: T => (W => Math.min(...
+            _.intersection(W[0], W[1]).map(i => W[0].indexOf(i) + W[1].indexOf(i) + 2)
+        ))(P.prep(T))
 
 }
 

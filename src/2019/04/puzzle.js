@@ -13,19 +13,12 @@ const P = {
         return inc && dbl
     },
 
-    matches_2: n => {
-        return P.matches_1(n) && true
-    },
+    matches_2: n => P.matches_1(n)
+        && (''+n).replace(/(?:(?!(\d)\1{1}).)/g,'').replace(/(\d)\1+/g,'').length > 0,
 
-    part_1: T => {
-        const r = T.split('-')
-        return _.range(r[0],r[1]).filter(n => P.matches_1(n)).length
-    },
+    part_1: T => (r => _.range(r[0],r[1]).filter(n => P.matches_1(n)).length)(T.split('-')),
 
-    part_2: T => {
-        const p = P.prep(T)
-        return p.length
-    }
+    part_2: T => (r => _.range(r[0],r[1]).filter(n => P.matches_2(n)).length)(T.split('-'))
 
 }
 

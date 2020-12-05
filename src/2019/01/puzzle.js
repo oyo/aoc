@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const P = {
 
     fuel_1: M => (~~(M / 3))-2,
