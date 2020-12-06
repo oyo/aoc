@@ -2,7 +2,7 @@ const fs = require('fs');
 
 [...Array(6).keys()].forEach(year => {
     const y = 2015 + year;
-    [...Array(7).keys()].forEach(day => {
+    [...Array(25).keys()].forEach(day => {
         const d = String(day + 1).padStart(2, '0')
         const path = __dirname + '/' + y + '/' + d
         if (!fs.existsSync(path))
