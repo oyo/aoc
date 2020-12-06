@@ -2,7 +2,7 @@ const _ = require('lodash')
 
 const P = {
 
-    prep: T => T.replaceAll('\n',' ').replaceAll('  ','|').split('|').map(L => L.split(' ')),
+    prep: T => T.replace(/\n/g,' ').split(/  /).map(L => L.split(' ')),
 
     format: L => {
         const o = {}
