@@ -16,9 +16,13 @@ const fs = require('fs');
             const s2 = Date.now()
             const p2 = puzzle.part_2(input)
             const t2 = Date.now() - s2
-            console.log(y + '-' + d + ': ' + p1 + ' (' + t1 + ' ms), ' + p2 + ' (' + t2 + ' ms) ')
+            console.log(
+                '\x1b[33m' + y + '-' + d + ':\x1b[0m '
+                + t1 + ' ms \x1b[2m' + p1 + '\x1b[0m '
+                + t2 + ' ms \x1b[2m' + p1 + '\x1b[0m '
+            )
         } catch (e) {
-            console.log(y + '-' + d + ': -')
+            console.log(y + '-' + d + ': \x1b[41m' + e + '\x1b[0m')
         }
     })
 })
