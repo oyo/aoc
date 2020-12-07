@@ -13,7 +13,6 @@ Show the help message and try to run the first example 01/2015 and check the tes
     yarn solve help
     yarn solve 0 1 2015
     yarn test
-    yarn start
 
 
 ### Prepare automatic download
@@ -62,3 +61,12 @@ because the utils will only try to download when there is no input already prese
     echo $AOC_COOKIE    
     rm src/2015/01/input
     yarn solve 0 1 2015
+
+
+### Visualizations
+
+I visualized some of the examples and put them here https://rohrmeier.s3.eu-central-1.amazonaws.com/aoc/
+If you want want to play with it, you can start a local webserver
+
+    yarn start
+
