@@ -65,7 +65,8 @@ because the utils will only try to download when there is no input already prese
 
 ### Visualizations
 
-I visualized some of the examples and put them here https://rohrmeier.s3.eu-central-1.amazonaws.com/aoc/
+I visualized some of the examples and put them here
+https://rohrmeier.s3.eu-central-1.amazonaws.com/aoc/index.html
 If you want want to play with it, you can start a local webserver
 
     yarn start
