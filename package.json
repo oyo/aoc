@@ -1,9 +1,9 @@
 {
-  "name": "bmw.aoc.starter",
+  "name": "aoc.stuff",
   "version": "0.0.1",
   "description": "AoC Code",
   "main": "index.js",
-  "author": "some author <some.author@bmw.de>",
+  "author": "Martin Rohrmeier <rohrmeier@web.de>",
   "license": "MIT",
   "scripts": {
     "test": "jest",
@@ -13,6 +13,7 @@
     "upload": "aws s3 sync --acl public-read resources/html/ s3://rohrmeier/aoc"
   },
   "dependencies": {
+    "@tarp/require": "^1.4.3",
     "concurrently": "^5.3.0",
     "crypto": "^1.0.1",
     "http-server": "^0.12.3",

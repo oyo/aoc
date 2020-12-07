@@ -480,6 +480,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@tarp/require@^1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@tarp/require/-/require-1.4.3.tgz#81c2de255774f8e2575240a823c3da5cf5db1d97"
+  integrity sha512-VF6LBtAovzil+58GlDdSXIxSqtkEd/0nd9gr1prlRxuw1x3GpBrMjmo8cY4ANMBYq7AVqj82NAMq4HixwISnYg==
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.12"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.12.tgz#4d8e9e51eb265552a7e4f1ff2219ab6133bdfb2d"
