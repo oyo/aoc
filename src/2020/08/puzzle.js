@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const P = {
 
     prep: T => T.split('\n').map(L => L.split(' ')).map(L => [ L[0], L[1]*1, 0 ]),
@@ -7,7 +5,7 @@ const P = {
     run: (p, l) => {
         let a = 0
         let i = 0;
-        while (i<p.length) {
+        while (i < p.length) {
             const o = p[i++]
             if (o[2]++)
                 break
