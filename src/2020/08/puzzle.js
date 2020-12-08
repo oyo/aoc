@@ -2,26 +2,21 @@ const _ = require('lodash')
 
 const P = {
 
-    prep: T => T.split('\n').map(L => L.split(' ')).map(L => [L[0],L[1]*1,0]),
+    prep: T => T.split('\n').map(L => L.split(' ')).map(L => [ L[0], L[1]*1, 0 ]),
 
     run: (p, l) => {
         let a = 0
-        let n = true;
-        for (let i=0; i<p.length; i++) {
-            const o = p[i]
-            //console.log(i+': '+a+' '+o)
-            if (o[2]>0) {
-                n = false;
+        let i = 0;
+        while (i<p.length) {
+            const o = p[i++]
+            if (o[2]++)
                 break
-            }
-            o[2]++
-            const val = o[1]
-            switch (o[0]) {
-                case 'acc': a += val; break
-                case 'jmp': i += val-1
-            }
+            if (o[0] === 'acc')
+                a += o[1]
+            else if (o[0] === 'jmp')
+                i += o[1]-1
         }
-        return l||n ? a : 0
+        return l || i===p.length ? a : 0
     },
 
     part_1: T => P.run(P.prep(T), true),
