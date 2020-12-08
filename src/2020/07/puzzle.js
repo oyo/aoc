@@ -3,14 +3,13 @@ const _ = require('lodash')
 const P = {
 
     prep_1: T => T.split('\n').map(L => L
-        .split(/(s? contain )|(s?, )|(s?\.)/)
-        .filter(b => b && b.match(/^.*bag$/) && !b.match(/no other/))
-        .map(b => b.substring(0,b.length-4).replace(/^\d /,''))),
+        .split(/( bags contain | bags?[,.]\s?)/)
+        .filter(b => b && !b.match(/^( bag.*|no other)$/))
+        .map(b => b.replace(/^\d+ /,''))),
 
     prep_2: T => T.split('\n').map(L => L
-        .split(/(s? contain )|(s?, )|(s?\.)/)
-        .filter(b => b && b.match(/^.*bag$/) && !b.match(/no other/))
-        .map(b => b.substring(0,b.length-4))
+        .split(/( bags contain | bags?[,.]\s?)/)
+        .filter(b => b && !b.match(/^( bag.*|no other)$/))
         .flatMap(b => b.match(/^\d+ /)
             ? new Array(b.substring(0,2).trim()*1).fill(b.substring(2).trim())
             : b
