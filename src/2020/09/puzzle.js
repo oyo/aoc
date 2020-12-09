@@ -1,15 +1,15 @@
 const P = {
 
-    prep: T => T.split('\n').map(L => L*1),
+    prep: T => T.split('\n').map(L => L * 1),
 
     check: (p, l) => {
-        for (let i=l; i<p.length; i++){
-            const a = p.slice(i-l,i)
-            const b = p.slice(i-l,i)
+        for (let i = l; i < p.length; i++) {
+            const a = p.slice(i - l, i)
+            const b = p.slice(i - l, i)
             let okay = false;
-            for (let x=0; x<l && !okay; x++)
-                for (let y=x+1; y<l && !okay; y++)
-                    if (a[x]+b[y]===p[i])
+            for (let x = 0; x < l && !okay; x++)
+                for (let y = x + 1; y < l && !okay; y++)
+                    if (a[x] + b[y] === p[i])
                         okay = true
             if (!okay)
                 return p[i]
@@ -18,15 +18,15 @@ const P = {
     },
 
     check2: (p, n) => {
-        for (let x = 0; x < p.length-1; x++) {
-            for (let y=x+1, lower=true; y<p.length && lower; y++) {
-                const s = p.slice(x,y)
-                const sum = s.reduce((a,b) => a+b)
+        for (let x = 0; x < p.length - 1; x++) {
+            for (let y = x + 1, lower = true; y < p.length && lower; y++) {
+                const s = p.slice(x, y)
+                const sum = s.reduce((a, b) => a + b)
                 if (sum > n)
                     lower = false
-                else if (sum===n) {
-                    const q = s.sort((a,b) => a - b)
-                    return Math.min(...q)+Math.max(...q)
+                else if (sum === n) {
+                    const q = s.sort((a, b) => a - b)
+                    return Math.min(...q) + Math.max(...q)
                 }
             }
         }
