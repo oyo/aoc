@@ -2,7 +2,7 @@ const P = {
 
     prep: T => T.split('\n').map(L => L * 1),
 
-    check: (p, l) => {
+    sumOf2Prev: (p, l) => {
         for (let i = l; i < p.length; i++) {
             const a = p.slice(i - l, i)
             let okay = false;
@@ -15,7 +15,7 @@ const P = {
         return 0
     },
 
-    check2: (p, n) => {
+    sumOfRangeBounds: (p, n) => {
         for (let x = 0; x < p.length - 1; x++) {
             for (let y = x + 1, lower = true; y < p.length && lower; y++) {
                 const s = p.slice(x, y)
@@ -31,9 +31,9 @@ const P = {
         return 0
     },
 
-    part_1: T => P.check(P.prep(T), 25),
+    part_1: T => P.sumOf2Prev(P.prep(T), 25),
 
-    part_2: T => P.check2(P.prep(T), 1124361034)
+    part_2: T => P.sumOfRangeBounds(P.prep(T), 1124361034)
 
 }
 
