@@ -24,7 +24,7 @@ const INPUT = [
 ].join('\n')
 
 it ('solves part_1', () => {
-    expect(puzzle.sumOf2Prev(puzzle.prep(INPUT),5)).toEqual(127)
+    expect(puzzle.notSumOf2Prev(puzzle.prep(INPUT),5)).toEqual(127)
 })
 
 it ('solves part_2', () => {

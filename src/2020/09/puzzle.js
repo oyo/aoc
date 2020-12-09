@@ -2,7 +2,7 @@ const P = {
 
     prep: T => T.split('\n').map(L => L * 1),
 
-    sumOf2Prev: (p, l) => {
+    notSumOf2Prev: (p, l) => {
         for (let i = l; i < p.length; i++) {
             const a = p.slice(i - l, i)
             let okay = false;
@@ -29,7 +29,7 @@ const P = {
         return 0
     },
 
-    part_1: T => P.sumOf2Prev(P.prep(T), 25),
+    part_1: T => P.notSumOf2Prev(P.prep(T), 25),
 
     part_2: T => P.sumOfRangeBounds(P.prep(T), 1124361034)
 
