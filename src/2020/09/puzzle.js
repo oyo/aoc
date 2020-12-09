@@ -22,10 +22,8 @@ const P = {
                 const sum = s.reduce((a, b) => a + b)
                 if (sum > n)
                     lower = false
-                else if (sum === n) {
-                    const q = s.sort((a, b) => a - b)
-                    return Math.min(...q) + Math.max(...q)
-                }
+                else if (sum === n)
+                    return Math.min(...s) + Math.max(...s)
             }
         }
         return 0
