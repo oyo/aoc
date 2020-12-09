@@ -5,12 +5,10 @@ const P = {
     check: (p, l) => {
         for (let i = l; i < p.length; i++) {
             const a = p.slice(i - l, i)
-            const b = p.slice(i - l, i)
             let okay = false;
-            for (let x = 0; x < l && !okay; x++)
+            for (let x = 0; x < l - 1 && !okay; x++)
                 for (let y = x + 1; y < l && !okay; y++)
-                    if (a[x] + b[y] === p[i])
-                        okay = true
+                    okay = a[x] + a[y] === p[i]
             if (!okay)
                 return p[i]
         }
