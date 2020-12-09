@@ -31,7 +31,7 @@ const P = {
 
     part_1: T => P.notSumOf2Prev(P.prep(T), 25),
 
-    part_2: T => P.sumOfRangeBounds(P.prep(T), 1124361034)
+    part_2: T => P.sumOfRangeBounds(P.prep(T), P.part_1(T))
 
 }
 
