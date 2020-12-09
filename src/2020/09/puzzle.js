@@ -5,11 +5,11 @@ const P = {
     notSumOf2Prev: (p, l) => {
         for (let i = l; i < p.length; i++) {
             const a = p.slice(i - l, i)
-            let okay = false;
-            for (let x = 0; x < l - 1 && !okay; x++)
-                for (let y = x + 1; y < l && !okay; y++)
-                    okay = a[x] + a[y] === p[i]
-            if (!okay)
+            let nok = true;
+            for (let x = 0; x < l - 1 && nok; x++)
+                for (let y = x + 1; y < l && nok; y++)
+                    nok = a[x] + a[y] !== p[i]
+            if (nok)
                 return p[i]
         }
         return 0
