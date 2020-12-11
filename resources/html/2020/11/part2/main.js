@@ -57,6 +57,7 @@ const P = {
 
   renderstep: (counter, transposer) => {
     P.step(P.board, counter, transposer)
+    P.step(P.board, counter, transposer)
     if ( P.board[0].reduce((a, y) => a + y.filter(c => c === '#').length, 0)
       === P.board[1].reduce((a, y) => a + y.filter(c => c === '#').length, 0)) {
       clearInterval(P.timer)
@@ -169,7 +170,7 @@ const Viz = {
 	volume: false,
 	mouse: {button:false,x:0,y:0,u:0,v:0,max:50},
 	keyMask: 0,
-	rot: {x:0.5,y:0.7},
+	rot: {x:0.5,y:1.2},
 	pos: {x:0,y:0},
 	rMatrix: new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,-100,1]),
 	uniRM: false,
@@ -275,7 +276,7 @@ const Viz = {
           {
             //c=this.color?Gradient.color[~~(dat[x][y][z]*256)]:1;
             if (dat[z][x]!=='.') {
-              c=(dat[z][x]==='L' ? 0.2 : 0.8);
+              c=(dat[z][x]==='L' ? 0.8 : 0.2);
               /*
               m.quadXP(x1,y0,0,c*0.6);
               m.quadYP(x0,y1,0,c*0.7);
