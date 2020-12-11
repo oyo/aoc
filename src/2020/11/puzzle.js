@@ -24,13 +24,13 @@ const P = {
 
     visibleCount: (p, y, x) =>
         P.visD(p, y, x, -1, -1) +
-        P.visD(p, y, x, -1, 0) +
-        P.visD(p, y, x, -1, 1) +
-        P.visD(p, y, x, 0, -1) +
-        P.visD(p, y, x, 0, 1) +
-        P.visD(p, y, x, 1, -1) +
-        P.visD(p, y, x, 1, 0) +
-        P.visD(p, y, x, 1, 1),
+        P.visD(p, y, x, -1,  0) +
+        P.visD(p, y, x, -1,  1) +
+        P.visD(p, y, x,  0, -1) +
+        P.visD(p, y, x,  0,  1) +
+        P.visD(p, y, x,  1, -1) +
+        P.visD(p, y, x,  1,  0) +
+        P.visD(p, y, x,  1,  1),
 
     visD: (p, sy, sx, dy, dx) => {
         let seen = false
