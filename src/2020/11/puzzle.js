@@ -5,11 +5,7 @@ const P = {
         const f = new Array(p[0].length).fill('.')
         p.unshift(f)
         p.push(f)
-        P.D = {
-            y: p.length,
-            x: p[0].length
-        }
-        return [p, p.slice().map(r => r.slice())]
+        return p
     },
 
     adjacentCount: (p, y, x) => 
@@ -61,11 +57,16 @@ const P = {
     },
 
     run: (board, counter, transposer) => {
+        P.D = {
+            y: board.length,
+            x: board[0].length
+        }
+        const dboard = [board, board.slice().map(r => r.slice())]
         let c0 = -2
         let count = -1
         while (count !== c0) {
             c0 = count
-            count = P.step(board, counter, transposer)
+            count = P.step(dboard, counter, transposer)
         }
         return count
     },

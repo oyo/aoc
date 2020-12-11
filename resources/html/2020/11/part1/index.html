@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>AoC 2020/11 part1</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #def;
+    }
+  </style>
+</head>
+
+<body>
+  <script id="shader-fs" type="x-shader/x-fragment">
+precision lowp float;
+varying vec4 vColor;
+void main(void) {
+  gl_FragColor = vColor;
+}
+  </script>
+  <script id="shader-vs" type="x-shader/x-vertex">
+attribute vec3 aPos;
+attribute vec4 aCol;
+uniform mat4 uMVMatrix,uPMatrix;
+varying vec4 vColor;
+void main(void) {
+  gl_Position = uPMatrix * uMVMatrix * vec4(aPos, 1.0);
+  vColor = aCol;
+}
+  </script>
+  <script src="main.js"></script>
+</body>
+
+</html>
