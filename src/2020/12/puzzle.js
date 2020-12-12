@@ -43,22 +43,11 @@ const P = {
                 case 'E': a.dx += v; break
                 case 'W': a.dx -= v; break
                 case 'R': {
-                    let dx = 0
-                    let dy = 0
-                    switch(v) {
-                        case 90:
-                            dx = a.dy
-                            dy = -a.dx
-                            break;
-                        case 180:
-                            dx = -a.dx
-                            dy = -a.dy
-                            break;
-                        case 270:
-                            dx = -a.dy
-                            dy = a.dx
-                            break;
-                    }
+                    const w = -v*Math.PI/180
+                    const cw = Math.cos(w)
+                    const sw = Math.sin(w)
+                    let dx = Math.round(cw*a.dx - sw*a.dy)
+                    let dy = Math.round(sw*a.dx + cw*a.dy)
                     a.dx = dx
                     a.dy = dy
                     break
