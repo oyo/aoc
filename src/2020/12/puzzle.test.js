@@ -1,11 +1,11 @@
 const { puzzle } = require('./puzzle')
 
 const INPUT = [
-'F10',
-'N3',
-'F7',
-'R90',
-'F11',
+    'F10',
+    'N3',
+    'F7',
+    'R90',
+    'F11',
 ].join('\n')
 
 it ('solves part_1', () => {
