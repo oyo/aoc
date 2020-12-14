@@ -1,3 +1,11 @@
+The approach here probably needs some explanation.
+I first wrote a brute force solution that worked for all the examples
+but it quickly turned out to run way to slow for the real input.
+With the example below I could verify my assumption that you can
+calculate a bus departure offset (bdo) like:
+
+   bdo(a,b,c) = bdo(bdo(a,b),c)
+
 Example with 3,5,7
 
 a:     9  [ 3, 0 ], [ 5, 1 ]
