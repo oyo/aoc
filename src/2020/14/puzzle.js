@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const B = BigInt
 
 const P = {
@@ -18,7 +16,7 @@ const P = {
         )
         .map(a => a.toString(2)),
 
-    run: (T, f) => _.reduce(
+    run: (T, f) => Object.entries(
         P.prep(T).reduce((a, l) =>
             l[0] === 'mask'
                 ? [a[0], l[1]]
@@ -27,7 +25,7 @@ const P = {
                     return a
                 })(),
             [{}, 0]
-        )[0], (a, v) => a + B(v), B(0)).toString() * 1,
+        )[0]).reduce((a, v) => a + B(v[1]), B(0)).toString() * 1,
 
     part_1: T => P.run(T, (mem, mask, adr, val) => mem[adr] = P.value(val, mask)),
 
