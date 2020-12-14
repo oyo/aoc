@@ -27,7 +27,7 @@ const P = {
 
     part_1: T => P.run(T, (mem, mask, adr, val) => mem[adr] = P.value(val, mask)),
 
-    part_2: T => P.run(T, (mem, mask, adr, val) => P.addresses(adr, mask).forEach(a => mem[a] = B(val)))
+    part_2: T => P.run(T, (mem, mask, adr, val) => P.addresses(adr, mask).forEach(a => mem[a] = val))
 
 }
 
