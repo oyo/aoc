@@ -2,8 +2,6 @@ const B = BigInt
 
 const P = {
 
-    prep: T => T.split('\n').map(L => L.split(/ = /)),
-
     value: (v, m) => (B(v) |
         B('0b' + m.replace(/X/g, '0'))) &
         B('0b' + m.replace(/X/g, '1')),
@@ -14,10 +12,10 @@ const P = {
             : adr,
             [B(v) | B('0b' + m.replace(/X/g, '0'))]
         )
-        .map(a => a.toString(2)),
+        .map(a => a.toString()),
 
     run: (T, f) => Object.entries(
-        P.prep(T).reduce((a, l) =>
+        T.split('\n').map(L => L.split(/ = /)).reduce((a, l) =>
             l[0] === 'mask'
                 ? [a[0], l[1]]
                 : (() => {
