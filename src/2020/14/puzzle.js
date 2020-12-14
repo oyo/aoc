@@ -1,18 +1,20 @@
 const _ = require('lodash')
 
+const B = BigInt
+
 const P = {
 
     prep: T => T.split('\n').map(L => L.split(/ = /)),
 
-    value: (v, m) => (BigInt(v) |
-        BigInt('0b' + m.replace(/X/g, '0'))) &
-        BigInt('0b' + m.replace(/X/g, '1')),
+    value: (v, m) => (B(v) |
+        B('0b' + m.replace(/X/g, '0'))) &
+        B('0b' + m.replace(/X/g, '1')),
 
     addresses: (v, m) => m.split('')
         .reduce((adr, c, i) => adr = c === 'X'
-            ? adr = (s => adr.flatMap(a => [a | s, a & ~s]))(BigInt(1) << BigInt(35 - i))
+            ? adr = (s => adr.flatMap(a => [a | s, a & ~s]))(B(1) << B(35 - i))
             : adr,
-            [BigInt(v) | BigInt('0b' + m.replace(/X/g, '0'))]
+            [B(v) | B('0b' + m.replace(/X/g, '0'))]
         )
         .map(a => a.toString(2)),
 
@@ -25,11 +27,11 @@ const P = {
                     return a
                 })(),
             [{}, 0]
-        )[0], (a, v) => a + BigInt(v), BigInt(0)).toString() * 1,
+        )[0], (a, v) => a + B(v), B(0)).toString() * 1,
 
     part_1: T => P.run(T, (mem, mask, adr, val) => mem[adr] = P.value(val, mask)),
 
-    part_2: T => P.run(T, (mem, mask, adr, val) => P.addresses(adr, mask).forEach(a => mem[a] = BigInt(val)))
+    part_2: T => P.run(T, (mem, mask, adr, val) => P.addresses(adr, mask).forEach(a => mem[a] = B(val)))
 
 }
 
