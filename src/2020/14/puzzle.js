@@ -8,31 +8,24 @@ const P = {
         BigInt('0b' + m.replace(/X/g, '0'))) &
         BigInt('0b' + m.replace(/X/g, '1')),
 
-    addresses: (v, m) => {
-        let list = [BigInt(v) | BigInt('0b' + m.replace(/X/g, '0'))]
-        for (let i = 0; i < m.length; i++) {
-            if (m[35 - i] === 'X') {
-                const smask = BigInt(1) << BigInt(i)
-                list = list.flatMap(a => [
-                    a | smask,
-                    a & (~smask)
-                ])
-            }
-        }
-        return list.map(a => a.toString(2))
-    },
+    addresses: (v, m) => m.split('')
+        .reduce((adr, c, i) => adr = c === 'X'
+            ? adr = (s => adr.flatMap(a => [a | s, a & ~s]))(BigInt(1) << BigInt(35 - i))
+            : adr,
+            [BigInt(v) | BigInt('0b' + m.replace(/X/g, '0'))]
+        )
+        .map(a => a.toString(2)),
 
-    run: (T, f) => {
-        let mask = 0
-        let mem = {}
-        P.prep(T).forEach(l => {
-            if (l[0] === 'mask')
-                mask = l[1]
-            else
-                f(mem, mask, l[0].split(/[\[\]]/g)[1], l[1])
-        })
-        return _.reduce(mem, (a, v) => a + BigInt(v), BigInt(0)).toString() * 1
-    },
+    run: (T, f) => _.reduce(
+        P.prep(T).reduce((a, l) =>
+            l[0] === 'mask'
+                ? [a[0], l[1]]
+                : (() => {
+                    f(a[0], a[1], l[0].split(/[\[\]]/g)[1], l[1])
+                    return a
+                })(),
+            [{}, 0]
+        )[0], (a, v) => a + BigInt(v), BigInt(0)).toString() * 1,
 
     part_1: T => P.run(T, (mem, mask, adr, val) => mem[adr] = P.value(val, mask)),
 
