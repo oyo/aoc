@@ -11,8 +11,7 @@ const P = {
             ? adr = (s => adr.flatMap(a => [a | s, a & ~s]))(B(1) << B(35 - i))
             : adr,
             [B(v) | B('0b' + m.replace(/X/g, '0'))]
-        )
-        .map(a => a.toString()),
+        ),
 
     run: (T, f) => Object.entries(
         T.split('\n').map(L => L.split(/ = /)).reduce((a, l) =>
