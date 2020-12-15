@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
+    "all": "node src/run",
     "solve": "node src/util/solve",
     "start": "yarn run open",
     "open": "concurrently \"cd resources/html && http-server -a localhost -p 1234\" \"open http://localhost:1234/\"",
