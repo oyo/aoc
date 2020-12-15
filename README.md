@@ -13,6 +13,7 @@ Show the help message and try to run the first example 01/2015 and check the tes
     yarn solve help
     yarn solve 0 1 2015
     yarn test
+    yarn all
 
 
 ### Prepare automatic download
