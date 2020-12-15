@@ -43,7 +43,7 @@ const util = {
         try {
             const url = util.getDailyURL(aocdate) + '/input'
             const options = {
-                agent: new HttpsProxyAgent(process.env.https_proxy),
+                agent: process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy) : undefined,
                 headers: {
                     cookie: COOKIE
                 }
@@ -63,7 +63,7 @@ const util = {
             const options = {
                 method: 'POST',
                 body: body,
-                agent: new HttpsProxyAgent(process.env.https_proxy),
+                agent: process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy) : undefined,
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
                     'cookie': COOKIE

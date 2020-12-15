@@ -2,16 +2,12 @@ const P = {
 
     run: (T, n) => {
         const p = T.split(',')
-        let i = p.length
         let last = p[p.length - 1]
-        const mem = p.reduce((a, n, i) => {
-            a[n] = [i + 1, i + 1];
-            return a
-        }, {})
+        const mem = new Array(999999999)
+        p.forEach((n, i) => mem[n] = [i + 1, i + 1])
         let num = 0
+        let i = p.length
         while (i++ < n) {
-            if (i % 1000000 === 0)
-                console.log(i)
             const lmem = mem[last]
             num = lmem[1] - lmem[0]
             let nmem = mem[num]
