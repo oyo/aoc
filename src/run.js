@@ -3,8 +3,8 @@ const fs = require('fs');
 const pad = (num, size) => ('                    ' + num).substr(-size)
 const codeColor = code => '\u001b[38;5;' + code + 'm'
 const timeCode = ms =>
-    (ms < 1 ? 118 :
-        (ms < 10 ? 10 :
+    (ms < 1 ? 10 :
+        (ms < 10 ? 118 :
             (ms < 100 ? 11 :
                 (ms < 1000 ? 208 :
                     (ms < 10000 ? 124: 9)))))
@@ -16,7 +16,6 @@ const pc = p => '\x1b[2m' + pad(p, 18) + ' \x1b[0m';
     let n = 0;
     let sum = 0;
     [...Array(25).keys()].forEach(day => {
-        n += 2
         const d = String(day + 1).padStart(2, '0')
         const path = __dirname + '/' + y + '/' + d
         if (!fs.existsSync(path))
@@ -37,6 +36,7 @@ const pc = p => '\x1b[2m' + pad(p, 18) + ' \x1b[0m';
                 + pc(p1) + tc(t1)
                 + pc(p2) + tc(t2)
             )
+            n += 2
             sum += t1 + t2
         } catch (e) {
             console.log(y + '-' + d + ' \x1b[41m' + e + '\x1b[0m')

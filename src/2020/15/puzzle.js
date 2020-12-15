@@ -1,26 +1,17 @@
 const P = {
 
     run: (T, n) => {
-        const p = T.split(',')
-        let last = p[p.length - 1]
-        const mem = new Array(999999999)
-        p.forEach((n, i) => mem[n] = [i + 1, i + 1])
-        let num = 0
-        let i = p.length
-        while (i++ < n) {
-            const lmem = mem[last]
-            num = lmem[1] - lmem[0]
-            let nmem = mem[num]
-            if (!nmem) {
-                nmem = [i, i]
-                mem[num] = nmem
-            } else {
-                nmem[0] = nmem[1]
-                nmem[1] = i
-            }
+        const mem = new Map()
+        T.split(',').forEach((n, i) => mem.set(n * 1, [i + 1]))
+        let last = mem[6]
+        for (let i = 7; i < n; i++) {
+            const num = mem.has(last)
+                ? i - mem.get(last)
+                : 0
+            mem.set(last, i)
             last = num
         }
-        return num
+        return last
     },
 
     part_1: T => P.run(T, 2020),
