@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const P = {
 
     prep: T => (p => ({
@@ -10,7 +8,8 @@ const P = {
         T.split(/\n+(your|nearby) tickets?:\n+/).map(L => L.split('\n'))
     ),
 
-    prepRules: R => R.map(l => l.split(/(-|: | or )/)),
+    prepRules: R => R.map(l => l.split(/(-|: | or )/))
+        .map(l => [l[0],1*l[2],1*l[4],1*l[6],1*l[8]]),
 
     prepTicket: R => R.map(l => l.split(/,/).map(a => a * 1)),
 
@@ -18,30 +17,29 @@ const P = {
 
     errors: (t, r) => t.reduce((b, v) => b +
         ((r.reduce((a, f) => a ||
-            (v >= f[2] * 1 && v <= f[4] * 1) ||
-            (v >= f[6] * 1 && v <= f[8] * 1), false))
+            (v >= f[1] && v <= f[2]) ||
+            (v >= f[3] && v <= f[4]), false))
                 ? 0
                 : v),
         0),
 
-    matchIndex: (f, tt) => {
-        const result = tt.reduce((b, ti, i) => {
-            let c = (ti.reduce((a, v) => a &&
-                ((v >= f[2] * 1 && v <= f[4] * 1) ||
-                    (v >= f[6] * 1 && v <= f[8] * 1)), true))
+    matchIndex: (f, tt) => tt.reduce((b, ti, i) => {
+            let c = (ti.reduce((a, v) => a && (
+                (v >= f[1] && v <= f[2]) ||
+                (v >= f[3] && v <= f[4])), true))
             if (c)
                 b.push(i)
             return b
-        }, [])
-        return result
-    },
+        }, []),
 
     part_1: T => (p => p.tickets.reduce((a, t) => a + P.errors(t, p.rules), 0))(P.prep(T)),
 
     part_2: T => {
         const p = P.prep(T)
-        const transValids = P.transpose(p.tickets.filter(t => P.errors(t, p.rules) === 0))
-        let ri = p.rules.map(r => [r[0], P.matchIndex(r, transValids)])
+        let ri = p.rules.map(r => [
+            r[0],
+            P.matchIndex(r, P.transpose(p.tickets.filter(t => P.errors(t, p.rules) === 0)))
+        ])
         const rulesindex = new Array(p.rules.length)
         while (ri.length > 0) {
             ri.filter(r => r[1].length === 1)
