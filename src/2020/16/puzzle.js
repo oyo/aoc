@@ -9,24 +9,25 @@ const P = {
     ),
 
     prepRules: R => R.map(l => l.split(/(-|: | or )/))
-        .map(l => [l[0],1*l[2],1*l[4],1*l[6],1*l[8]]),
+        .map(l => [l[0], 1 * l[2], 1 * l[4], 1 * l[6], 1 * l[8]]),
 
     prepTicket: R => R.map(l => l.split(/,/).map(a => a * 1)),
 
     transpose: m => m[0].map((x, i) => m.map(x => x[i] * 1)),
 
-    errors: (t, r) => t.reduce((b, v) => b +
-        ((r.reduce((a, f) => a ||
-            (v >= f[1] && v <= f[2]) ||
-            (v >= f[3] && v <= f[4]), false))
-                ? 0
-                : v),
+    errors: (ticket, rules) => ticket.reduce((b, v) => b +
+        ((rules.reduce((a, field) => a ||
+            (v >= field[1] && v <= field[2]) ||
+            (v >= field[3] && v <= field[4]), false))
+            ? 0
+            : v),
         0),
 
-    matchIndex: (f, tt) => tt.reduce((b, ti, i) => {
-            let c = (ti.reduce((a, v) => a && (
-                (v >= f[1] && v <= f[2]) ||
-                (v >= f[3] && v <= f[4])), true))
+    matchIndex: (field, tickets) => P.transpose(tickets)
+        .reduce((b, ti, i) => {
+            const c = (ti.reduce((a, v) => a && (
+                (v >= field[1] && v <= field[2]) ||
+                (v >= field[3] && v <= field[4])), true))
             if (c)
                 b.push(i)
             return b
@@ -38,7 +39,7 @@ const P = {
         const p = P.prep(T)
         let ri = p.rules.map(r => [
             r[0],
-            P.matchIndex(r, P.transpose(p.tickets.filter(t => P.errors(t, p.rules) === 0)))
+            P.matchIndex(r, p.tickets.filter(t => P.errors(t, p.rules) === 0))
         ])
         const rulesindex = new Array(p.rules.length)
         while (ri.length > 0) {
