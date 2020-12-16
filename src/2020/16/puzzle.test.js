@@ -35,5 +35,5 @@ it ('solves part_1', () => {
 })
 
 it ('solves part_2', () => {
-    expect(puzzle.part_2(INPUT_2)).toEqual(2)
+    expect(puzzle.part_2(INPUT_2)).toEqual(1)
 })
