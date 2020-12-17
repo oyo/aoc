@@ -2,7 +2,21 @@ const P3 = {
 
 	prep: T => T.split('\n'),
 
-	prepEmpty: d => {
+    //prepEmptySlow: d => new Array(d+2).fill(true).map(z => new Array(d+2).fill(true).map(y => new Array(d+2))),
+
+    prepEmpty: d => {
+		const za = new Array(d + 2)
+		for (let z = 0; z < d + 2; z++) {
+			const ya = new Array(d + 2)
+			za[z] = ya
+			for (let y = 0; y < d + 2; y++) {
+                ya[y] = new Array(d + 2).fill('.')
+			}
+		}
+		return za
+	},
+
+	prepEmptyX: d => {
 		const za = new Array(d + 2)
 		for (let z = 0; z < d + 2; z++) {
 			const ya = new Array(d + 2)
@@ -101,7 +115,9 @@ const P4 = {
 
 	prep: T => T.split('\n'),
 
-	prepEmpty: d => {
+    //prepEmptySlow: d => new Array(d+2).fill(true).map(z => new Array(d+2).fill(true).map(y => new Array(d+2).fill(true).map(x => new Array(d+2)))),
+
+    prepEmpty: d => {
 		const za = new Array(d + 2)
 		for (let z = 0; z < d + 2; z++) {
 			const ya = new Array(d + 2)
