@@ -1,18 +1,8 @@
 const P = {
 
-	prepEmpty: d => {
-		const za = new Array(d + 2)
-		for (let z = 0; z < d + 2; z++) {
-			const ya = new Array(d + 2)
-			za[z] = ya
-			for (let y = 0; y < d + 2; y++) {
-				ya[y] = new Array(d + 2).fill('.')
-			}
-		}
-		return za
-	},
+	prep: T => T.split('\n'),
 
-	populateRandom: (z, r, s) => z.map(y => y.map(x => x.map(c => Math.random() < r ? s : c))),
+	prepEmpty: d => new Array(d+2).fill(true).map(z => new Array(d+2).fill(true).map(y => new Array(d+2).fill('.'))),
 
 	populate: (dim, p) => {
 		const board = P.prepEmpty(dim)
@@ -20,14 +10,15 @@ const P = {
 		const o = z0 - (p.length >> 1)
 		for (let y = 0; y < p.length; y++) {
 			for (let x = 0; x < p.length; x++) {
-				//console.log(x+' '+y+' '+p[y][x])
 				board[z0][o + y][o + x] = p[y][x]
 			}
 		}
 		return board
 	},
 
-	prep: T => T.split('\n'),
+	clone: (board) => board.slice().map(y => y.slice().map(x => x.slice())),
+
+	count: z => z.reduce((a, y) => a + y.reduce((b, x) => b + x.filter(c => c === '#').length,0),0),
 
 	adjacentCount: (p, z, y, x) =>
 		(p[z - 1][y - 1][x - 1] === '#' ? 1 : 0) +
@@ -58,52 +49,6 @@ const P = {
 		(p[z + 1][y + 1][x] === '#' ? 1 : 0) +
 		(p[z + 1][y + 1][x + 1] === '#' ? 1 : 0),
 
-	visibleCount: (p, z, y, x) =>
-		P.visD(p, z, y, x, -1, -1, -1) +
-		P.visD(p, z, y, x, -1, -1, 0) +
-		P.visD(p, z, y, x, -1, -1, 1) +
-		P.visD(p, z, y, x, -1, 0, -1) +
-		P.visD(p, z, y, x, -1, 0, 0) +
-		P.visD(p, z, y, x, -1, 0, 1) +
-		P.visD(p, z, y, x, -1, 1, -1) +
-		P.visD(p, z, y, x, -1, 1, 0) +
-		P.visD(p, z, y, x, -1, 1, 1) +
-		P.visD(p, z, y, x, 0, -1, -1) +
-		P.visD(p, z, y, x, 0, -1, 0) +
-		P.visD(p, z, y, x, 0, -1, 1) +
-		P.visD(p, z, y, x, 0, 0, -1) +
-		P.visD(p, z, y, x, 0, 0, 1) +
-		P.visD(p, z, y, x, 0, 1, -1) +
-		P.visD(p, z, y, x, 0, 1, 0) +
-		P.visD(p, z, y, x, 0, 1, 1) +
-		P.visD(p, z, y, x, 1, -1, -1) +
-		P.visD(p, z, y, x, 1, -1, 0) +
-		P.visD(p, z, y, x, 1, -1, 1) +
-		P.visD(p, z, y, x, 1, 0, -1) +
-		P.visD(p, z, y, x, 1, 0, 0) +
-		P.visD(p, z, y, x, 1, 0, 1) +
-		P.visD(p, z, y, x, 1, 1, -1) +
-		P.visD(p, z, y, x, 1, 1, 0) +
-		P.visD(p, z, y, x, 1, 1, 1),
-
-	visD: (p, sy, sx, sz, dy, dx, dz) => {
-		let seen = false
-		for (
-			let z = sz + dz, y = sy + dy, x = sx + dx;
-			z > 0 && z < P.D.z - 1 && y > 0 && y < P.D.y - 1 && x > 0 && x < P.D.x - 1 && !seen;
-			z += dz, y += dy, x += dx
-		) {
-			seen = (p[z][y][x] !== '.' ? p[z][y][x] : false)
-		}
-		return seen === '#' ? 1 : 0
-	},
-
-	dump: (p, i) => {
-		for (let y = 1; y < P.D.y - 1; y++)
-			console.log(p[y].join('').substring(1, P.D.x - 1))
-		console.log()
-	},
-
 	step: (board, counter, transposer) => {
 		board.push(board.shift())
 		const p = board[0]
@@ -112,19 +57,6 @@ const P = {
 			for (let y = 1; y < P.D.y - 1; y++)
 				for (let x = 1; x < P.D.x - 1; x++)
 					p[z][y][x] = transposer(p1[z][y][x], counter(p1, z, y, x))
-	},
-
-	clone: (board) => board.slice().map(y => y.slice().map(x => x.slice())),
-
-	//countx: (board) => board.reduce((a, z) => a + z.reduce((a, y) => a + y.filter(c => c === '#')),0,0).length,
-	count: (board) => {
-		let c = 0
-		for (let z = 1; z < P.D.z - 1; z++)
-			for (let y = 1; y < P.D.y - 1; y++)
-				for (let x = 1; x < P.D.x - 1; x++)
-					if (board[z][y][x] === '#')
-						c++
-		return c
 	},
 
 	renderstep: (counter, transposer) => {

@@ -16,18 +16,6 @@ const P3 = {
 		return za
 	},
 
-	prepEmptyX: d => {
-		const za = new Array(d + 2)
-		for (let z = 0; z < d + 2; z++) {
-			const ya = new Array(d + 2)
-			za[z] = ya
-			for (let y = 0; y < d + 2; y++) {
-				ya[y] = new Array(d + 2).fill('.')
-			}
-		}
-		return za
-	},
-
 	populate: (dim, p) => {
 		const board = P3.prepEmpty(dim)
 		const z0 = (dim >> 1) + 1
