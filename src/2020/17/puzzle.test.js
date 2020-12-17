@@ -11,5 +11,5 @@ it ('solves part_1', () => {
 })
 
 it ('solves part_2', () => {
-    //expect(puzzle.part_2(INPUT)).toEqual(2)
+    expect(puzzle.part_2(INPUT)).toEqual(848)
 })
