@@ -69,7 +69,6 @@ const P3 = {
 			for (let y = 1; y < P3.D.y - 1; y++)
 				for (let x = 1; x < P3.D.x - 1; x++)
                     p[z][y][x] = transposer(p1[z][y][x], counter(p1, z, y, x))
-        return P3.count(p)
 	},
 
 	part_step: () => P3.step(P3.adjacentCount, (s, c) =>
@@ -91,11 +90,10 @@ const P3 = {
 			x: board[0][0].length - 2
 		}
 		P3.board = [P3.clone(P3.orig), P3.clone(P3.orig)]
-        let count = 0
         for (let i=0; i<6; i++)
-            count = P3.part_step()
-        return count
-    }
+            P3.part_step()
+		return P3.count(P3.board[0])
+	}
 
 }
 
@@ -231,7 +229,6 @@ const P4 = {
 				for (let x = 1; x < P4.D.x - 1; x++)
 	    			for (let w = 1; w < P4.D.w - 1; w++)
                         p[z][y][x][w] = transposer(p1[z][y][x][w], counter(p1, z, y, x, w))
-        return P4.count(p)
 	},
 
 	part_step: () => P4.step(P4.adjacentCount, (s, c) =>
@@ -254,10 +251,9 @@ const P4 = {
             w: board[0][0][0].length - 2
         }
         P4.board = [P4.clone(P4.orig), P4.clone(P4.orig)]
-        let count = 0
         for (let i=0; i<6; i++)
-            count = P4.part_step()
-        return count
+            P4.part_step()
+        return P4.count(P4.board[0])
     }
 
 }
