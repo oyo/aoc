@@ -18,7 +18,7 @@ const INPUT_2 = {
 
 it ('solves part_1', () => {
     Object.keys(INPUT).forEach(e =>
-        expect(puzzle.eval(e)).toEqual(INPUT[e])
+        expect(puzzle.eval1(e)).toEqual(INPUT[e])
     )
 })
 
