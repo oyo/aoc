@@ -58,32 +58,9 @@ const P = {
         const s = a.map(t => [t[0], t[1].map(b => cr[b])])
         // filter 2 times 1
         const f = s.filter(t => t[1].filter(b => b === 1).length === 2)
-
+        // multiply corner ids
         const r = f.reduce((a,c) => a * c[0], 1) 
         return r
-    },
-
-    test: T => {
-        const p = P.prep(T)
-        const tile = p[3931]
-
-        console.log(tile)
-        P.dumpTile(tile)
-        let b = P.borders(tile)
-        console.log(b)
-        for (let r = 0; r < 4; r++ ) {
-            P.dumpBorder(b)
-            console.log()
-            b = P.rotate(b)
-        }
-        b = P.flip(b)
-        for (let r = 0; r < 4; r++ ) {
-            P.dumpBorder(b)
-            console.log()
-            b = P.rotate(b)
-        }
-
-        return 0//p
     },
 
     part_2: T => {
