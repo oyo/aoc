@@ -1,6 +1,3 @@
-const { replace } = require('lodash')
-const _ = require('lodash')
-
 const P = {
 
     prep: T => {
@@ -21,36 +18,58 @@ const P = {
 
     br: (ru) => {
         let re = '^(0)$'
-        //let re = '^(((((a)((a)((b)((b)((b)((a)((a)|(b))|(b)(a))|(a)((b)(b)))|(a)((a)((b)(a)|((a)|(b))(b))|(b)((b)(b)|(a)(a))))|(a)((a)(((b)(b)|(a)(a))(b)|((b)(a)|((a)|(b))(b))(a))|(b)((b)((a)(a)|(a)(b))|(a)((a)(b)|(b)(b)))))|(b)((a)((b)(((b)(a)|((a)|(b))(b))(a)|((a)(a)|(b)((a)|(b)))(b))|(a)(1))|(b)(110)))|(b)(90))(b)|(100)(a)))(11))$'
         let g
         while (g = re.match(/\((\d+)\)/)) {
-            //console.log(re)
-            //console.log(g)
             let c = ru[g[1]]
-            //console.log(c)
             if (c === 'a' || c === 'b')
                 re = re.replaceAll(g[0],c)
             else {
                 c = c.map(s => '('+s.join(')(')+')').join('|')
-                //console.log(c)
                 re = re.replaceAll(g[0],'('+c+')')
             }
         }
         return new RegExp(re)
     },
 
-    part_1: T => {
-        const p = P.prep(T)
-        const re = P.br(p.r)
-        const r = p.w.filter(w => w.match(re)).length
-        return r
+    /*
+    br2: (ru) => {
+        let re = '^(0)$'
+        let g
+        while (g = re.match(/\((\d+)\)/)) {
+            let c = ru[g[1]]
+            if (c === 'a' || c === 'b')
+                re = re.replaceAll(g[0],c)
+            else if (g[1] === '8' || g[1] === '11') {
+                //TODO
+                //find regex matching abc123, abcabc123123, abcabcabc123123123, ...
+                //like (?1)? in perl
+                c = c.map(s => '('+s.join(')+(')+')+').join('|')
+                re = re.replaceAll(g[0],'('+c+')')
+            } else {
+                c = c.map(s => '('+s.join(')(')+')').join('|')
+                re = re.replaceAll(g[0],'('+c+')')
+            }
+        }
+        return new RegExp(re)
     },
+    */
 
-    part_1w: T => (p => p.w.filter(w => w.match(P.br(p.r))).length)(P.prep(T)),
+    part_1: T => (p => p.w.filter(w => w.match(P.br(p.r))).length)(P.prep(T)),
+
+    //part_2_todo: T => (p => p.w.filter(w => w.match(P.br2(p.r))).length)(P.prep(T)),
 
     part_2: T => {
         const p = P.prep(T)
-        return p.length
+        p.r[8].push([ 42, 42 ])
+        p.r[8].push([ 42, 42, 42 ])
+        p.r[8].push([ 42, 42, 42, 42 ])
+        p.r[8].push([ 42, 42, 42, 42, 42 ])
+        p.r[11].push([ 42, 42, 31, 31 ])
+        p.r[11].push([ 42, 42, 42, 31, 31, 31 ])
+        p.r[11].push([ 42, 42, 42, 42, 31, 31, 31, 31 ])
+        p.r[11].push([ 42, 42, 42, 42, 42, 31, 31, 31, 31, 31 ])
+        const re = P.br(p.r)
+        return p.w.filter(w => w.match(re)).length
     }
 
 }
