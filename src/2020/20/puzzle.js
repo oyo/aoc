@@ -53,20 +53,55 @@ const P = {
         const c = Object.keys(g).map(n => [ n, g[n].length ])
         // reverse map n to number
         const gr = Object.keys(g).flatMap(n => g[n].map(v => [v, n*1]))
-        const cr = gr.reduce((a,n) => { a[n[0]] = n[1]; return a }, new Array(1024))
+        // an array where 
+        const bc = gr.reduce((a,n) => { a[n[0]] = n[1]; return a }, new Array(1024))
         // map tiles to number of side occurrence
-        const s = a.map(t => [t[0], t[1].map(b => cr[b])])
-        // filter 2 times 1
-        const f = s.filter(t => t[1].filter(b => b === 1).length === 2)
-        // multiply corner ids
-        const r = f.reduce((a,c) => a * c[0], 1) 
+        const s = a.map(t => [t[0], t[1].map(b => bc[b])])
+        // filter single occurrences
+        const sorted = {
+            corner: s.filter(t => t[1].filter(b => b === 1).length === 2),
+            edge:   s.filter(t => t[1].filter(b => b === 1).length === 1),
+            middle: s.filter(t => t[1].filter(b => b === 1).length === 0)
+        }
+        // multiply corner ids -> solution part 1
+        const r = sorted.corner.reduce((a,c) => a * c[0], 1)
+
+        // really solve
+        
+
         return r
     },
 
     part_2: T => {
-        const p = P.prep(T)
-        return p.length
+        // boundaries of all tiles
+        const a = P.prep(T)
+        // all values in a single array 
+        const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c)).sort((a,b) => b - a)
+        // grouped by number of occurrence
+        const g = _.groupBy(n, o => n.filter(m => m === o).length)
+        g[2] = _.uniq(g[2])
+        // count group size
+        const c = Object.keys(g).map(n => [ n, g[n].length ])
+        // reverse map n to number
+        const gr = Object.keys(g).flatMap(n => g[n].map(v => [v, n*1]))
+        // an array where indices are border values and value is number of occurrences
+        const bc = gr.reduce((a,n) => { a[n[0]] = n[1]; return a }, new Array(1024))
+        // map tiles to number of side occurrence
+        const s = a.map(t => [t[0], t[1], t[1].map(b => bc[b])])
+        // filter single occurrences
+        const sorted = {
+            corner: s.filter(t => t[2].filter(b => b === 1).length === 2),
+            edge:   s.filter(t => t[2].filter(b => b === 1).length === 1),
+            middle: s.filter(t => t[2].filter(b => b === 1).length === 0)
+        }
+
+        // really solve
+
+        
+
+        return sorted.corner
     }
+
 
 }
 
