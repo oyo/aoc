@@ -1,4 +1,9 @@
 const _ = require('lodash')
+const { board } = require('./board')
+const B = board
+
+//const B = BigInt
+//(b(1)<<b(8*12)).toString(2)
 
 const P = {
 
@@ -23,7 +28,7 @@ const P = {
 
     dumpBorder: b => b.forEach(n => P.dump(n)),
 
-    dumpInner: b => b.forEach(n => console.log(n.toString(2).padStart(10,0).split('').join(' '))),
+    dumpInner: b => b.forEach(n => console.log(n.toString(2).padStart(10,0).split('').join(' ').replace(/(^| )0/g, ' .').replace(/(^| )1/g, '██'))),
 
     dumpBoardIds: b => {
         for (let y = 0; y < b.length; y++)
@@ -81,11 +86,17 @@ const P = {
         return t
     },
 
-    align: (u,b,s) => {
+    align: (t,b,s) => {
         let i = 0
-        while (u[1].indexOf(b) !== s && i++ < 4)
-            P.rotateTile(u)
-        return u
+        while (t[1].indexOf(b) !== s && i++ < 4)
+            t = P.rotateTile(t)
+        if (t[1].indexOf(b) !== s)
+            t = P.flipTile(t)
+        while (t[1].indexOf(b) !== s && i++ < 8)
+            t = P.rotateTile(t)
+        if (t[1].indexOf(b) !== s)
+            console.log('ERROR: unable to align '+t[0])
+        return t
     },
 
     // in bt find the tile matching t at side s [0-3] = t,r,b,l correctly rotated and flipped
@@ -94,14 +105,17 @@ const P = {
         const b = t[1][s]
         //console.log(bt[b])
         let u = bt[b].filter(f => f[0] !== t[0])[0]
-        u = P.align(u,b,s)
-        if (s % 2 === 0) {
-            u = P.flipTile(u)
-            u = P.rotateTile(u)
-            u = P.rotateTile(u)
-        } else
-            u = P.flipTile(u)
-        //console.log(u)
+        u = P.align(u,P.rev(b),(s+2)%4)
+        /*
+        if (t[0]==='2953') {
+            console.log(t)
+            P.dumpInner(t[3])
+            console.log(s)
+            console.log(u)
+            P.dumpInner(u[3])
+            console.log()
+        }
+        */
         return u
     },
 
@@ -135,21 +149,6 @@ const P = {
         // boundaries of all tiles
         const a = P.prep(T)
         const q = a.filter(t => t[0]==='1867')[0]
-        const qb = q[1]
-        const qi = q[2]
-        P.dumpBorder(qb)
-        console.log()
-        P.dumpInner(qi)
-        console.log()
-        P.dumpBorder(P.flip(qb))
-        console.log()
-        P.dumpInner(P.flipInner(qi))
-        console.log()
-        P.dumpBorder(P.rotate(qb))
-        console.log()
-        P.dumpInner(P.rotateInner(qi))
-        console.log()
-//        return 0
 
         // all values in a single array 
         const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c)).sort((a,b) => b - a)
@@ -164,20 +163,21 @@ const P = {
         const bc = gr.reduce((a,n) => { a[n[0]] = n[1]; return a }, new Array(1024))
         // map tiles to number of side occurrence
         const s = a.map(t => [t[0], t[1], t[1].map(b => bc[b]), t[2]])
-        // filter single occurrences
-        const sorted = {
-            corner: s.filter(t => t[2].filter(b => b === 1).length === 2),
-            edge:   s.filter(t => t[2].filter(b => b === 1).length === 1),
-            middle: s.filter(t => t[2].filter(b => b === 1).length === 0)
-        }
-
         // prepared with all tiles flipped
         const af = a.map(t => [t[0], P.flip(t[1]), P.flipInner(t[2])])
         const sf = af.map(t => [t[0], t[1], t[1].map(b => bc[b]), t[2]])
 
+        // filter single occurrences
+        const sorted = {
+            corner: sf.filter(t => t[2].filter(b => b === 1).length === 2),
+            edge:   sf.filter(t => t[2].filter(b => b === 1).length === 1),
+            middle: sf.filter(t => t[2].filter(b => b === 1).length === 0)
+        }
+
         // array where indices are border values and items are tile ids
         const bt = s.concat(sf).reduce((r,t) => { t[1].forEach(b => (r[b] = r[b] || []).push(t)); return r },[])
 
+        // populate board
         const b = P.prepBoard()
         let t
         for (let y = 0; y < 12; y++) {
@@ -191,13 +191,21 @@ const P = {
             }
             //console.log()
         }
-
         P.dumpBoardIds(b)
-        console.log(b[0][0])
-        P.dumpInner(b[0][0][3])
+
+        let bb = B.create(b)
+        console.log(B.toBinary(bb))
+
+        const sm = B.searchMonster(bb)
+        console.log(sm.positions.length)
+        const bm = B.monsterMap(sm.monster,sm.positions)
+        console.log(B.toBinary(bm))
         console.log()
-        P.dumpInner(b[1][0][3])
-        return 0//bt
+        const bd = B.mapDiff(bb,bm)
+
+        const count = bd.reduce((a, n) => a + n.toString(2).match(/1/g).length, 0)
+          
+        return count
     }
 
 
