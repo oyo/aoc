@@ -191,16 +191,16 @@ const P = {
             }
             //console.log()
         }
-        P.dumpBoardIds(b)
+        //P.dumpBoardIds(b)
 
         let bb = B.create(b)
-        console.log(B.toBinary(bb))
+        //console.log(B.toBinary(bb))
 
         const sm = B.searchMonster(bb)
-        console.log(sm.positions.length)
+        //console.log(sm.positions.length)
         const bm = B.monsterMap(sm.monster,sm.positions)
-        console.log(B.toBinary(bm))
-        console.log()
+        //console.log(B.toBinary(bm))
+        //console.log()
         const bd = B.mapDiff(bb,bm)
 
         const count = bd.reduce((a, n) => a + n.toString(2).match(/1/g).length, 0)

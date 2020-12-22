@@ -19,7 +19,7 @@ const BORDERS_ROT  = [513, 1022, 31, 1023]
 const BORDERS_FLIP = [1023, 992, 511, 513]
 
 it ('prepares input', () => {
-    expect(puzzle.prep(INPUT)).toEqual([['1234', BORDERS]])
+    expect(puzzle.prep(INPUT)[0][1]).toEqual(BORDERS)
 })
 
 it ('rotates correctly', () => {
