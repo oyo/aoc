@@ -23,7 +23,7 @@ const P = {
     eval2: e => {
         let g
         while (g = e.match(P.sub.paren))
-            e = e.replace(P.sub.paren, P.eval1(g[1]))
+            e = e.replace(P.sub.paren, P.eval2(g[1]))
         while (g = e.match(P.sub.add)) {
             const t = g[1].split('+')
             e = e.replace(P.sub.add, 1*t[0]+1*t[1])
