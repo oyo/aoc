@@ -21,11 +21,10 @@ const P = {
 
     game: (p, l) => {
         const h = []
-        let i = 0
+        let i = 1
         while (p[0].length > 0 && p[1].length > 0) {
-            i++
             const c = p[0].join(',') + '  ' + p[1].join(',')
-            //console.log(('' + l).padStart(l,' ') + '.' + i)
+            //console.log(('' + l).padStart(l,' ') + '.' + i++)
             if (h.indexOf(c) >= 0) {
                 p.push(0)
                 return p
@@ -52,8 +51,7 @@ const P = {
     },
 
     part_2: T => {
-        const p = P.prep(T)
-        const r = P.game(p, 1)
+        const r = P.game(P.prep(T), 1)
         const w = r[r[2]];
         return w.reduce((a, n, i) => a + (w.length - i) * n, 0)
     }

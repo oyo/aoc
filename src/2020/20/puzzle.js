@@ -2,9 +2,6 @@ const _ = require('lodash')
 const { board } = require('./board')
 const B = board
 
-//const B = BigInt
-//(b(1)<<b(8*12)).toString(2)
-
 const P = {
 
     prep: T => T.replace(/\./g,0).replace(/#/g,1).split('\n\n').map(t => t.split('\n'))
@@ -12,13 +9,12 @@ const P = {
             s.shift().split(/[ :]/g)[1],
             P.borders(s.map(n => parseInt(n,2))),
             s.map(n => parseInt(n,2)),
-            //P.inner(s.map(n => parseInt(n,2))),
         ]),
 
-    prepBoard: () => {
-        const b = new Array(12)
+    prepBoard: (d) => {
+        const b = new Array(d)
         for (let y = 0; y < b.length; y++)
-            b[y] = new Array(12)
+            b[y] = new Array(d)
         return b
     },
 
@@ -101,45 +97,33 @@ const P = {
 
     // in bt find the tile matching t at side s [0-3] = t,r,b,l correctly rotated and flipped
     match: (bt,t,s) => {
-        //console.log(t)
+        console.log(t)
         const b = t[1][s]
-        //console.log(bt[b])
         let u = bt[b].filter(f => f[0] !== t[0])[0]
-        u = P.align(u,P.rev(b),(s+2)%4)
-        /*
-        if (t[0]==='2953') {
-            console.log(t)
-            P.dumpInner(t[3])
-            console.log(s)
-            console.log(u)
-            P.dumpInner(u[3])
-            console.log()
-        }
-        */
-        return u
+        return P.align(u,P.rev(b),(s+2)%4)
     },
 
     part_1: T => {
-        // boundaries of all tiles
+        // tiles with boundaries
         const a = P.prep(T)
-        // all values in a single array 
-        const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c)).sort((a,b) => b - a)
+        // all boundaries in a single array 
+        const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c))
         // grouped by number of occurrence
         const g = _.groupBy(n, o => n.filter(m => m === o).length)
-        g[2] = _.uniq(g[2])
-        // count group size
-        const c = Object.keys(g).map(n => [ n, g[n].length ])
+        // count group size (only used to confirm every side has exactly one match)
+        // g[2] = _.uniq(g[2])
+        // const c = Object.keys(g).map(n => [ n, g[n].length ])
         // reverse map n to number
         const gr = Object.keys(g).flatMap(n => g[n].map(v => [v, n*1]))
-        // an array where 
+        // an array where indices are border values and value is number of occurrences
         const bc = gr.reduce((a,n) => { a[n[0]] = n[1]; return a }, new Array(1024))
         // map tiles to number of side occurrence
         const s = a.map(t => [t[0], t[1].map(b => bc[b])])
         // filter single occurrences
         const sorted = {
             corner: s.filter(t => t[1].filter(b => b === 1).length === 2),
-            edge:   s.filter(t => t[1].filter(b => b === 1).length === 1),
-            middle: s.filter(t => t[1].filter(b => b === 1).length === 0)
+            //edge:   s.filter(t => t[1].filter(b => b === 1).length === 1),
+            //middle: s.filter(t => t[1].filter(b => b === 1).length === 0)
         }
         // multiply corner ids -> solution part 1
         return sorted.corner.reduce((a,c) => a * c[0], 1)
@@ -148,15 +132,15 @@ const P = {
     part_2: T => {
         // boundaries of all tiles
         const a = P.prep(T)
-        const q = a.filter(t => t[0]==='1867')[0]
+        const D = Math.round(Math.sqrt(a.length))
 
         // all values in a single array 
-        const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c)).sort((a,b) => b - a)
+        const n = a.flatMap(t => [ t[1], P.flip(t[1]) ].flatMap(c => c))
         // grouped by number of occurrence
         const g = _.groupBy(n, o => n.filter(m => m === o).length)
-        g[2] = _.uniq(g[2])
         // count group size
-        const c = Object.keys(g).map(n => [ n, g[n].length ])
+        //g[2] = _.uniq(g[2])
+        //const c = Object.keys(g).map(n => [ n, g[n].length ])
         // reverse map n to number
         const gr = Object.keys(g).flatMap(n => g[n].map(v => [v, n*1]))
         // an array where indices are border values and value is number of occurrences
@@ -173,25 +157,23 @@ const P = {
             edge:   sf.filter(t => t[2].filter(b => b === 1).length === 1),
             middle: sf.filter(t => t[2].filter(b => b === 1).length === 0)
         }
+        //console.log(sorted.corner)
 
         // array where indices are border values and items are tile ids
         const bt = s.concat(sf).reduce((r,t) => { t[1].forEach(b => (r[b] = r[b] || []).push(t)); return r },[])
 
         // populate board
-        const b = P.prepBoard()
+        const b = P.prepBoard(D)
         let t
-        for (let y = 0; y < 12; y++) {
+        for (let y = 0; y < D; y++) {
             t = b[y][0] = y === 0
-                ? P.rotateTo(sorted.corner[0],1221)
+                ? P.rotateTo(sorted.corner[3],1221)
                 : P.match(bt,b[y-1][0],2)
-            //console.log(t[2])
-            for (let x = 1; x < 12; x++) {
+            for (let x = 1; x < D; x++) {
                 t = b[y][x] = P.match(bt,t,1)
-                //console.log(t[2])
             }
-            //console.log()
         }
-        //P.dumpBoardIds(b)
+        //B.dumpIds(b)
 
         let bb = B.create(b)
         //console.log(B.toBinary(bb))
