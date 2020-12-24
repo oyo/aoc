@@ -54,7 +54,7 @@ const P = {
     },
 
     step: (board, counter, transposer) => {
-        const b = board[0]
+        const b = board
         const b1 = b.slice()
         for (let y = 1; y < P.D - 1; y++)
             for (let x = 1; x < P.D - 1; x++)
@@ -65,11 +65,10 @@ const P = {
     run: (input, counter, transposer) => {
         const board = new Array(P.D).fill(N(0))
         input.map(l => P.flipPath(board, l))
-        const dboard = [board, board.slice()]
         let i = 0
         while (i++ < 100)
-            P.step(dboard, counter, transposer)
-        return dboard[0]
+            P.step(board, counter, transposer)
+        return board
     },
 
     part_1: T => {
