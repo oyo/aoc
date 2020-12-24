@@ -11,7 +11,9 @@ const P = {
 
     toBinaryRow: n => n.toString(2).padStart(P.D, 0).split('').join(' ').replace(/(^| )0/g, ' .').replace(/(^| )1/g, '██'),
 
-    toBinary: b => b.map((n,i) => P.toBinaryRow(n).padStart(P.D*2+i,' ')).join('\n'),
+    toBinary: b => b.map((n, i) => P.toBinaryRow(n).padStart(P.D * 2 + i, ' ')).join('\n'),
+
+    // countBitsRE: n => n.toString(2).match(/1/g).length,
 
     countBits: n => {
         let c = N(0)
@@ -24,12 +26,11 @@ const P = {
     },
 
     count: b => b.reduce((a, n) => a + P.countBits(n), 0),
-    //countRE: () => P.B.reduce((a, n) => n===0n ? a : a + n.toString(2).match(/1/g).length, 0),
 
     adjacentCount: (b, y, x) => Number(
-        P.countBits(b[y - 1] & (N(3) << N(P.D - x - 2))) + // 011
-        P.countBits(b[y    ] & (N(5) << N(P.D - x - 2))) + // 101
-        P.countBits(b[y + 1] & (N(6) << N(P.D - x - 2)))   // 110
+        P.countBits(b[y - 1] & (N(3) << N(P.D - x - 2))) + // 0 1 1
+        P.countBits(b[y    ] & (N(5) << N(P.D - x - 2))) + // 1 0 1
+        P.countBits(b[y + 1] & (N(6) << N(P.D - x - 2)))   // 1 1 0
     ),
 
     tst: (b, y, x) => (b[y] & (N(1) << N(P.D - x - 1))) ? true : false,
@@ -78,7 +79,7 @@ const P = {
     },
 
     part_2: T => P.count(P.run(P.prep(T), P.adjacentCount, (s, c) =>
-        (s === true && (c === 0 || c > 2)) || (s === false && c === 2)
+        (s === true && (c === 0 || c > 2)) || (s === false && (c === 2))
     ))
 
 }
