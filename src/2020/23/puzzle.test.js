@@ -11,5 +11,6 @@ it ('solves part_1', () => {
 })
 
 it ('solves part_2', () => {
-    //expect(puzzle.part_2(INPUT)).toEqual(149245887792)
+    //disabled long running test
+    expect(puzzle.part_2(INPUT)).toEqual(149245887792)
 })
