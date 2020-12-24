@@ -54,11 +54,8 @@ const P = {
     },
 
     step: (board, counter, transposer) => {
-        //board.push(board.shift())
         const b = board[0]
-        const b1 = board[1]
-        for (let y = 0; y < P.D; y++)
-            b1[y] = b[y]
+        const b1 = b.slice()
         for (let y = 1; y < P.D - 1; y++)
             for (let x = 1; x < P.D - 1; x++)
                 if (transposer(P.tst(b1, y, x), counter(b1, y, x)))
