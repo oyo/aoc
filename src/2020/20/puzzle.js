@@ -97,7 +97,7 @@ const P = {
 
     // in bt find the tile matching t at side s [0-3] = t,r,b,l correctly rotated and flipped
     match: (bt,t,s) => {
-        console.log(t)
+        //console.log(t)
         const b = t[1][s]
         let u = bt[b].filter(f => f[0] !== t[0])[0]
         return P.align(u,P.rev(b),(s+2)%4)
