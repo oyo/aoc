@@ -17,5 +17,10 @@ jobs:
       - name: 
         run: |
           yarn install
+      - shell: bash
+        env:
+          AOC_COOKIE: ${{ secrets.aoc_cookie }}
+        run: |
+          yarn solve 0 1 2015
       - run: echo "🍏 This job's status is ${{ job.status }}."
 

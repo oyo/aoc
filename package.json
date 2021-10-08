@@ -14,15 +14,15 @@
     "upload": "aws s3 sync --acl public-read resources/html/ s3://rohrmeier/aoc"
   },
   "dependencies": {
-    "concurrently": "^5.3.0",
+    "concurrently": "^6.3.0",
     "crypto": "^1.0.1",
-    "http-server": "^0.12.3",
+    "http-server": "^13.0.2",
     "https-proxy-agent": "^5.0.0",
     "lodash": "^4.17.20",
     "lodash.product": "^18.9.19",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "jest": "^26.6.3"
+    "jest": "^27.2.4"
   }
 }
