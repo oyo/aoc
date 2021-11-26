@@ -6,7 +6,7 @@
   "author": "Martin Rohrmeier <rohrmeier@web.de>",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=14"
   },
   "scripts": {
     "requirements-check": "node src/util/check-version.js",
