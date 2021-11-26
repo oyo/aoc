@@ -10,7 +10,6 @@
   },
   "scripts": {
     "requirements-check": "node src/util/check-version.js",
-    "postinstall": "yarn requirements-check",
     "test": "jest",
     "all": "node src/run",
     "solve": "node src/util/solve",
