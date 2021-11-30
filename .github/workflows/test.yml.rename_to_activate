@@ -17,7 +17,6 @@ jobs:
           AOC_COOKIE: ${{ secrets.aoc_cookie }}
         run: |
           yarn solve 0 1 2015
-      - run: echo "status ${{ job.status }}"
       - shell: bash
         run: |
           yarn test

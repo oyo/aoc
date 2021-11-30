@@ -10,6 +10,7 @@
   },
   "scripts": {
     "requirements-check": "node src/util/check-version.js",
+    "use-latest": "export PATH=$(echo $PATH | sed -e 's/node@14/node@17/')",
     "test": "jest",
     "all": "node src/run",
     "solve": "node src/util/solve",
