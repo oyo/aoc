@@ -2,7 +2,7 @@ const P = {
 
     prep: T => T.split('\n').map(n => n * 1),
 
-    countInc: p => p.map((a, i) => a - p[i - 1]).filter(v => v > 0).length,
+    countInc: p => p.reduce((s, a, i) => s += a > p[i - 1] ? 1 : 0, 0),
 
     part_1: T => P.countInc(P.prep(T)),
 
