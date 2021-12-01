@@ -6,7 +6,7 @@ const P = {
 
     part_1: T => P.countInc(P.prep(T)),
 
-    part_2: T => P.countInc((p => [...p].map((a, i) => p[i - 2] + p[i - 1] + p[i]))(P.prep(T)))
+    part_2: T => P.countInc((p => [...p].map((a, i) => p[i - 2] + p[i - 1] + a))(P.prep(T)))
 
 }
 
