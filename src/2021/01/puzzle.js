@@ -1,4 +1,4 @@
-const P = {
+exports.puzzle = P = {
 
     prep: T => T.split('\n').map(n => n * 1),
 
@@ -9,5 +9,3 @@ const P = {
     part_2: T => P.countInc((p => [...p].map((a, i) => p[i - 2] + p[i - 1] + a))(P.prep(T)))
 
 }
-
-exports.puzzle = P
