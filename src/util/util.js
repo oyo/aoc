@@ -3,10 +3,10 @@ const fetch = require('node-fetch')
 const HttpsProxyAgent = require('https-proxy-agent')
 const _ = require('lodash')
 
-const AOC_BASE = 'https://adventofcode.com/[YEAR]/day/[DAY]'
+const AOC_BASE = 'https://adventofcode.com'
 const COOKIE = process.env.AOC_COOKIE
 
-const streamToString = (stream) => {
+const streamToString = stream => {
     const chunks = []
     return new Promise((resolve, reject) => {
         stream.on('data', chunk => chunks.push(chunk))
@@ -25,23 +25,22 @@ const util = {
         }
     }, 
 
-    getAoCDateFromPath: (path) => {
+    getAoCDateFromPath: path => {
         const tokens = path.split('/')
         return util.getAoCDate(tokens.pop(),tokens.pop())
     }, 
 
-    getDailyURL: (aocdate) => {
-        return AOC_BASE.replace('[YEAR]', aocdate.year).replace('[DAY]', aocdate.day)
+    getDailyURL: aocdate => {
+        return `${AOC_BASE}/${aocdate.year}/day/${aocdate.day}`
     }, 
 
-    getDailyPath: (aocdate) => {
-        return __dirname + '/../' + aocdate.year + '/'
-            + (aocdate.day < 10 ? '0'+aocdate.day : aocdate.day)
+    getDailyPath: aocdate => {
+        return `${__dirname}/../${aocdate.year}/${aocdate.day < 10 ? '0'+aocdate.day : aocdate.day}`
     },
 
-    downloadInput: async (aocdate) => {
+    downloadInput: async aocdate => {
         try {
-            const url = util.getDailyURL(aocdate) + '/input'
+            const url = `${util.getDailyURL(aocdate)}/input`
             const options = {
                 agent: process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy) : undefined,
                 headers: {
@@ -52,14 +51,14 @@ const util = {
             const input = await response.text()
             return input
         } catch (e) {
-            return 'ERROR: ' + e
+            return `ERROR: ${e}`
         }
     },
 
     submitAnswer: async (output, level, aocdate) => {
         try {
-            const url = util.getDailyURL(aocdate) + '/answer'
-            const body = 'level=' + level + '&answer=' + output
+            const url = `${util.getDailyURL(aocdate)}/answer`
+            const body = `level=${level}&answer=${output}`
             const options = {
                 method: 'POST',
                 body: body,
@@ -73,26 +72,26 @@ const util = {
             const result = await response.text()
             return result
         } catch (e) {
-            return 'ERROR: ' + e
+            return `ERROR: ${e}`
         }
     },
 
     copyStarter: async (day, year) => {
         const aocdate = util.getAoCDate(day, year)
         const path = util.getDailyPath(aocdate)
-        const filename = path + '/puzzle.js'
+        const filename = `${path}/puzzle.js`
         if (fs.existsSync(filename)) {
             return
         }
         await fs.promises.mkdir(path, { recursive: true })
-        await fs.copyFile(__dirname + '/puzzle.js_', path + '/puzzle.js', (err) => { if (err) console.log(err) })
-        await fs.copyFile(__dirname + '/puzzle.test.js_', path + '/puzzle.test.js', (err) => { if (err) console.log(err) })
+        await fs.copyFile(`${__dirname}/puzzle.js_`, `${path}/puzzle.js`, err => { if (err) console.log(err) })
+        await fs.copyFile(`${__dirname}/puzzle.test.js_`, `${path}/puzzle.test.js`, err => { if (err) console.log(err) })
     },
 
     getInput: async (day, year) => {
         const aocdate = util.getAoCDate(day, year)
         const path = util.getDailyPath(aocdate)
-        const filename = path + '/input'
+        const filename = `${path}/input`
         try {
             fs.existsSync(filename)
             return await util.getString(fs.createReadStream(filename))
@@ -116,7 +115,7 @@ const util = {
             }
             return output
         } catch (e) {
-            return 'ERROR: ' + e
+            return `ERROR: ${e}`
         }
     },
 
