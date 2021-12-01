@@ -13,10 +13,6 @@ const INPUT = [
     263,
 ].join('\n')
 
-it('solves part_1', () => {
-    expect(puzzle.part_1(INPUT)).toEqual(7)
-})
+it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(7))
 
-it('solves part_2', () => {
-    expect(puzzle.part_2(INPUT)).toEqual(5)
-})
+it('solves part_2', () => expect(puzzle.part_2(INPUT)).toEqual(5))
