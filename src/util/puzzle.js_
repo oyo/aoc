@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const P = {
+exports.puzzle = P = {
 
     prep: T => T.split('\n').map(L => L.split(',')),
 
@@ -15,5 +15,3 @@ const P = {
     }
 
 }
-
-exports.puzzle = P
