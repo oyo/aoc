@@ -9,10 +9,6 @@ const INPUT = [
     'forward 2'
 ].join('\n')
 
-it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(
-    150
-))
+it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(150))
 
-it('solves part_2', () => expect(puzzle.part_2(INPUT)).toEqual(
-    900
-))
+it('solves part_2', () => expect(puzzle.part_2(INPUT)).toEqual(900))
