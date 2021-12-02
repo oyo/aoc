@@ -1,13 +1,7 @@
 const { puzzle } = require('./puzzle')
 
-const INPUT = [
-'',
-'',
-'',
-'',
-'',
-'',
-].join('\n')
+const INPUT = 
+``
 
 it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(9))
 

@@ -1,17 +1,16 @@
 const { puzzle } = require('./puzzle')
 
-const INPUT = [
-    199,
-    200,
-    208,
-    210,
-    200,
-    207,
-    240,
-    269,
-    260,
-    263,
-].join('\n')
+const INPUT =
+`199
+200
+208
+210
+200
+207
+240
+269
+260
+263`
 
 it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(7))
 
