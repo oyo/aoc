@@ -34,11 +34,8 @@ const rtime = (f, T) => {
             console.log(`${y}-${d} ${error(e)}`)
         }
     })
-    console.log([
-        '',
-        `# puzzles ${n}`,
-        `total ${sum} ms`,
-        `avg   ${sum / n} ms`,
-        ''
-    ].join('\n'))
+    console.log(`
+# puzzles ${n}
+total ${sum} ms
+avg   ${sum / n} ms`)
 })
