@@ -14,6 +14,6 @@ const INPUT =
 00010
 01010`
 
-it('solves part_1', () => expect(puzzle.part_1(INPUT)).toEqual(198))
+it('solves 1', () => expect(puzzle.part_1(INPUT)).toEqual(198))
 
-it('solves part_2', () => expect(puzzle.part_2(INPUT)).toEqual(230))
+it('solves 2', () => expect(puzzle.part_2(INPUT)).toEqual(230))
