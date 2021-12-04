@@ -9,6 +9,12 @@ class Board {
         this.score = 0
     }
 
+    count(n) {
+        if (this.score < 1)
+            this.score = this.board[0].filter(v => !isNaN(v)).reduce((o, a) => o + a, 0) * n
+        return this.score
+    }
+
     check(idx) {
         const y = ~~(idx / 5)
         const x = idx % 5
@@ -20,14 +26,8 @@ class Board {
             return true
         s = 0
         for (let i = 0; i < 5 && !isNaN(s); i++)
-            s += b[i * 5 + x]
+            s += b[5 * i + x]
         return !isNaN(s)
-    }
-
-    countScore(n) {
-        if (this.score < 1)
-            this.score = this.board[0].filter(v => !isNaN(v)).reduce((o, a) => o + a, 0) * n
-        return this.score
     }
 
     call(n) {
@@ -42,7 +42,7 @@ class Board {
         if (++this.m < 5)
             return 0
         if (this.check(i))
-            return this.countScore(n)
+            return this.count(n)
         return 0
     }
 
