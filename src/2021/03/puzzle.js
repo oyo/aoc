@@ -20,9 +20,9 @@ exports.puzzle = P = {
         const g = (p => (new Array(P.L).fill(0))
             .map((x, i) => P.countBits(p, i))
             .reduce((o, a, i) => {
-                return a[0] > a[1] ? o : (o | (1 << (P.L - i - 1)))
+                return a[0] > a[1] ? o : o | (1 << (P.L - i - 1))
             }, 0))(P.prep(T))
-        return g * (~g & (Math.pow(2, P.L) - 1))
+        return g * (~g & ((1<<P.L) - 1))
     },
 
     part_2: T => P.divideByBit(P.prep(T), 0).map((d, k) => {
