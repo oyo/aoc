@@ -1,5 +1,3 @@
-const pad = s => (`    ${s}`).substr(-4)
-
 class Board {
 
     constructor(b) {
@@ -48,14 +46,14 @@ class Board {
 
     toString = () => this.board.map(b =>
         new Array(5).fill().map((_, i) => b.slice(i * 5, i * 5 + 5)
-            .map(v => pad(v)).join('')).join('\n')
+            .map(v => (`  ${v}`).substr(-3)).join('')).join('\n')
     ).join('\n\n')
 }
 
 exports.puzzle = P = {
 
     prep: T => (p => ({
-        n: p.shift().trim().split(',').map(n => n * 1),
+        n: p.shift().split(',').map(n => n * 1),
         b: p.map(b => new Board(b))
     }))(T.split('\n\n')),
 
