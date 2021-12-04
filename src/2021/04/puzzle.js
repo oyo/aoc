@@ -4,7 +4,7 @@ class Board {
 
     constructor(b) {
         const p = b.trim().split(/\s+/).map(n => n * 1)
-        this.board = [p, new Array(p.length).fill(NaN)]
+        this.board = [p, new Array(p.length)]
         this.m = 0
         this.score = 0
     }
