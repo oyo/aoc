@@ -1,4 +1,4 @@
-const P = {
+exports.puzzle = P = {
 
     prep: T => T.split('\n').map(L => L.split(/[- :]/)),
 
@@ -13,5 +13,3 @@ const P = {
     part_2: T => P.prep(T).filter(L => P.match_2(L)).length
 
 }
-
-exports.puzzle = P
