@@ -4,7 +4,7 @@ class Board {
 
     constructor(b) {
         const p = b.trim().split(/\s+/).map(n => n * 1)
-        this.board = [p, new Array(p.length)]
+        this.board = [p, new Array(p.length).fill(NaN)]
         this.m = 0
         this.score = 0
     }
@@ -46,52 +46,40 @@ class Board {
         return 0
     }
 
-    toString() {
-        let s = ''
-        for (let bi = 0; bi < 2; bi++) {
-            const b = this.board[bi]
-            for (let y = 0; y < 5; y++)
-                s += b.slice(y * 5, y * 5 + 5).map(r => pad(r)) + '\n'
-            s += '\n'
-        }
-        return s
-    }
+    toString = () => this.board.map(b =>
+        new Array(5).fill().map((_, i) => b.slice(i * 5, i * 5 + 5)
+            .map(v => pad(v)).join('')).join('\n')
+    ).join('\n\n')
 }
 
 exports.puzzle = P = {
 
-    prep: T => {
-        const p = T.split('\n\n');
-        const n = p.shift().trim().split(',').map(n => n * 1)
-        const b = p.map(b => new Board(b))
-        return { n: n, b: b }
-    },
+    prep: T => (p => ({
+        n: p.shift().trim().split(',').map(n => n * 1),
+        b: p.map(b => new Board(b))
+    }))(T.split('\n\n')),
 
     part_1: T => {
         const p = P.prep(T)
-        const b = p.b
-        for (let i = 0; i < p.n.length; i++) {
-            for (let j = 0; j < b.length; j++) {
-                const score = b[j].call(p.n[i])
+        for (n of p.n) {
+            for (b of p.b) {
+                const score = b.call(n)
                 if (score)
                     return score
             }
         }
-        return 0
     },
 
     part_2: T => {
         const p = P.prep(T)
-        let b = p.b
-        for (let i = 0; i < p.n.length; i++) {
-            for (let j = 0; j < b.length; j++) {
-                const score = b[j].call(p.n[i])
-                if (b.length === 1 && score)
+        for (n of p.n) {
+            for (b of p.b) {
+                const score = b.call(n)
+                if (p.b.length === 1 && score)
                     return score
             }
-            b = b.filter(u => u.score === 0)
+            p.b = p.b.filter(u => u.score === 0)
         }
-        return 0
     }
 
 }
