@@ -1,8 +1,8 @@
 const P = {
 
-	prep: T => T.split('\n'),
+	prep: T => T.trim().split('\n').map(L => L.trim()),
 
-	prepEmpty: d => new Array(d+2).fill(true).map(z => new Array(d+2).fill(true).map(y => new Array(d+2).fill('.'))),
+	prepEmpty: d => new Array(d + 2).fill(true).map(z => new Array(d + 2).fill(true).map(y => new Array(d + 2).fill('.'))),
 
 	populate: (dim, p) => {
 		const board = P.prepEmpty(dim)
@@ -16,9 +16,9 @@ const P = {
 		return board
 	},
 
-	clone: (board) => board.slice().map(y => y.slice().map(x => x.slice())),
+	clone: board => board.slice().map(y => y.slice().map(x => x.slice())),
 
-	count: z => z.reduce((a, y) => a + y.reduce((b, x) => b + x.filter(c => c === '#').length,0),0),
+	count: z => z.reduce((a, y) => a + y.reduce((b, x) => b + x.filter(c => c === '#').length, 0), 0),
 
 	adjacentCount: (p, z, y, x) =>
 		(p[z - 1][y - 1][x - 1] === '#' ? 1 : 0) +
@@ -49,7 +49,7 @@ const P = {
 		(p[z + 1][y + 1][x] === '#' ? 1 : 0) +
 		(p[z + 1][y + 1][x + 1] === '#' ? 1 : 0),
 
-	update: (counter, transposer) => {		
+	update: (counter, transposer) => {
 		P.board.push(P.board.shift())
 		const p = P.board[0]
 		const p1 = P.board[1]
@@ -57,6 +57,7 @@ const P = {
 			for (let y = 1; y < P.D.y - 1; y++)
 				for (let x = 1; x < P.D.x - 1; x++)
 					p[z][y][x] = transposer(p1[z][y][x], counter(p1, z, y, x))
+		return P
 	},
 
 	step: () => P.update(P.adjacentCount, (s, c) =>
@@ -73,16 +74,13 @@ const P = {
 
 	init: T => {
 		const p = P.prep(T)
-		let board = P.populate(32 - 2, p)
-		P.orig = board
+		const board = P.populate(32, p)
 		P.D = {
 			z: board.length - 2,
 			y: board[0].length - 2,
 			x: board[0][0].length - 2
 		}
-		P.board = [P.clone(P.orig), P.clone(P.orig)]
-		P.stepN = 0
-		P.timer = setTimeout(P.step, 1000)
+		P.board = [P.clone(board), P.clone(board)]
 		return P
 	}
 
@@ -91,13 +89,12 @@ const P = {
 class QuadModel {
 
 	constructor() {
-		this.v = []
-		this.c = []	
+		this.clear()
 	}
 
 	clear() {
-		this.v.clear()
-		this.c.clear()
+		this.v = []
+		this.c = []
 	}
 
 	quadXM(x, y, z, c) {
@@ -107,7 +104,7 @@ class QuadModel {
 			this.c.push(c, 0.7 * c, 0.5 * c, 1)
 	}
 
-	quadXP (x, y, z, c) {
+	quadXP(x, y, z, c) {
 		const y1 = y + 1, z1 = z + 1
 		this.v.push(x, y, z, x, y1, z1, x, y, z1, x, y, z, x, y1, z, x, y1, z1)
 		for (let i = 0; i < 6; i++)
@@ -146,25 +143,33 @@ class QuadModel {
 
 class Scene extends QuadModel {
 
-	constructor(voxel) {
+	listener = []
+
+	constructor() {
 		super()
-		this.create(voxel)
 	}
 
-	create(voxel) {
-		const v = voxel
+	setModel(model) {
+		this.model = model
+		this.create()
+		this.fireSceneChanged()
+		return this;
+	}
+
+	create() {
+		this.clear()
+		const v = this.model.getData()
 		const d = v.length
-		const d2 = d/2
+		const d2 = d / 2
 		for (let z in v) {
-			const z0 = z - d2
+			const z0 = z - d2 + 1
 			const z1 = z0 + 1
 			for (let y in v) {
-				const y0 = y - d2
+				const y0 = y - d2 + 1
 				const y1 = y0 + 1
 				for (let x in v) {
-					const x0 = x - d2
+					const x0 = x - d2 + 1
 					const x1 = x0 + 1
-					//if (filt[x][y][z])
 					{
 						if (v[z][y][x] !== '.') {
 							const c = (v[z][y][x] === '#' ? 0.8 : 0.2)
@@ -181,39 +186,68 @@ class Scene extends QuadModel {
 		}
 	}
 
+	addListener(l) {
+		this.listener.push(l)
+		return this
+	}
+
+	fireSceneChanged() {
+		for (let l of this.listener)
+			if (l.sceneChanged)
+				l.sceneChanged(this)
+	}
+
+}
+
+class AnimatedScene extends Scene {
+
+	speed = 4000
+
+	constructor() {
+		super()
+	}
+
+	start() {
+		this.stop()
+		this.timer = setInterval(this.step.bind(this), this.speed)
+		return this;
+	}
+
+	stop() {
+		if (this.timer)
+			clearInterval(this.timer)
+		return this
+	}
+
+	step() {
+		if (!this.model)
+			return this
+		this.model.step()
+		this.create()
+		this.fireSceneChanged()
+		return this
+	}
+
 }
 
 
-var gl
+let gl
+class Simple3D {
 
-const Viz = {
-	mode: true,
-	pos: { x: 0, y: 0, z: -24 },
-	rot: { x: 0.2, y: 0.2/*, z: 0*/ },
-	rMatrix: new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -100, 1]),
-	uniRM: false,
-	perspective: function (fovy, aspect, n, f) {
-		var t = Math.tan(fovy * Math.PI / 360) * n,
-			b = -t,
-			l = aspect * b,
-			r = aspect * t
-		//return this.frustum(l, r, b, t, n, f)
-		return [
-			2 * n / (r - l), 0, (r + l) / (r - l), 0,
-			0, 2 * n / (t - b), (t + b) / (t - b), 0,
-			0, 0, -(f + n) / (f - n), -(2 * f * n) / (f - n),
-			0, 0, -1, 0
-		]
-	},
-	init: function (settings) {
-		//Gradient.init()
-		//this.rMatrix[14] = -24//-this.DIM - 40
+	cam = { fov: 60 }
+	pos = { x: 0, y: 0, z: -48 }
+	rot = { x: 0.2, y: 0.4/*, z: 0*/ }
+	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+	mode = true
+	uniRM = false
+
+	constructor() {
 		this.canvas = document.createElement('canvas')
 		try {
-			gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl')
-		} catch (e) { }
-		if (!gl)
+			gl = this.canvas.getContext('webgl')
+		} catch (e) {
 			alert('WebGL not initialized!')
+		}
 		gl.clearColor(0.9, 0.95, 1, 1)
 		gl.clearDepth(1)
 		gl.enable(gl.DEPTH_TEST)
@@ -221,14 +255,14 @@ const Viz = {
 		gl.depthFunc(gl.LEQUAL)
 		document.body.appendChild(this.canvas)
 		this.initShaders()
-		this.doResize()
-		window.addEventListener('resize', this.resize.bind(this))
-		return Viz
-	},
-	initShaders: function () {
-		var sh = gl.createProgram()
+		this.resize()
+		window.addEventListener('resize', this.requestResize.bind(this))
+	}
+
+	initShaders() {
+		const sh = gl.createProgram()
 		gl.attachShader(sh, this.getShader(gl, gl.VERTEX_SHADER,
-`attribute vec3 aPos;
+			`attribute vec3 aPos;
 attribute vec4 aCol;
 uniform mat4 uMVMatrix,uPMatrix;
 varying vec4 vColor;
@@ -237,7 +271,7 @@ void main(void) {
   vColor = aCol;
 }`))
 		gl.attachShader(sh, this.getShader(gl, gl.FRAGMENT_SHADER,
-`precision lowp float;
+			`precision lowp float;
 varying vec4 vColor;
 void main(void) {
 	gl_FragColor = vColor;
@@ -252,76 +286,91 @@ void main(void) {
 		this.shader = sh
 		gl.enableVertexAttribArray(this.vertexPositionAttribute)
 		gl.enableVertexAttribArray(this.vertexColorAttribute)
-	},
-	getShader: function (gl, type, source) {
-		var s = gl.createShader(type)
+	}
+
+	getShader(gl, type, source) {
+		const s = gl.createShader(type)
 		gl.shaderSource(s, source)
 		gl.compileShader(s)
 		if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
 			alert('GLSL compile error:\n' + gl.getShaderInfoLog(s))
 		return s
-	},
-	arrayToBuffer: function (arr, itemSize, ptr) {
-		var buf = gl.createBuffer()
+	}
+
+	arrayToBuffer(arr, itemSize, ptr) {
+		const buf = gl.createBuffer()
 		gl.bindBuffer(gl.ARRAY_BUFFER, buf)
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW)
 		buf.itemSize = itemSize
 		buf.numItems = arr.length / buf.itemSize
 		gl.vertexAttribPointer(ptr, buf.itemSize, gl.FLOAT, false, 0, 0)
 		return buf
-	},
-	setScene: function(scene) {
-		this.scene = scene
-		this.arrayToBuffer(scene.c, 4, this.vertexColorAttribute)
-		this.numItems = this.arrayToBuffer(scene.v, 3, this.vertexPositionAttribute).numItems
-		//console.log(this.si.cubes+' voxels, '+m.v.length+' vertices in '+(Date.now()-time)+'ms')
-		this.render()
-		return Viz
-	},
-	render: function () {
+	}
+
+	perspective(fov, aspect, near, far) {
+		const f = 1.0 / Math.tan(fov * Math.PI / 360)
+		const ri = 1 / (near - far)
+		return [
+			f / aspect, 0, 0, 0,
+			0, f, 0, 0,
+			0, 0, (near + far) * ri, -1,
+			0, 0, near * far * ri * 2, 0
+		]
+	}
+
+	render() {
 		if (!this.scene)
 			return
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		var cx = Math.cos(this.rot.x),
+		const cx = Math.cos(this.rot.x),
 			sx = Math.sin(this.rot.x),
 			cy = Math.cos(this.rot.y),
-			sy = Math.sin(this.rot.y)
+			sy = Math.sin(this.rot.y),
 			r = this.rMatrix
 		r[0] = cy; r[1] = sx * sy; r[2] = -cx * sy,
-		r[5] = cx; r[6] = sx
+			r[5] = cx; r[6] = sx
 		r[8] = sy; r[9] = -sx * cy; r[10] = cx * cy
 		r[12] = this.pos.x
 		r[13] = this.pos.y
 		r[14] = this.pos.z
 		gl.uniformMatrix4fv(this.uniRM, false, r)
 		gl.drawArrays(this.mode ? gl.TRIANGLES : gl.LINES, 0, this.numItems)
-	},
-	resize: function () {
+	}
+
+	requestResize() {
 		clearTimeout(this.resizeTimer)
-		var self = this
-		this.resizeTimer = setTimeout(function () {
-			self.doResize()
-		}, 200)
-	},
-	doResize: function () {
+		this.resizeTimer = setTimeout(this.resize.bind(this), 200)
+	}
+
+	resize() {
 		this.canvas.width = window.innerWidth
 		this.canvas.height = window.innerHeight
-		this.pMatrix = new Float32Array(this.perspective(20, window.innerWidth / this.canvas.height, 1, 1000))
+		this.pMatrix = new Float32Array(this.perspective(this.cam.fov, this.canvas.width / this.canvas.height, 0.5, 1000))
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 		gl.uniformMatrix4fv(gl.getUniformLocation(this.shader, 'uPMatrix'), false, this.pMatrix)
 		this.change = true
 		this.render()
-	},
+	}
 
-	updatePos: function(c) {
+	setScene(scene) {
+		this.scene = scene
+		this.arrayToBuffer(scene.c, 4, this.vertexColorAttribute)
+		this.numItems = this.arrayToBuffer(scene.v, 3, this.vertexPositionAttribute).numItems
+		this.render()
+		return this
+	}
+
+	updatePos(c) {
 		this.pos.x += c[0]
 		this.pos.y += c[1]
 		this.pos.z += c[2]
+		if (this.pos.z > -4)
+			this.pos.z = -4
 		this.render()
 		return this
-	},
+	}
 
-	updateRot: function(r) {
+	updateRot(r) {
 		this.rot.y += r[0] / 360
 		this.rot.x += r[1] / 360
 		if (this.rot.x > Math.PI / 2)
@@ -338,9 +387,9 @@ class UserInput {
 
 	mouse = { button: false, x: 0, y: 0, u: 0, v: 0, max: 50 }
 	keyMask = 0
+	listener = []
 
-	constructor(controller) {
-		this.controller = controller
+	constructor() {
 		document.addEventListener('mousedown', this.mouseDown.bind(this))
 		document.addEventListener('mouseup', this.mouseUp.bind(this))
 		document.addEventListener('mouseout', this.mouseUp.bind(this))
@@ -352,7 +401,7 @@ class UserInput {
 	}
 
 	mouseWheel(evt) {
-		console.log(evt)
+		this.fireZoomChanged(evt.deltaY)
 	}
 
 	mouseMove(evt) {
@@ -383,7 +432,7 @@ class UserInput {
 	}
 
 	move() {
-		this.controller.mouseDragChanged(this.mouse)
+		this.fireMouseChanged(this.mouse)
 	}
 
 	mouseDown(evt) {
@@ -403,14 +452,14 @@ class UserInput {
 	keyDown(evt) {
 		//console.log(evt.keyCode)
 		switch (evt.keyCode) {
-			case  78: this.createData(); this.createScene(); break
-			case  84: this.color = !this.color; this.createScene(); break
-			case  86: this.color = this.volume = !this.volume; this.createScene(); break
-			case  87: this.mode = !this.mode; break
-			case  37: this.startKeyTimer( 1); break
-			case  40: this.startKeyTimer( 2); break
-			case  39: this.startKeyTimer( 4); break
-			case  38: this.startKeyTimer( 8); break
+			case 78: this.createData(); this.createScene(); break
+			case 84: this.color = !this.color; this.createScene(); break
+			case 86: this.color = this.volume = !this.volume; this.createScene(); break
+			case 87: this.mode = !this.mode; break
+			case 37: this.startKeyTimer(1); break
+			case 40: this.startKeyTimer(2); break
+			case 39: this.startKeyTimer(4); break
+			case 38: this.startKeyTimer(8); break
 			case 187: this.startKeyTimer(16); break
 			case 189: this.startKeyTimer(32); break
 		}
@@ -419,10 +468,10 @@ class UserInput {
 
 	keyUp(evt) {
 		switch (evt.keyCode) {
-			case  37: this.keyMask &= ~1; break //left
-			case  40: this.keyMask &= ~2; break //down
-			case  39: this.keyMask &= ~4; break //right
-			case  38: this.keyMask &= ~8; break //up
+			case 37: this.keyMask &= ~1; break //left
+			case 40: this.keyMask &= ~2; break //down
+			case 39: this.keyMask &= ~4; break //right
+			case 38: this.keyMask &= ~8; break //up
 			case 187: this.keyMask &= ~16; break //+
 			case 189: this.keyMask &= ~32; break //-
 		}
@@ -440,7 +489,30 @@ class UserInput {
 			clearInterval(this.keyTimer)
 			this.keyTimer = null
 		}
-		this.controller.keysChanged(this.keyMask)
+		this.fireKeysChanged(this.keyMask)
+	}
+
+	addListener(l) {
+		this.listener.push(l)
+		return this
+	}
+
+	fireKeysChanged() {
+		for (let l of this.listener)
+			if (l.keysChanged)
+				l.keysChanged(this.keyMask)
+	}
+
+	fireMouseChanged() {
+		for (let l of this.listener)
+			if (l.mouseChanged)
+				l.mouseChanged(this.mouse)
+	}
+
+	fireZoomChanged(y) {
+		for (let l of this.listener)
+			if (l.mouseChanged)
+				l.zoomChanged(y)
 	}
 
 }
@@ -448,30 +520,37 @@ class UserInput {
 class Game {
 
 	constructor(model) {
-		this.scene = new Scene(model.getData())
-		this.input = new UserInput(this)
-		this.output = Viz.init().setScene(this.scene)
+		this.input = new UserInput().addListener(this)
+		this.output = new Simple3D()
+		this.scene = new AnimatedScene().addListener(this).setModel(model).start()
 	}
 
 	keysChanged(keyMask) {
 		const speed = 0.5
-		const camEvent = [0,0,0]		
-		if (keyMask &  1) camEvent[0] = -speed
-		if (keyMask &  2) camEvent[1] = -speed
-		if (keyMask &  4) camEvent[0] = speed
-		if (keyMask &  8) camEvent[1] = speed
+		const camEvent = [0, 0, 0]
+		if (keyMask & 1) camEvent[0] = -speed
+		if (keyMask & 2) camEvent[1] = -speed
+		if (keyMask & 4) camEvent[0] = speed
+		if (keyMask & 8) camEvent[1] = speed
 		if (keyMask & 16) camEvent[2] = speed
 		if (keyMask & 32) camEvent[2] = -speed
 		this.output.updatePos(camEvent)
 	}
 
-	mouseDragChanged(vector) {
-		this.output.updateRot([vector.u,vector.v])
+	mouseChanged(vector) {
+		this.output.updateRot([vector.u, vector.v])
+	}
+
+	zoomChanged(y) {
+		this.output.updatePos([0,0,-y*0.2])
+	}
+
+	sceneChanged(scene) {
+		this.output.setScene(scene)
 	}
 
 }
 
-new Game(P.init(
-`.#.
-..#
-###`))
+fetch('input')
+  .then(response => response.text())
+  .then(data => new Game(P.init(data)))
