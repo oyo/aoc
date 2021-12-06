@@ -6,9 +6,9 @@ exports.puzzle = P = {
 
     sim: (f, n) => {
         const g = P.groupBy(f)
-        let m
         for (let i = 0; i < n; i++) {
-            g.push(m = g.shift())
+            const m = g.shift()
+            g.push(m)
             g[6] += m
         }
         return g.reduce((a, b) => a + b, 0)
