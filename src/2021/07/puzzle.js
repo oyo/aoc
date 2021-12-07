@@ -1,4 +1,4 @@
-const {abs, min, max} = Math
+const { abs, min, max } = Math
 
 exports.puzzle = P = {
 
