@@ -88,6 +88,9 @@ const P = {
 
 class QuadModel {
 
+	col = { r: 1, g: 0.7, b: 0.5 }
+	shade = { xm: .4, xp: .5, ym: .2, yp: .8, zm: .3, zp: .7 }
+
 	constructor() {
 		this.clear()
 	}
@@ -98,45 +101,51 @@ class QuadModel {
 	}
 
 	quadXM(x, y, z, c) {
-		const y1 = y + 1, z1 = z + 1
+		c = c || this.col
+		const y1 = y + 1, z1 = z + 1, f = this.shade.xm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y, z1, x, y1, z1, x, y, z, x, y1, z1, x, y1, z)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 	quadXP(x, y, z, c) {
-		const y1 = y + 1, z1 = z + 1
+		c = c || this.col
+		const y1 = y + 1, z1 = z + 1, f = this.shade.xp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z1, x, y, z1, x, y, z, x, y1, z, x, y1, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 	quadYM(x, y, z, c) {
-		const x1 = x + 1, z1 = z + 1
+		c = c || this.col
+		const x1 = x + 1, z1 = z + 1, f = this.shade.ym, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z, x1, y, z1, x, y, z, x1, y, z1, x, y, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 	quadYP(x, y, z, c) {
-		const x1 = x + 1, z1 = z + 1
+		c = c || this.col
+		const x1 = x + 1, z1 = z + 1, f = this.shade.yp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z1, x1, y, z, x, y, z, x, y, z1, x1, y, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 	quadZM(x, y, z, c) {
-		const x1 = x + 1, y1 = y + 1
+		c = c || this.col
+		const x1 = x + 1, y1 = y + 1, f = this.shade.zm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z, x1, y1, z, x, y, z, x1, y1, z, x1, y, z)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 	quadZP(x, y, z, c) {
-		const x1 = x + 1, y1 = y + 1
+		c = c || this.col
+		const x1 = x + 1, y1 = y + 1, f = this.shade.zp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y1, z, x, y1, z, x, y, z, x1, y, z, x1, y1, z)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+			this.c.push(...s)
 	}
 
 }
@@ -171,18 +180,22 @@ class Scene extends QuadModel {
 					const x0 = x - d2
 					const x1 = x0 + 1
 					if (v[z][y][x] !== '.') {
-						const c = (v[z][y][x] === '#' ? 0.8 : 0.2)
-						this.quadXP(x1, y0, z0, c * 0.6)
-						this.quadYP(x0, y1, z0, c * 0.7)
-						this.quadZP(x0, y0, z1, c * 0.8)
-						this.quadXM(x0, y0, z0, c * 0.5)
-						this.quadYM(x0, y0, z0, c * 0.4)
-						this.quadZM(x0, y0, z0, c * 0.3)
+						//const c = (v[z][y][x] === '#' ? { r: 1, g: 0.7, b: 0.5 } : { r: 1, g: 0.9, b: 0.3 })
+						const c = Math.random() > 0.5
+							? { r: 1, g: 0.9, b: 0.3 } // gold
+							: { r: 1, g: 0.4, b: 0 } // orange
+							//: { r: 0.3, g: 0.8, b: 0 } // green
+							//: { r: 0, g: 0.784, b: 1 } // lightblue
+						this.quadXP(x1, y0, z0, c)
+						this.quadYP(x0, y1, z0, c)
+						this.quadZP(x0, y0, z1, c)
+						this.quadXM(x0, y0, z0, c)
+						this.quadYM(x0, y0, z0, c)
+						this.quadZM(x0, y0, z0, c)
 					}
 				}
 			}
 		}
-		console.log(``)
 	}
 
 	addListener(l) {
@@ -236,7 +249,7 @@ class Simple3D {
 	cam = { fov: 60 }
 	pos = { x: 0, y: 0, z: -1 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
-	col = { r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
+	col = { r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	mode = true
 	uniRM = false
