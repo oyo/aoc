@@ -1,6 +1,6 @@
 const P = {
 
-	prep: T => T.trim().split('\n').reverse(),
+	prep: T => T.trim().split('\n').map(L => L.trim()),
 
 	prepEmpty: d => new Array(d + 2).fill(true).map(z => new Array(d + 2).fill(true).map(y => new Array(d + 2).fill('.'))),
 
@@ -93,15 +93,20 @@ class QuadModel {
 	}
 
 	clear() {
-		this.v = []
-		this.c = []
+		this.vc = []
+		this.idx = []
 	}
 
 	quadXM(x, y, z, c) {
-		const y1 = y + 1, z1 = z + 1
-		this.v.push(x, y, z, x, y, z1, x, y1, z1, x, y, z, x, y1, z1, x, y1, z)
-		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c)
+		const y1 = y + 1, z1 = z + 1, i = this.idx.length
+		this.vc.push(
+			x,  y,  z, c, 0.7 * c, 0.5 * c,
+			x,  y, z1, c, 0.7 * c, 0.5 * c,
+			x, y1, z1, c, 0.7 * c, 0.5 * c,
+			x, y1,  z, c, 0.7 * c, 0.5 * c
+		)
+		this.idx.push(i, i+1, i+2, i, i+2, i+3)
+		console.log(this.vc.length+' '+this.idx.length)
 	}
 
 	quadXP(x, y, z, c) {
@@ -172,12 +177,12 @@ class Scene extends QuadModel {
 					const x1 = x0 + 1
 					if (v[z][y][x] !== '.') {
 						const c = (v[z][y][x] === '#' ? 0.8 : 0.2)
-						this.quadXP(x1, y0, z0, c * 0.6)
-						this.quadYP(x0, y1, z0, c * 0.7)
-						this.quadZP(x0, y0, z1, c * 0.8)
+						//this.quadXP(x1, y0, z0, c * 0.6)
+						//this.quadYP(x0, y1, z0, c * 0.7)
+						//this.quadZP(x0, y0, z1, c * 0.8)
 						this.quadXM(x0, y0, z0, c * 0.5)
-						this.quadYM(x0, y0, z0, c * 0.4)
-						this.quadZM(x0, y0, z0, c * 0.3)
+						//this.quadYM(x0, y0, z0, c * 0.4)
+						//this.quadZM(x0, y0, z0, c * 0.3)
 					}
 				}
 			}
@@ -204,6 +209,60 @@ class AnimatedScene extends Scene {
 
 	constructor() {
 		super()
+/*
+		this.vc = [
+			-0.5, -0.5, -0.5,   1, 1, 0,
+			-0.5, 0.5, -0.5,    1, 1, 0,
+			0.5, 0.5, -0.5,     1, 1, 0,
+			0.5, -0.5, -0.5,    1, 1, 0,
+
+			-0.5, -0.5, 0.5,    0, 0, 1,
+			0.5, -0.5, 0.5,     0, 0, 1,
+			0.5, 0.5, 0.5,      0, 0, 1,
+			-0.5, 0.5, 0.5,     0, 0, 1,
+
+			-0.5, -0.5, -0.5,   0, 1, 1,
+			-0.5, -0.5, 0.5,    0, 1, 1,
+			-0.5, 0.5, 0.5,     0, 1, 1,
+			-0.5, 0.5, -0.5,    0, 1, 1,
+
+			0.5, -0.5, -0.5,    1, 0, 0,
+			0.5, 0.5, -0.5,     1, 0, 0,
+			0.5, 0.5, 0.5,      1, 0, 0,
+			0.5, -0.5, 0.5,     1, 0, 0,
+
+			-0.5, -0.5, -0.5,   1, 0, 1,
+			0.5, -0.5, -0.5,    1, 0, 1,
+			0.5, -0.5, 0.5,     1, 0, 1,
+			-0.5, -0.5, 0.5,    1, 0, 1,
+
+			-0.5, 0.5, -0.5,    0, 1, 0,
+			-0.5, 0.5, 0.5,     0, 1, 0,
+			0.5, 0.5, 0.5,      0, 1, 0,
+			0.5, 0.5, -0.5,     0, 1, 0
+		];
+
+		// Indexes (for drawing squares using triangles)
+		this.idx = [
+			0, 1, 2,
+			0, 2, 3,
+
+			4, 5, 6,
+			4, 6, 7,
+
+			8, 9, 10,
+			8, 10, 11,
+
+			12, 13, 14,
+			12, 14, 15,
+
+			16, 17, 18,
+			16, 18, 19,
+
+			20, 21, 22,
+			20, 22, 23
+		];
+*/
 	}
 
 	start() {
@@ -233,35 +292,43 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
+	gl
 	cam = { fov: 60 }
-	pos = { x: 0, y: 0, z: -1 }
-	rot = { x: 0, y: 0/*, z: 0*/ }
-	col = { r: 0, g: 0.1, b: 0.3, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
+	pos = { x: 0, y: 0, z: -8 }
+	rot = { x: 0.2, y: 0.4/*, z: 0*/ }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	mode = true
-	uniRM = false
 
 	constructor() {
 		this.canvas = document.createElement('canvas')
 		try {
 			gl = this.canvas.getContext('webgl')
+			gl.clearColor(0.9, 0.95, 1, 1)
+			gl.clearDepth(1)
+			gl.enable(gl.DEPTH_TEST)
+			gl.enable(gl.CULL_FACE)
+			gl.depthFunc(gl.LEQUAL)
+			this.initShaders()
 		} catch (e) {
 			alert('WebGL not initialized!')
 		}
-		gl.clearColor(this.col.r, this.col.g, this.col.b, this.col.a)
-		gl.clearDepth(1)
-		gl.enable(gl.DEPTH_TEST)
-		gl.enable(gl.CULL_FACE)
-		gl.depthFunc(gl.LEQUAL)
 		document.body.appendChild(this.canvas)
-		this.initShaders()
 		this.resize()
 		window.addEventListener('resize', this.requestResize.bind(this))
 	}
 
 	initShaders() {
-		const sh = gl.createProgram()
-		gl.attachShader(sh, this.getShader(gl, gl.VERTEX_SHADER,
+
+		const getShader = (type, source) => {
+			const s = gl.createShader(type)
+			gl.shaderSource(s, source)
+			gl.compileShader(s)
+			if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+				alert('GLSL compile error:\n' + gl.getShaderInfoLog(s))
+			return s
+		}
+		const sh = this.shader = gl.createProgram()
+		gl.attachShader(sh, getShader(gl.VERTEX_SHADER,
 			`attribute vec3 aPos;
 attribute vec4 aCol;
 uniform mat4 uMVMatrix,uPMatrix;
@@ -270,7 +337,7 @@ void main(void) {
   gl_Position = uPMatrix * uMVMatrix * vec4(aPos, 1.0);
   vColor = aCol;
 }`))
-		gl.attachShader(sh, this.getShader(gl, gl.FRAGMENT_SHADER,
+		gl.attachShader(sh, getShader(gl.FRAGMENT_SHADER,
 			`varying lowp vec4 vColor;
 void main(void) {
 	gl_FragColor = vColor;
@@ -278,22 +345,10 @@ void main(void) {
 		gl.linkProgram(sh)
 		if (!gl.getProgramParameter(sh, gl.LINK_STATUS))
 			alert('Shaders not initialized!')
-		gl.useProgram(sh)
-		this.vertexPositionAttribute = gl.getAttribLocation(sh, 'aPos')
-		this.vertexColorAttribute = gl.getAttribLocation(sh, 'aCol')
+		gl.useProgram(sh)		
 		this.uniRM = gl.getUniformLocation(sh, 'uMVMatrix')
-		this.shader = sh
-		gl.enableVertexAttribArray(this.vertexPositionAttribute)
-		gl.enableVertexAttribArray(this.vertexColorAttribute)
-	}
-
-	getShader(gl, type, source) {
-		const s = gl.createShader(type)
-		gl.shaderSource(s, source)
-		gl.compileShader(s)
-		if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
-			alert('GLSL compile error:\n' + gl.getShaderInfoLog(s))
-		return s
+		gl.enableVertexAttribArray(this.vertexPosition = gl.getAttribLocation(sh, 'aPos'))
+		gl.enableVertexAttribArray(this.vertexColor = gl.getAttribLocation(sh, 'aCol'))
 	}
 
 	perspective(fov, aspect, near, far) {
@@ -326,9 +381,13 @@ void main(void) {
 		r[12] = this.pos.x
 		r[13] = this.pos.y
 		r[14] = this.pos.z
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		//gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.uniformMatrix4fv(this.uniRM, false, r)
-		gl.drawArrays(this.mode ? gl.TRIANGLES : gl.LINES, 0, this.numItems)
+		gl.drawElements(gl.LINES, 6 * 2 * 3, gl.UNSIGNED_SHORT, 0);
+
+		// Call drawScene again in the next browser repaint
+		//count += 0.01;
+		//requestAnimationFrame(drawScene);
 	}
 
 	requestResize() {
@@ -346,20 +405,19 @@ void main(void) {
 		this.render()
 	}
 
-	arrayToBuffer(arr, itemSize, ptr) {
-		const buf = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, buf)
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW)
-		buf.itemSize = itemSize
-		buf.numItems = arr.length / buf.itemSize
-		gl.vertexAttribPointer(ptr, buf.itemSize, gl.FLOAT, false, 0, 0)
-		return buf
-	}
-
 	setScene(scene) {
 		this.scene = scene
-		this.arrayToBuffer(scene.c, 3, this.vertexColorAttribute)
-		this.numItems = this.arrayToBuffer(scene.v, 3, this.vertexPositionAttribute).numItems
+		// Write a_Position and a_Color using gl.ARRAY_BUFFER
+		gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(scene.vc), gl.STATIC_DRAW);
+
+		gl.vertexAttribPointer(this.vertexPosition, 3, gl.FLOAT, false, 4 * (3 + 3), 0);
+
+		gl.vertexAttribPointer(this.vertexColor, 3, gl.FLOAT, false, 4 * (3 + 3), 4 * 3);
+
+		// Write indexes in gl.ELEMENT_ARRAY_BUFFER
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(scene.idx), gl.STATIC_DRAW);
 		this.render()
 		return this
 	}
@@ -389,7 +447,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -45, v: 8, w: 20, max: 50 }
+	mouse = { button: false, x: 0, y: 0, u: 0, v: 0, max: 50 }
 	keyMask = 0
 	listener = []
 
@@ -402,7 +460,6 @@ class UserInput {
 		document.addEventListener('keyup', this.keyUp.bind(this))
 		document.addEventListener('DOMMouseScroll', this.mouseWheel.bind(this))
 		document.addEventListener('mousewheel', this.mouseWheel.bind(this))
-		this.mouseUp()
 	}
 
 	mouseWheel(evt) {
@@ -428,19 +485,11 @@ class UserInput {
 	}
 
 	slowDown() {
-		this.mouse.u *= 0.98
+		this.mouse.u *= 0.97
 		this.mouse.v *= 0.9
-		this.mouse.w *= 0.9
-		let stop = true
 		if (this.mouse.u > 1 || this.mouse.v > 1 || this.mouse.u < -1 || this.mouse.v < -1) {
 			this.move()
-			stop = false
-		}
-		if (this.mouse.w > 1 || this.mouse.w) {
-			this.fireZoomChanged(this.mouse.w)
-			stop = false
-		}
-		if (stop)
+		} else
 			clearInterval(this.slowDownTimer)
 	}
 
@@ -536,7 +585,7 @@ class Game {
 	constructor(model) {
 		this.input = new UserInput().addListener(this)
 		this.output = new Simple3D()
-		this.scene = new AnimatedScene().addListener(this).setModel(model).start()
+		this.scene = new AnimatedScene().addListener(this).setModel(model)//.start()
 	}
 
 	keysChanged(keyMask) {
