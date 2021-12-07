@@ -200,7 +200,7 @@ class Scene extends QuadModel {
 
 class AnimatedScene extends Scene {
 
-	speed = 4000
+	speed = 5000
 
 	constructor() {
 		super()
@@ -236,7 +236,7 @@ class Simple3D {
 	cam = { fov: 60 }
 	pos = { x: 0, y: 0, z: -1 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
-	col = { r: 0, g: 0.1, b: 0.3, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
+	col = { r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	mode = true
 	uniRM = false

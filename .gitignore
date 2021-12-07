@@ -1,4 +1,4 @@
 latest
-**/input
+src/**/input
 node_modules/
 yarn-error.log
