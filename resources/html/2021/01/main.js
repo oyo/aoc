@@ -74,7 +74,7 @@ const P = {
 
 	init: T => {
 		const p = P.prep(T)
-		const board = P.populate(32, p)
+		const board = P.populate(31, p)
 		P.D = {
 			z: board.length - 2,
 			y: board[0].length - 2,
@@ -93,50 +93,55 @@ class QuadModel {
 	}
 
 	clear() {
-		this.v = []
-		this.c = []
+		this.vc = []
+		this.idx = []
 	}
 
 	quadXM(x, y, z, c) {
-		const y1 = y + 1, z1 = z + 1
-		this.v.push(x, y, z, x, y, z1, x, y1, z1, x, y, z, x, y1, z1, x, y1, z)
-		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+		const y1 = y + 1, z1 = z + 1, i = this.idx.length
+		this.vc.push(
+			x,  y,  z, c, 0.7 * c, 0.5 * c,
+			x,  y, z1, c, 0.7 * c, 0.5 * c,
+			x, y1, z1, c, 0.7 * c, 0.5 * c,
+			x, y1,  z, c, 0.7 * c, 0.5 * c
+		)
+		this.idx.push(i, i+1, i+2, i, i+2, i+3)
+		console.log(this.vc.length+' '+this.idx.length)
 	}
 
 	quadXP(x, y, z, c) {
 		const y1 = y + 1, z1 = z + 1
 		this.v.push(x, y, z, x, y1, z1, x, y, z1, x, y, z, x, y1, z, x, y1, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+			this.c.push(c, 0.7 * c, 0.5 * c)
 	}
 
 	quadYM(x, y, z, c) {
 		const x1 = x + 1, z1 = z + 1
 		this.v.push(x, y, z, x1, y, z, x1, y, z1, x, y, z, x1, y, z1, x, y, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+			this.c.push(c, 0.7 * c, 0.5 * c)
 	}
 
 	quadYP(x, y, z, c) {
 		const x1 = x + 1, z1 = z + 1
 		this.v.push(x, y, z, x1, y, z1, x1, y, z, x, y, z, x, y, z1, x1, y, z1)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+			this.c.push(c, 0.7 * c, 0.5 * c)
 	}
 
 	quadZM(x, y, z, c) {
 		const x1 = x + 1, y1 = y + 1
 		this.v.push(x, y, z, x, y1, z, x1, y1, z, x, y, z, x1, y1, z, x1, y, z)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+			this.c.push(c, 0.7 * c, 0.5 * c)
 	}
 
 	quadZP(x, y, z, c) {
 		const x1 = x + 1, y1 = y + 1
 		this.v.push(x, y, z, x1, y1, z, x, y1, z, x, y, z, x1, y, z, x1, y1, z)
 		for (let i = 0; i < 6; i++)
-			this.c.push(c, 0.7 * c, 0.5 * c, 1)
+			this.c.push(c, 0.7 * c, 0.5 * c)
 	}
 
 }
@@ -162,28 +167,27 @@ class Scene extends QuadModel {
 		const d = v.length
 		const d2 = d / 2
 		for (let z in v) {
-			const z0 = z - d2 + 1
+			const z0 = z - d2
 			const z1 = z0 + 1
 			for (let y in v) {
-				const y0 = y - d2 + 1
+				const y0 = y - d2
 				const y1 = y0 + 1
 				for (let x in v) {
-					const x0 = x - d2 + 1
+					const x0 = x - d2
 					const x1 = x0 + 1
-					{
-						if (v[z][y][x] !== '.') {
-							const c = (v[z][y][x] === '#' ? 0.8 : 0.2)
-							this.quadXP(x1, y0, z0, c * 0.6)
-							this.quadYP(x0, y1, z0, c * 0.7)
-							this.quadZP(x0, y0, z1, c * 0.8)
-							this.quadXM(x0, y0, z0, c * 0.5)
-							this.quadYM(x0, y0, z0, c * 0.4)
-							this.quadZM(x0, y0, z0, c * 0.3)
-						}
+					if (v[z][y][x] !== '.') {
+						const c = (v[z][y][x] === '#' ? 0.8 : 0.2)
+						//this.quadXP(x1, y0, z0, c * 0.6)
+						//this.quadYP(x0, y1, z0, c * 0.7)
+						//this.quadZP(x0, y0, z1, c * 0.8)
+						this.quadXM(x0, y0, z0, c * 0.5)
+						//this.quadYM(x0, y0, z0, c * 0.4)
+						//this.quadZM(x0, y0, z0, c * 0.3)
 					}
 				}
 			}
 		}
+		console.log(``)
 	}
 
 	addListener(l) {
@@ -205,6 +209,60 @@ class AnimatedScene extends Scene {
 
 	constructor() {
 		super()
+/*
+		this.vc = [
+			-0.5, -0.5, -0.5,   1, 1, 0,
+			-0.5, 0.5, -0.5,    1, 1, 0,
+			0.5, 0.5, -0.5,     1, 1, 0,
+			0.5, -0.5, -0.5,    1, 1, 0,
+
+			-0.5, -0.5, 0.5,    0, 0, 1,
+			0.5, -0.5, 0.5,     0, 0, 1,
+			0.5, 0.5, 0.5,      0, 0, 1,
+			-0.5, 0.5, 0.5,     0, 0, 1,
+
+			-0.5, -0.5, -0.5,   0, 1, 1,
+			-0.5, -0.5, 0.5,    0, 1, 1,
+			-0.5, 0.5, 0.5,     0, 1, 1,
+			-0.5, 0.5, -0.5,    0, 1, 1,
+
+			0.5, -0.5, -0.5,    1, 0, 0,
+			0.5, 0.5, -0.5,     1, 0, 0,
+			0.5, 0.5, 0.5,      1, 0, 0,
+			0.5, -0.5, 0.5,     1, 0, 0,
+
+			-0.5, -0.5, -0.5,   1, 0, 1,
+			0.5, -0.5, -0.5,    1, 0, 1,
+			0.5, -0.5, 0.5,     1, 0, 1,
+			-0.5, -0.5, 0.5,    1, 0, 1,
+
+			-0.5, 0.5, -0.5,    0, 1, 0,
+			-0.5, 0.5, 0.5,     0, 1, 0,
+			0.5, 0.5, 0.5,      0, 1, 0,
+			0.5, 0.5, -0.5,     0, 1, 0
+		];
+
+		// Indexes (for drawing squares using triangles)
+		this.idx = [
+			0, 1, 2,
+			0, 2, 3,
+
+			4, 5, 6,
+			4, 6, 7,
+
+			8, 9, 10,
+			8, 10, 11,
+
+			12, 13, 14,
+			12, 14, 15,
+
+			16, 17, 18,
+			16, 18, 19,
+
+			20, 21, 22,
+			20, 22, 23
+		];
+*/
 	}
 
 	start() {
@@ -234,34 +292,43 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
+	gl
 	cam = { fov: 60 }
-	pos = { x: 0, y: 0, z: -48 }
+	pos = { x: 0, y: 0, z: -8 }
 	rot = { x: 0.2, y: 0.4/*, z: 0*/ }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	mode = true
-	uniRM = false
 
 	constructor() {
 		this.canvas = document.createElement('canvas')
 		try {
 			gl = this.canvas.getContext('webgl')
+			gl.clearColor(0.9, 0.95, 1, 1)
+			gl.clearDepth(1)
+			gl.enable(gl.DEPTH_TEST)
+			gl.enable(gl.CULL_FACE)
+			gl.depthFunc(gl.LEQUAL)
+			this.initShaders()
 		} catch (e) {
 			alert('WebGL not initialized!')
 		}
-		gl.clearColor(0.9, 0.95, 1, 1)
-		gl.clearDepth(1)
-		gl.enable(gl.DEPTH_TEST)
-		gl.enable(gl.CULL_FACE)
-		gl.depthFunc(gl.LEQUAL)
 		document.body.appendChild(this.canvas)
-		this.initShaders()
 		this.resize()
 		window.addEventListener('resize', this.requestResize.bind(this))
 	}
 
 	initShaders() {
-		const sh = gl.createProgram()
-		gl.attachShader(sh, this.getShader(gl, gl.VERTEX_SHADER,
+
+		const getShader = (type, source) => {
+			const s = gl.createShader(type)
+			gl.shaderSource(s, source)
+			gl.compileShader(s)
+			if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+				alert('GLSL compile error:\n' + gl.getShaderInfoLog(s))
+			return s
+		}
+		const sh = this.shader = gl.createProgram()
+		gl.attachShader(sh, getShader(gl.VERTEX_SHADER,
 			`attribute vec3 aPos;
 attribute vec4 aCol;
 uniform mat4 uMVMatrix,uPMatrix;
@@ -270,41 +337,18 @@ void main(void) {
   gl_Position = uPMatrix * uMVMatrix * vec4(aPos, 1.0);
   vColor = aCol;
 }`))
-		gl.attachShader(sh, this.getShader(gl, gl.FRAGMENT_SHADER,
-			`precision lowp float;
-varying vec4 vColor;
+		gl.attachShader(sh, getShader(gl.FRAGMENT_SHADER,
+			`varying lowp vec4 vColor;
 void main(void) {
 	gl_FragColor = vColor;
 }`))
 		gl.linkProgram(sh)
 		if (!gl.getProgramParameter(sh, gl.LINK_STATUS))
 			alert('Shaders not initialized!')
-		gl.useProgram(sh)
-		this.vertexPositionAttribute = gl.getAttribLocation(sh, 'aPos')
-		this.vertexColorAttribute = gl.getAttribLocation(sh, 'aCol')
+		gl.useProgram(sh)		
 		this.uniRM = gl.getUniformLocation(sh, 'uMVMatrix')
-		this.shader = sh
-		gl.enableVertexAttribArray(this.vertexPositionAttribute)
-		gl.enableVertexAttribArray(this.vertexColorAttribute)
-	}
-
-	getShader(gl, type, source) {
-		const s = gl.createShader(type)
-		gl.shaderSource(s, source)
-		gl.compileShader(s)
-		if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
-			alert('GLSL compile error:\n' + gl.getShaderInfoLog(s))
-		return s
-	}
-
-	arrayToBuffer(arr, itemSize, ptr) {
-		const buf = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, buf)
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW)
-		buf.itemSize = itemSize
-		buf.numItems = arr.length / buf.itemSize
-		gl.vertexAttribPointer(ptr, buf.itemSize, gl.FLOAT, false, 0, 0)
-		return buf
+		gl.enableVertexAttribArray(this.vertexPosition = gl.getAttribLocation(sh, 'aPos'))
+		gl.enableVertexAttribArray(this.vertexColor = gl.getAttribLocation(sh, 'aCol'))
 	}
 
 	perspective(fov, aspect, near, far) {
@@ -321,20 +365,29 @@ void main(void) {
 	render() {
 		if (!this.scene)
 			return
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		const cx = Math.cos(this.rot.x),
 			sx = Math.sin(this.rot.x),
 			cy = Math.cos(this.rot.y),
 			sy = Math.sin(this.rot.y),
 			r = this.rMatrix
-		r[0] = cy; r[1] = sx * sy; r[2] = -cx * sy,
-			r[5] = cx; r[6] = sx
-		r[8] = sy; r[9] = -sx * cy; r[10] = cx * cy
+		r[0] = cy
+		r[1] = sx * sy
+		r[2] = -cx * sy
+		r[5] = cx
+		r[6] = sx
+		r[8] = sy
+		r[9] = -sx * cy
+		r[10] = cx * cy
 		r[12] = this.pos.x
 		r[13] = this.pos.y
 		r[14] = this.pos.z
+		//gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.uniformMatrix4fv(this.uniRM, false, r)
-		gl.drawArrays(this.mode ? gl.TRIANGLES : gl.LINES, 0, this.numItems)
+		gl.drawElements(gl.LINES, 6 * 2 * 3, gl.UNSIGNED_SHORT, 0);
+
+		// Call drawScene again in the next browser repaint
+		//count += 0.01;
+		//requestAnimationFrame(drawScene);
 	}
 
 	requestResize() {
@@ -354,8 +407,17 @@ void main(void) {
 
 	setScene(scene) {
 		this.scene = scene
-		this.arrayToBuffer(scene.c, 4, this.vertexColorAttribute)
-		this.numItems = this.arrayToBuffer(scene.v, 3, this.vertexPositionAttribute).numItems
+		// Write a_Position and a_Color using gl.ARRAY_BUFFER
+		gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(scene.vc), gl.STATIC_DRAW);
+
+		gl.vertexAttribPointer(this.vertexPosition, 3, gl.FLOAT, false, 4 * (3 + 3), 0);
+
+		gl.vertexAttribPointer(this.vertexColor, 3, gl.FLOAT, false, 4 * (3 + 3), 4 * 3);
+
+		// Write indexes in gl.ELEMENT_ARRAY_BUFFER
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(scene.idx), gl.STATIC_DRAW);
 		this.render()
 		return this
 	}
@@ -364,8 +426,8 @@ void main(void) {
 		this.pos.x += c[0]
 		this.pos.y += c[1]
 		this.pos.z += c[2]
-		if (this.pos.z > -4)
-			this.pos.z = -4
+		if (this.pos.z > -2)
+			this.pos.z = -2
 		this.render()
 		return this
 	}
@@ -517,12 +579,13 @@ class UserInput {
 
 }
 
+
 class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)
 		this.output = new Simple3D()
-		this.scene = new AnimatedScene().addListener(this).setModel(model).start()
+		this.scene = new AnimatedScene().addListener(this).setModel(model)//.start()
 	}
 
 	keysChanged(keyMask) {
@@ -542,7 +605,7 @@ class Game {
 	}
 
 	zoomChanged(y) {
-		this.output.updatePos([0,0,-y*0.2])
+		this.output.updatePos([0, 0, -y * 0.2])
 	}
 
 	sceneChanged(scene) {
@@ -551,6 +614,7 @@ class Game {
 
 }
 
+
 fetch('input')
-  .then(response => response.text())
-  .then(data => new Game(P.init(data)))
+	.then(response => response.text())
+	.then(data => new Game(P.init(data)))
