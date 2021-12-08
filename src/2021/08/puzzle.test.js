@@ -18,14 +18,11 @@ const MAPPING = ['d', 'e', 'a', 'f', 'g', 'b', 'c']
 it('solves 1', () => expect(P.part_1(INPUT)).toEqual(26))
 
 it('finds segments', () => expect(P.findSegmentMapping(P.prep(INPUT_1)[0][0])).toEqual(MAPPING))
-/*
-it('finds digit', () => expect(P.findDigit(P.prep(INPUT_1)[0][0][1], MAPPING)).toEqual(5))
 
-it('finds digits', () => expect(P.findDigits(P.prep(INPUT_1)[0][0], MAPPING)).toEqual([8, 5, 2, 3, 7, 9, 6, 4, 0, 1]))
+it('finds digit', () => expect(P.findDigit(P.prep(INPUT_1)[0][0][1], MAPPING)).toEqual(5))
 
 it('finds code', () => expect(P.findCode(P.prep(INPUT_1)[0])).toEqual(5353))
 
 it('finds codes', () => expect(P.part_2(INPUT_1)).toEqual(5353))
 
 it('solves 2', () => expect(P.part_2(INPUT)).toEqual(61229))
-*/
