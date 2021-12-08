@@ -35,7 +35,7 @@ exports.puzzle = P = {
 
     findCode: u => u[1].map(v => P.findDigit(v, P.findSegmentMapping(u[0]))).join('') * 1,
 
-    part_1: T => P.prep(T).map(L => L[1].map(s => s.length).filter(c => c === 2 || c === 3 || c === 4 || c === 7).length).reduce((a, b) => a + b),
+    part_1: T => P.prep(T).map(L => L[1].map(s => s.length).filter(c => c !== 5 && c !== 6).length).reduce((a, b) => a + b),
 
     part_2: T => P.prep(T).map(u => P.findCode(u)).reduce((a, b) => a + b)
 

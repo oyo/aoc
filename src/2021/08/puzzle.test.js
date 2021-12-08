@@ -1,4 +1,4 @@
-const { puzzle } = require('./puzzle')
+require('./puzzle')
 
 const LINE = `acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf`
 const MAPPING = ['d', 'e', 'a', 'f', 'g', 'b', 'c']
