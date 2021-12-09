@@ -32,28 +32,24 @@ exports.puzzle = P = {
         return r
     },
 
-    fillRek: (p, p1, c, h) => {
-        if (p1[c.y][c.x] >= h)
+    fillRek: (p, c, h) => {
+        if (p[c.y][c.x] >= h)
             return 0
-        p1[c.y][c.x] = h
-        return c.s = 1
-            + P.fillRek(p, p1, { x: c.x + 1, y: c.y }, h)
-            + P.fillRek(p, p1, { x: c.x - 1, y: c.y }, h)
-            + P.fillRek(p, p1, { x: c.x, y: c.y - 1 }, h)
-            + P.fillRek(p, p1, { x: c.x, y: c.y + 1 }, h)
+        p[c.y][c.x] = h
+        return 1
+            + P.fillRek(p, { x: c.x + 1, y: c.y }, h)
+            + P.fillRek(p, { x: c.x - 1, y: c.y }, h)
+            + P.fillRek(p, { x: c.x, y: c.y - 1 }, h)
+            + P.fillRek(p, { x: c.x, y: c.y + 1 }, h)
     },
 
     fillTo: (p, h) => P
         .lowPoints(p).low
         .filter(c => c.z < h)
-        .map(c => {
-            P.fillRek(p, P.clone(p), c, h)
-            return c
-        })
-        // count for part 2 result
-        .sort((a, b) => b.s - a.s)
+        .map(c => P.fillRek(p, c, h))
+        .sort((a, b) => b - a)
         .slice(0, 3)
-        .reduce((o, c) => o * c.s, 1),
+        .reduce((o, s) => o * s, 1),
 
     part_1: T => P.lowPoints(P.prep(T)).sum,
 
