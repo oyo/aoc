@@ -1,15 +1,15 @@
 exports.puzzle = P = {
 
-    prep: T => P.addBorder(T.trim().split('\n').map(L => L.split('').map(n => n * 1)), 1, 10),
+    prep: T => P.addBorder(T.split('\n').map(L => L.split('').map(n => n * 1)), 1, 10),
 
     addBorder: (p, o, d) =>
         new Array(p.length + (o << 1)).fill().map((_, y) =>
             new Array(p[0].length + (o << 1)).fill().map((_, x) =>
                 p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : d)),
 
-    toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + x + ' ', '') + '\n', ''),
-
-    clone: b => b.slice().map(y => y.slice()),
+    // keep for debug purposes
+    // clone: b => b.slice().map(y => y.slice()),
+    // toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + x + ' ', '') + '\n', ''),
 
     lowPoint: (b, y, x) =>
         b[y][x] < b[y - 1][x] &&
