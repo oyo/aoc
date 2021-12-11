@@ -12,16 +12,11 @@ exports.puzzle = P = {
     score: s => s.split('').reduce((o, c) => o * 5 + ' )]}>'.indexOf(c), 0),
 
     checkLine: l => {
-        /*
         do {
             s = l.length
             l = l.replace(/(\[\]|\(\)|\<\>|\{\})/g, '')
         } while (l.length < s)
         return l;
-        */
-        while (l.length < (l = l.replace(/(\[\]|\(\)|\<\>|\{\})/g, '')).length)
-            ;
-        return l
     },
 
     part_1: T => P.prep(T)
