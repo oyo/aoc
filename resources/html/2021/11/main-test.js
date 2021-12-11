@@ -1,11 +1,18 @@
 const P = {
 
-	prep: T => P.addBorder(T.trim().split('\n').map(L => L.split('').map(n => n * 1)), 1, 1e4),
+	H: 10,
+
+	prep: T =>
+		P.addBorder(
+			P.addBorder(
+				T.trim().split('\n').map(L => L.split('').map(n => n * 1)
+			), 160
+		), 1, 1e4),
 
 	addBorder: (p, o, d) =>
 		new Array(p.length + (o << 1)).fill().map((_, y) =>
 			new Array(p[0].length + (o << 1)).fill().map((_, x) =>
-				p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : d)),
+				p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : (d===undefined? ~~(Math.random()*P.H) : d))),
 
 	clone: b => b.slice().map(y => y.slice()),
 	// keep for debug purposes
@@ -28,7 +35,7 @@ const P = {
         const r = { sum: 0, low: [] }
         for (let y = 1; y < p.length - 1; y++)
             for (let x = 1; x < p[y].length - 1; x++) {
-                p[y][x]++
+                p[y][x] += Math.random() < 0.1 ? 2 : 1
             }
         let hasFlashed
         let fc = 0
@@ -36,7 +43,7 @@ const P = {
             hasFlashed = false
             for (let y = 1; y < p.length - 1; y++) {
                 for (let x = 1; x < p[y].length - 1; x++) {
-                    if (p[y][x] > 9) {
+                    if (p[y][x] >= P.H) {
                         hasFlashed = true
                         fc++
                         P.flash(p, y, x)
@@ -77,7 +84,10 @@ const P = {
 
 	step: () => {
 		const p = P.board[1]
-		const flashes = P.doStep(p)
+		let flashes
+		do {
+			flashes = P.doStep(p)
+		} while (p[p.length>>1][p[0].length>>1] !== 0)
 		if (flashes === (p.length - 2) * (p[0].length - 2))
 		P.board[1] = P.clone(P.board[0])
 		P.count++
@@ -187,15 +197,21 @@ class Scene extends QuadModel {
 	create() {
 		this.clear()
 		const p = this.model.getData()
-		const cg = { r: 0, g: 0.9, b: 1 }
+		const c2 = { r: 0, g: 0.9, b: 1 }
+		const c1 = { r: 1, g: 0.9, b: 0.3 } // gold
+		const c3 = { r: 1, g: 0.4, b: 0 } // orange
 		const dz = p.length, dz2 = dz >> 1
 		for (let z = 0; z < dz; z++) {
 			for (let x = 0; x < p[z].length; x++) {
-				if (p[z][x] < 10) {
-					const pz = (p[z][x]+9)%10
-					const f = pz/10
-					const c = { r: cg.r*f, g: cg.g*f, b: cg.b*f }
-					this.cubeAt(x - (p[z].length >> 1), pz-5, z - dz2, c)
+				if (p[z][x] < P.H) {
+					let pz = (p[z][x]+P.H-1)%P.H
+					//for (; pz >=0; pz-- ) {
+					const f = 0.6+(pz+1)/(P.H<<1)
+					const cr = pz>0.8 ? c1 : c2 
+					const c = { r: cr.r*f, g: cr.g*f, b: cr.b*f }
+					//	this.cubeAt(x - (p[z].length >> 1), pz-5, z - dz2, c)
+					//}
+					this.quadYP(x - (p[z].length >> 1), pz-(P.H>>1), z - dz2, c)
 				}
 			}
 		}
@@ -217,7 +233,7 @@ class Scene extends QuadModel {
 
 class AnimatedScene extends Scene {
 
-	speed = 100
+	speed = 120
 
 	constructor() {
 		super()
@@ -250,7 +266,7 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
-	cam = { fov: 20 }
+	cam = { fov: 30 }
 	pos = { x: 0, y: 0, z: -1 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
 	col = { r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
@@ -356,7 +372,7 @@ void main(void) {
 	resize() {
 		this.canvas.width = window.innerWidth
 		this.canvas.height = window.innerHeight
-		this.pMatrix = new Float32Array(this.perspective(this.cam.fov, this.canvas.width / this.canvas.height, 0.5, 1000))
+		this.pMatrix = new Float32Array(this.perspective(this.cam.fov, this.canvas.width / this.canvas.height, 0.5, 2000))
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 		gl.uniformMatrix4fv(gl.getUniformLocation(this.shader, 'uPMatrix'), false, this.pMatrix)
 		this.change = true
@@ -406,7 +422,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -35.6, v: 70, w: 32, max: 70 }
+	mouse = { button: false, x: 0, y: 0, u: -35.6, v: 80, w: 200, max: 70 }
 	keyMask = 0
 	listener = []
 
@@ -415,6 +431,10 @@ class UserInput {
 		document.addEventListener('mouseup', this.mouseUp.bind(this))
 		document.addEventListener('mouseout', this.mouseUp.bind(this))
 		document.addEventListener('mousemove', this.mouseMove.bind(this))
+		//document.addEventListener('touchstart', this.mouseDown.bind(this))
+		//document.addEventListener('touchend', this.mouseUp.bind(this))
+		//document.addEventListener('touchcancel', this.mouseUp.bind(this))
+		//document.addEventListener('touchmove', this.mouseMove.bind(this))
 		document.addEventListener('keydown', this.keyDown.bind(this))
 		document.addEventListener('keyup', this.keyUp.bind(this))
 		document.addEventListener('DOMMouseScroll', this.mouseWheel.bind(this))
@@ -447,7 +467,7 @@ class UserInput {
 	slowDown() {
 		this.mouse.u *= 0.98
 		this.mouse.v *= 0.9
-		this.mouse.w *= 0.9
+		this.mouse.w *= 0.94
 		let stop = true
 		if (this.mouse.u > 1 || this.mouse.v > 1 || this.mouse.u < -1 || this.mouse.v < -1) {
 			this.move()
