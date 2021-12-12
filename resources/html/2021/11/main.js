@@ -11,67 +11,67 @@ const P = {
 	// keep for debug purposes
 	toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + (x < 0 ? ' -' : (x >= 1e4 ? ' .' : (x > 9 ? x : ' ' + x))), '') + '\n', ''),
 
-    flash: (p, y, x) => {
-        p[y - 1][x - 1]++
-        p[y - 1][x]++
-        p[y - 1][x + 1]++
-        p[y][x - 1]++
-        p[y][x] = -1e6
-        p[y][x + 1]++
-        p[y + 1][x - 1]++
-        p[y + 1][x]++
-        p[y + 1][x + 1]++
-    },
+	flash: (p, y, x) => {
+		p[y - 1][x - 1]++
+		p[y - 1][x]++
+		p[y - 1][x + 1]++
+		p[y][x - 1]++
+		p[y][x] = -1e6
+		p[y][x + 1]++
+		p[y + 1][x - 1]++
+		p[y + 1][x]++
+		p[y + 1][x + 1]++
+	},
 
-    doStep: p => {
-        //console.log(P.toString(p))
-        const r = { sum: 0, low: [] }
-        for (let y = 1; y < p.length - 1; y++)
-            for (let x = 1; x < p[y].length - 1; x++) {
-                p[y][x]++
-            }
-        let hasFlashed
-        let fc = 0
-        do {
-            hasFlashed = false
-            for (let y = 1; y < p.length - 1; y++) {
-                for (let x = 1; x < p[y].length - 1; x++) {
-                    if (p[y][x] > 9) {
-                        hasFlashed = true
-                        fc++
-                        P.flash(p, y, x)
-                    }
-                }
-            }
-        } while (hasFlashed)
-        for (let y = 1; y < p.length - 1; y++) {
-            for (let x = 1; x < p[y].length - 1; x++) {
-                if (p[y][x] < 0) {
-                    p[y][x] = 0
-                }
-            }
-        }
-        //console.log(P.toString(p))
-        return fc
-    },
+	doStep: p => {
+		//console.log(P.toString(p))
+		const r = { sum: 0, low: [] }
+		for (let y = 1; y < p.length - 1; y++)
+			for (let x = 1; x < p[y].length - 1; x++) {
+				p[y][x]++
+			}
+		let hasFlashed
+		let fc = 0
+		do {
+			hasFlashed = false
+			for (let y = 1; y < p.length - 1; y++) {
+				for (let x = 1; x < p[y].length - 1; x++) {
+					if (p[y][x] > 9) {
+						hasFlashed = true
+						fc++
+						P.flash(p, y, x)
+					}
+				}
+			}
+		} while (hasFlashed)
+		for (let y = 1; y < p.length - 1; y++) {
+			for (let x = 1; x < p[y].length - 1; x++) {
+				if (p[y][x] < 0) {
+					p[y][x] = 0
+				}
+			}
+		}
+		//console.log(P.toString(p))
+		return fc
+	},
 
-    doSteps: (p, n) => {
-        let fc = 0
-        for (let i = 0; i < n; i++)
-            fc += P.doStep(p)
-        return fc
-    },
+	doSteps: (p, n) => {
+		let fc = 0
+		for (let i = 0; i < n; i++)
+			fc += P.doStep(p)
+		return fc
+	},
 
-    doStepsAll: p => {
-        let n = (p.length - 2) * (p[0].length - 2)
-        for (let i = 0; ; i++)
-            if (P.doStep(p) === n)
-                return i + 1
-    },
+	doStepsAll: p => {
+		let n = (p.length - 2) * (p[0].length - 2)
+		for (let i = 0; ; i++)
+			if (P.doStep(p) === n)
+				return i + 1
+	},
 
-    part_1: T => P.doSteps(P.prep(T), 100),
+	part_1: T => P.doSteps(P.prep(T), 100),
 
-    part_2: T => P.doStepsAll(P.prep(T)),
+	part_2: T => P.doStepsAll(P.prep(T)),
 
 	getData: () => P.board[1],
 
@@ -79,7 +79,7 @@ const P = {
 		const p = P.board[1]
 		const flashes = P.doStep(p)
 		if (flashes === (p.length - 2) * (p[0].length - 2))
-		P.board[1] = P.clone(P.board[0])
+			P.board[1] = P.clone(P.board[0])
 		P.count++
 		//console.log(P.count)
 		//console.log(P.toString(P.board))
@@ -88,7 +88,7 @@ const P = {
 
 	init: T => {
 		const p = P.prep(T)
-		P.board = [p,P.clone(p)]
+		P.board = [p, P.clone(p)]
 		//console.log(P.toString(p))
 		P.count = 0
 		return P
@@ -192,10 +192,10 @@ class Scene extends QuadModel {
 		for (let z = 0; z < dz; z++) {
 			for (let x = 0; x < p[z].length; x++) {
 				if (p[z][x] < 10) {
-					const pz = (p[z][x]+9)%10
-					const f = pz/10
-					const c = { r: cg.r*f, g: cg.g*f, b: cg.b*f }
-					this.cubeAt(x - (p[z].length >> 1), pz-5, z - dz2, c)
+					const pz = (p[z][x] + 9) % 10
+					const f = 0.5 + pz / 20
+					const c = { r: cg.r * f, g: cg.g * f, b: cg.b * f }
+					this.cubeAt(x - (p[z].length >> 1), pz - 5, z - dz2, c)
 				}
 			}
 		}
