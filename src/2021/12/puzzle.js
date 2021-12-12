@@ -5,9 +5,9 @@ exports.puzzle = P = {
     pathRek: (l, p, m, t) => {
         if (m[m.length - 1] === 'end') {
             l.push(m.slice())
-            return m
+            return l
         }
-        return p.filter(e =>
+        p.filter(e =>
             e[0] === m[m.length - 1] && (
                 e[1][0] < 'a' || (
                     e[1] !== 'start' &&
@@ -17,18 +17,11 @@ exports.puzzle = P = {
         )
             .map(s => m.slice(0, m.length - 1).concat(s))
             .map(o => P.pathRek(l, p, o, o.filter(w => o[o.length - 1][0] >= 'a' && w === o[o.length - 1]).length === 2 ? 1 : t))
+        return l
     },
 
-    part_1: T => {
-        const l = []
-        const m = P.pathRek(l, P.prep(T), ['start'], 1)
-        return l.length
-    },
+    part_1: T => P.pathRek([], P.prep(T), ['start'], 1).length,
 
-    part_2: T => {
-        const l = []
-        const m = P.pathRek(l, P.prep(T), ['start'], 2)
-        return l.length
-    }
+    part_2: T => P.pathRek([], P.prep(T), ['start'], 2).length,
 
 }
