@@ -4,19 +4,20 @@ exports.puzzle = P = {
 
     pathRek: (l, p, m, t) => {
         if (m[m.length - 1] === 'end') {
-            l.push(m.slice())
+            l.push(m)
             return l
         }
+        const max = m.filter(w => m[m.length - 1][0] >= 'a' && w === m[m.length - 1]).length === 2 ? 1 : t
         p.filter(e =>
             e[0] === m[m.length - 1] && (
                 e[1][0] < 'a' || (
                     e[1] !== 'start' &&
-                    m.filter(w => w === e[1]).length < t
+                    m.filter(w => w === e[1]).length < max
                 )
             )
         )
             .map(s => m.slice(0, m.length - 1).concat(s))
-            .map(o => P.pathRek(l, p, o, o.filter(w => o[o.length - 1][0] >= 'a' && w === o[o.length - 1]).length === 2 ? 1 : t))
+            .map(o => P.pathRek(l, p, o, max))
         return l
     },
 
