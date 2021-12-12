@@ -17,7 +17,8 @@ exports.puzzle = P = {
         const max = p.filter(w => from[0] >= 'a' && w === from).length === 2 ? 1 : t
         return g[from]
             .filter(to => to[0] < 'a' || p.filter(w => w === to).length < max)
-            .map(w => P.visit(l, p.concat(w), g, max))[0]
+            .map(w => P.visit(l, p.concat(w), g, max))
+            [0]
     },
 
     part_1: T => P.visit([], ['start'], P.prep(T), 1).length,
