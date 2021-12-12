@@ -48,7 +48,7 @@ it('solves 1', () => {
 })
 
 it('solves 2', () => {
-    //expect(puzzle.part_2(INPUT1)).toEqual(36)
+    expect(puzzle.part_2(INPUT1)).toEqual(36)
     expect(puzzle.part_2(INPUT2)).toEqual(103)
-    //expect(puzzle.part_2(INPUT3)).toEqual(3509)
+    expect(puzzle.part_2(INPUT3)).toEqual(3509)
 })
