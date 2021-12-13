@@ -28,6 +28,8 @@ exports.puzzle = P = {
     },
 
     // create a bitmap image and use OCR to get the code
+    // add libraries, remove comment from part_2 + make it async
+    // $ yarn add jimp tesseract.js
     createImage: p => {
         const max = [0, 1].map(i => p.map(c => c[i]).sort((a, b) => b - a).shift())
         const file = './resources/html/2021/13/code.png'
@@ -61,14 +63,14 @@ exports.puzzle = P = {
     toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + ' ' + x, '') + '\n', ''),
 
     parse: d => (c => new Array((c[c.length - 1][0] + 2) / 5).fill().reduce((s, _, i) =>
-        s + String.fromCharCode(65 + C.indexOf(
+        s + String.fromCharCode(65 + C.binary.indexOf(
             d.filter(p => p[0] >= i * 5 && p[0] < i * 5 + 5)
-                .reduce((n, c) => n | (1 << ((c[1] << 2) + (3 - (c[0] - i * 5)))), 0))), ''))(
+                .reduce((n, c) => n | (1 << (((5-c[1]) << 2) + (3 - (c[0] - i * 5)))), 0))), ''))(
                     d.sort((a, b) => a[0] - b[0] !== 0 ? a[0] - b[0] : a[1] - b[1])
                 ),
 
     /*
-    // only used when letters don't have use same size or spacing
+    // only used when letters don't use same size or spacing
     detect: d => {
         const s = d.map(c => c[0]).sort((a, b) => a - b)
         const max = s[s.length - 1]
