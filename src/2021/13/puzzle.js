@@ -269,13 +269,12 @@ exports.puzzle = P = {
         ]
     ].map(d => d.reduce((n, c, i) => n | (c << (i << 2)), 0)),
 
-    parse: d => {
-        const c = d.sort((a, b) => a[0] - b[0] !== 0 ? a[0] - b[0] : a[1] - b[1])
-        return new Array((c[c.length - 1][0] + 2) / 5).fill().reduce((s, _, i) =>
-            s + String.fromCharCode(65 + P.C.indexOf(
-                d.filter(p => p[0] >= i * 5 && p[0] < i * 5 + 5)
-                    .reduce((n, c) => n | (1 << ((c[1] << 2) + (3 - (c[0] - i * 5)))), 0))), '')
-    },
+    parse: d => (c => new Array((c[c.length - 1][0] + 2) / 5).fill().reduce((s, _, i) =>
+        s + String.fromCharCode(65 + P.C.indexOf(
+            d.filter(p => p[0] >= i * 5 && p[0] < i * 5 + 5)
+                .reduce((n, c) => n | (1 << ((c[1] << 2) + (3 - (c[0] - i * 5)))), 0))), ''))(
+                    d.sort((a, b) => a[0] - b[0] !== 0 ? a[0] - b[0] : a[1] - b[1])
+                ),
 
     /*
     // only used when letters don't have use same size or spacing
