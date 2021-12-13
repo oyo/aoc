@@ -20,9 +20,11 @@
   },
   "dependencies": {
     "https-proxy-agent": "^5.0.0",
+    "jimp": "^0.16.1",
     "lodash": "^4.17.21",
     "lodash.product": "^18.9.19",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "tesseract.js": "^2.1.5"
   },
   "devDependencies": {
     "concurrently": "^6.3.0",
