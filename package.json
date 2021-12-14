@@ -15,8 +15,8 @@
     "all": "node src/run",
     "solve": "node src/util/solve",
     "start": "yarn run open",
-    "open": "concurrently \"cd resources/html && http-server -a localhost -p 1234\" \"open http://localhost:1234/\"",
-    "deploy": "aws s3 sync --acl public-read resources/html/ s3://rohrmeier/aoc"
+    "open": "concurrently \"cd docs && http-server -a localhost -p 1234\" \"open http://localhost:1234/\"",
+    "deploy": "aws s3 sync --acl public-read docs/ s3://rohrmeier/aoc"
   },
   "dependencies": {
     "https-proxy-agent": "^5.0.0",
