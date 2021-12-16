@@ -84,15 +84,16 @@ class Packet {
     }
 
     calcOperation() {
+        const c = this.children
         switch (this.typeid) {
-            case 0: return this.children.reduce((o, a) => o + a.calcOperation(), 0n)
-            case 1: return this.children.reduce((o, a) => o * a.calcOperation(), 1n)
-            case 2: return BigInt(Math.min(...this.children.map(c => Number(c.calcOperation()))))
-            case 3: return BigInt(Math.max(...this.children.map(c => Number(c.calcOperation()))))
+            case 0: return c.reduce((o, a) => o + a.calcOperation(), 0n)
+            case 1: return c.reduce((o, a) => o * a.calcOperation(), 1n)
+            case 2: return BigInt(Math.min(...c.map(c => Number(c.calcOperation()))))
+            case 3: return BigInt(Math.max(...c.map(c => Number(c.calcOperation()))))
             case 4: return this.value
-            case 5: return this.children[0].calcOperation() > this.children[1].calcOperation() ? 1n : 0n
-            case 6: return this.children[0].calcOperation() < this.children[1].calcOperation() ? 1n : 0n
-            case 7: return this.children[0].calcOperation() === this.children[1].calcOperation() ? 1n : 0n
+            case 5: return c[0].calcOperation() > c[1].calcOperation() ? 1n : 0n
+            case 6: return c[0].calcOperation() < c[1].calcOperation() ? 1n : 0n
+            case 7: return c[0].calcOperation() === c[1].calcOperation() ? 1n : 0n
         }
         return 0n
     }
