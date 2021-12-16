@@ -8,7 +8,7 @@ class Packet {
 
     constructor(hex, pointer) {
         this.hex = hex
-        this.data = BigInt('0x'+hex)
+        this.data = BigInt('0x' + hex)
         this.length = BigInt(hex.length << 2)
         this.pointer = pointer ? BigInt(pointer) : 0n
         this.children = []
@@ -36,7 +36,7 @@ class Packet {
             token = this.nextToken(5)
             value = (value << 4n) | (token & 0b1111n)
             i++
-        } while (token > 0b1111n && i<10)
+        } while (token > 0b1111n && i < 10)
         this.value = value
     }
 
@@ -59,24 +59,6 @@ class Packet {
         const child = new Packet(this.hex, this.pointer)
         this.pointer = child.pointer
         this.children.push(child)
-    }
-
-    pad(s, l) {
-        return (new Array(Number(l)).fill(0).join('') + s).slice(-Number(l))
-    }
-
-    toBinary(b, l) {
-        return `${this.pad(b.toString(2), l)}`
-    }
-
-    toStringDebug() {
-        return `${this.length}->${this.pointer}: ${this.toBinary(this.data, this.length).splitAt(Number(this.pointer)).join('.')} ${this.children}`
-    }
-
-    toString() {
-        return this.typeid === 4
-            ? `LI ${this.value} v${this.version}`
-            : `OP ${this.typeid} v${this.version} [ ${this.children} ]`
     }
 
     calcVersionSum() {

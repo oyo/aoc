@@ -22,7 +22,6 @@ const OPS = {
     '9C0141080250320F1802104A08': 1n
 }
 
-/*
 it('parses literals', () => {
     const li = new Packet(LITERAL)
     expect(li.version).toEqual(6)
@@ -47,7 +46,7 @@ it('parses operator 1', () => {
 it('calculates version sums', () => Object.entries(VERSIONS).forEach(p =>
     expect(new Packet(p[0]).calcVersionSum()).toEqual(p[1]))
 )
-*/
+
 it('calculates operations', () => Object.entries(OPS).forEach(p =>
     expect(new Packet(p[0]).calcOperation()).toEqual(p[1]))
 )
