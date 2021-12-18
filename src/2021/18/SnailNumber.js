@@ -27,15 +27,13 @@ class SnailNumber {
     }
 
     reduce() {
-        let before = JSON.stringify(this.value)
-        let v = before
-        do {
-            before = v
-            v = v.split('')
-            v = this.explode(v)
-            v = this.split(v)
-            v = JSON.stringify(JSON.parse(v.join('')))
-        } while (before.hashCode() !== v.hashCode())
+        let v = JSON.stringify(this.value)
+        let hash
+        while (hash !== v.hashCode()) {
+            hash = v.hashCode()
+            v = this.explode(v.split(''))
+            v = this.split(v).join('')
+        }
         return JSON.parse(v)
     }
 
@@ -56,8 +54,7 @@ class SnailNumber {
                 case '[':
                     if (++depth > 4) {
                         const a = v[i + 1] * 1 + (carry ? carry : 0)
-                        const b = v[i + 3] * 1
-                        carry = b
+                        const b = carry = v[i + 3] * 1
                         if (prev)
                             v[prev] += a
                         prev = i
@@ -86,10 +83,7 @@ class SnailNumber {
     split(v) {
         for (let i = 0; i < v.length; i++) {
             if (v[i] > 9) {
-                const f = Math.floor(v[i] / 2)
-                const c = Math.ceil(v[i] / 2)
-                v.splice(i, 1, '[', f, ',', c, ']')
-                i += ['[', f, ',', c, ']'].join('').length
+                v[i] = `[${Math.floor(v[i] / 2)},${Math.ceil(v[i] / 2)}]`
                 break
             }
         }
