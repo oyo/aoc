@@ -11,13 +11,12 @@ String.prototype.hashCode = function () {
 
 class SnailNumber {
 
-    constructor(value) {
-        this.value = typeof value === 'string' ? JSON.parse(value) : value
+    static addNumbers(l) {
+        return l.reduce((s, n) => s.add(n), new SnailNumber(l.shift()))
     }
 
-    static addNumbers(l) {
-        const s = new SnailNumber(l.shift())
-        return l.reduce((s, n) => s.add(n), s)
+    constructor(value) {
+        this.value = typeof value === 'string' ? JSON.parse(value) : value
     }
 
     add(n) {
@@ -53,10 +52,9 @@ class SnailNumber {
             switch (c) {
                 case '[':
                     if (++depth > 4) {
-                        const a = v[i + 1] * 1 + (carry ? carry : 0)
-                        const b = carry = v[i + 3] * 1
                         if (prev)
-                            v[prev] += a
+                            v[prev] += v[i + 1] * 1 + (carry ? carry : 0)
+                        carry = v[i + 3] * 1
                         prev = i
                         v[i++] = 0
                         v[i++] = ''
