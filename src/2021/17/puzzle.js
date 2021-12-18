@@ -18,7 +18,8 @@ exports.puzzle = P = {
 
     yhits: (p, xh) => {
         const xvlist = xh.map(h => h[0]).filter((v, i, a) => a.indexOf(v) === i)
-        let pairs = []
+        //let pairs = []
+        let pairs = 0
         for (let xvs of xvlist) {
             for (let yvs = p[2]; yvs <= -p[2]; yvs++) {
                 for (
@@ -30,7 +31,8 @@ exports.puzzle = P = {
                     yv--
                     if (x >= p[0] && x <= p[1] && y >= p[2] && y <= p[3]) {
                         nohit = false
-                        pairs.push([xvs, yvs])
+                        //pairs.push([xvs, yvs])
+                        pairs++
                     }
                 }
             }
@@ -40,6 +42,6 @@ exports.puzzle = P = {
 
     part_1: T => (n => (n * (n - 1) >> 1))(P.prep1(T)),
 
-    part_2: T => (p => P.yhits(p, P.xhits(p)).length + (p[1] - p[0] + 1) * (p[3] - p[2] + 1))(P.prep2(T))
+    part_2: T => (p => P.yhits(p, P.xhits(p)) + (p[1] - p[0] + 1) * (p[3] - p[2] + 1))(P.prep2(T))
 
 }
