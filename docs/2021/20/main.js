@@ -202,7 +202,7 @@ class Scene extends QuadModel {
 
 class AnimatedScene extends Scene {
 
-	speed = 3000
+	speed = 1000
 
 	constructor() {
 		super()
@@ -235,7 +235,7 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
-	cam = { fov: 20 }
+	cam = { fov: 40 }
 	pos = { x: 0, y: 0, z: -1 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
 	col = { r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
@@ -391,7 +391,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -32, v: 46, w: 82, max: 70 }
+	mouse = { button: false, x: 0, y: 0, u: -40, v: 42, w: 42, max: 70 }
 	keyMask = 0
 	listener = []
 
