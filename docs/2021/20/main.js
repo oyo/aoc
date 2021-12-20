@@ -391,7 +391,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -32, v: 20, w: 82, max: 70 }
+	mouse = { button: false, x: 0, y: 0, u: -32, v: 46, w: 82, max: 70 }
 	keyMask = 0
 	listener = []
 
