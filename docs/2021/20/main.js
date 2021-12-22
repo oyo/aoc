@@ -420,7 +420,7 @@ class UserInput {
 			default: return
 		}
 		var mouseEvent = document.createEvent('MouseEvent')
-		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null)
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX<<1, touch.screenY<<1, touch.clientX<<1, touch.clientY<<1, false, false, false, false, 0, null)
 		touch.target.dispatchEvent(mouseEvent)
 		evt.preventDefault()
 	}
