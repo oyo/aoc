@@ -1,69 +1,69 @@
 const P = {
 
-    prep: T => {
-        const s = T.trim().split('\n\n')
-        const b = P.addBorder(s[1].split('\n').map(L => L.split('')), 120, '.')
-        return {
-            a: BigInt('0b'+s[0].replace(/\./g,'0').replace(/#/g,'1')),
-            b: [ b, P.clone(b) ]
-        }
-    },
+	prep: T => {
+		const s = T.trim().split('\n\n')
+		const b = P.addBorder(s[1].split('\n').map(L => L.split('')), 120, '.')
+		return {
+			a: BigInt('0b' + s[0].replace(/\./g, '0').replace(/#/g, '1')),
+			b: [b, P.clone(b)]
+		}
+	},
 
-    addBorder: (p, o, d) =>
-        new Array(p.length + (o << 1)).fill().map((_, y) =>
-            new Array(p[0].length + (o << 1)).fill().map((_, x) =>
-                p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : d)),
+	addBorder: (p, o, d) =>
+		new Array(p.length + (o << 1)).fill().map((_, y) =>
+			new Array(p[0].length + (o << 1)).fill().map((_, x) =>
+				p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : d)),
 
-    clone: b => b.slice().map(y => y.slice()),
+	clone: b => b.slice().map(y => y.slice()),
 
-    toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + x, '') + '\n', ''),
+	toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + x, '') + '\n', ''),
 
-    enhance: (a, p, y, x) => {
-        let n = 
-        (p[y - 1][x - 1] === '#' ? (1<<8) : 0) |
-        (p[y - 1][x    ] === '#' ? (1<<7) : 0) |
-        (p[y - 1][x + 1] === '#' ? (1<<6) : 0) |
-        (p[y    ][x - 1] === '#' ? (1<<5) : 0) |
-        (p[y    ][x    ] === '#' ? (1<<4) : 0) |
-        (p[y    ][x + 1] === '#' ? (1<<3) : 0) |
-        (p[y + 1][x - 1] === '#' ? (1<<2) : 0) |
-        (p[y + 1][x    ] === '#' ? (1<<1) : 0) |
-        (p[y + 1][x + 1] === '#' ?      1 : 0)
-        return Number((a >> (511n - BigInt(n))) & 1n)
-    },
+	enhance: (a, p, y, x) => {
+		let n =
+			(p[y - 1][x - 1] === '#' ? (1 << 8) : 0) |
+			(p[y - 1][x] === '#' ? (1 << 7) : 0) |
+			(p[y - 1][x + 1] === '#' ? (1 << 6) : 0) |
+			(p[y][x - 1] === '#' ? (1 << 5) : 0) |
+			(p[y][x] === '#' ? (1 << 4) : 0) |
+			(p[y][x + 1] === '#' ? (1 << 3) : 0) |
+			(p[y + 1][x - 1] === '#' ? (1 << 2) : 0) |
+			(p[y + 1][x] === '#' ? (1 << 1) : 0) |
+			(p[y + 1][x + 1] === '#' ? 1 : 0)
+		return Number((a >> (511n - BigInt(n))) & 1n)
+	},
 
-    clearBorder: p => {
-        const c = p[2][2]
-        let s = 0
-        for (let y = 1; y < p.length-1; y++) {
-            if (p[y][1]==='#') s++
-            if (p[y][p.length-2]==='#') s++
-            p[y][1] = p[y][p.length-2] = c
-        }
-        for (let x = 1; x < p.length-1; x++) {
-            if (p[1][x]==='#') s++
-            if (p[p.length-2][x]==='#') s++
-            p[1][x] = p[p.length-2][x] = c
-        }
-        return s
-    },
+	clearBorder: p => {
+		const c = p[2][2]
+		let s = 0
+		for (let y = 1; y < p.length - 1; y++) {
+			if (p[y][1] === '#') s++
+			if (p[y][p.length - 2] === '#') s++
+			p[y][1] = p[y][p.length - 2] = c
+		}
+		for (let x = 1; x < p.length - 1; x++) {
+			if (p[1][x] === '#') s++
+			if (p[p.length - 2][x] === '#') s++
+			p[1][x] = p[p.length - 2][x] = c
+		}
+		return s
+	},
 
-    doStep: p => {
-        const b = p.b.pop()
-        p.b.unshift(b)
-        let s = 0
-        //console.log(P.toString(p))
-        for (let y = 1; y < b.length - 1; y++) {
-            for (let x = 1; x < b[y].length - 1; x++) {
-                const l = P.enhance(p.a, p.b[1], y, x)
-                s += l
-                b[y][x] = l ? '#' : '.'
-            }
-        }
-        const c = P.clearBorder(b)
-        //console.log(c)
-        return s - c
-    },
+	doStep: p => {
+		const b = p.b.pop()
+		p.b.unshift(b)
+		let s = 0
+		//console.log(P.toString(p))
+		for (let y = 1; y < b.length - 1; y++) {
+			for (let x = 1; x < b[y].length - 1; x++) {
+				const l = P.enhance(p.a, p.b[1], y, x)
+				s += l
+				b[y][x] = l ? '#' : '.'
+			}
+		}
+		const c = P.clearBorder(b)
+		//console.log(c)
+		return s - c
+	},
 
 	getData: () => P.p.b[0],
 
@@ -404,7 +404,25 @@ class UserInput {
 		document.addEventListener('keyup', this.keyUp.bind(this))
 		document.addEventListener('DOMMouseScroll', this.mouseWheel.bind(this))
 		document.addEventListener('mousewheel', this.mouseWheel.bind(this))
+		document.addEventListener('touchstart', this.touch2Mouse.bind(this), true);
+		document.addEventListener('touchmove', this.touch2Mouse.bind(this), true);
+		document.addEventListener('touchend', this.touch2Mouse.bind(this), true);
 		this.mouseUp()
+	}
+
+	touch2Mouse(evt) {
+		const touch = evt.changedTouches[0]
+		let mouseEv
+		switch (evt.type) {
+			case 'touchstart': mouseEv = 'mousedown'; break
+			case 'touchend': mouseEv = 'mouseup'; break
+			case 'touchmove': mouseEv = 'mousemove'; break
+			default: return
+		}
+		var mouseEvent = document.createEvent('MouseEvent')
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null)
+		touch.target.dispatchEvent(mouseEvent)
+		evt.preventDefault()
 	}
 
 	mouseWheel(evt) {
