@@ -10,5 +10,5 @@ it ('solves part_1', () => {
 it ('solves part_2', () => {
     expect(puzzle.part_2(')')).toEqual(1)
     expect(puzzle.part_2('()))')).toEqual(3)
-    expect(puzzle.part_2('((())()))))((')).toEqual(9)
+    expect(puzzle.part_2('((())()))))((')).toEqual(8)
 })
