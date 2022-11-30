@@ -13,8 +13,8 @@ const rtime = (f, T) => {
     return { o: `${pc(p)}${tc(t)}`, t: t }
 }
 
-[1].forEach(year => {
-    const y = 2020 + year;
+[22].forEach(year => {
+    const y = 2000 + year;
     let n = 0;
     let sum = 0;
     [...Array(25).keys()].forEach(day => {
