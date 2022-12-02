@@ -2,7 +2,7 @@ exports.puzzle = P = {
 
     prep1: T => T.split('\n')
         .map(L => [L.charCodeAt(0) - 64, L.charCodeAt(2) - 87])
-        .map(L => [L[1],(N => N === -2 ? 1 : N === 2 ? -1 : N)(L[1] - L[0])]),
+        .map(L => [L[1], (N => N === -2 ? 1 : N === 2 ? -1 : N)(L[1] - L[0])]),
 
     prep2: T => T.split('\n')
         .map(L => [L.charCodeAt(0) - 64, L.charCodeAt(2) - 89]),
