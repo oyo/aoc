@@ -24,7 +24,7 @@ const rtime = (f, T) => {
             return
         try {
             const { puzzle } = require(`${path}/puzzle`)
-            const input = fs.readFileSync(`${path}/input`, 'utf-8').trim()
+            const input = fs.readFileSync(`${path}/input`, 'utf-8')
             const r1 = rtime(puzzle.part_1, input)
             const r2 = rtime(puzzle.part_2, input)
             console.log(`${y}-${d} ${r1.o}${r2.o}`)

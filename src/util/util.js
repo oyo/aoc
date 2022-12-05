@@ -107,7 +107,7 @@ const util = {
         try {
             const date = util.getAoCDateFromPath(path)
             const input = await util.getInput(date.day, date.year)
-            const output = partFunction(input.trim())
+            const output = partFunction(input)
             if (submitPart) {
                 const result = await util.submitAnswer(output, submitPart, date)
                 const message = _.filter(result.split('\n'), line => line.match(/^<article>/))
@@ -121,7 +121,7 @@ const util = {
 
     getString: async (stream) => {
         const string = await streamToString(stream ? stream : process.stdin)
-        return string.trim()
+        return string
     },
 
     toLines: (input) => {
