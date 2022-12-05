@@ -26,12 +26,12 @@ exports.puzzle = P = {
         const n = M[0]
         const s = M[1] - 1
         const t = M[2] - 1
-        C[t] = C[t].concat(C[s].splice(C[s].length - n, n))
+        C[t] = C[t].concat(C[s].splice(-n, n))
         return C
     },
 
     process: (T, move) => (([c, m]) => {
-        const d = P.transposeCrates(P.parseCrates(c.slice(0, c.length - 1)))
+        const d = P.transposeCrates(P.parseCrates(c.slice(0, -1)))
         P.parseMoves(m).forEach(n => move(d, n))
         return d.map(d => d.at(-1)).join('')
     })(P.prep(T)),
