@@ -5,12 +5,12 @@ exports.puzzle = P = {
     parseCrates: C => C.map(c => c.match(/.{3,4}/g).map(d => d.replace(/[ \[\]]/g, ''))),
 
     transposeCrates: C => C[0].reduce((a, _, c) => {
-            a[c] = C.reduce((b, _, r) => {
-                b[C.length - r - 1] = C[r][c]
-                return b
-            }, []).filter(E => E)
-            return a
-        }, []),
+        a[c] = C.reduce((b, _, r) => {
+            b[C.length - r - 1] = C[r][c]
+            return b
+        }, []).filter(E => E)
+        return a
+    }, []),
 
     parseMoves: M => M
         .map(m => m.split(/move | from | to /).slice(1).map(o => Number.parseInt(o)))
