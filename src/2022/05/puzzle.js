@@ -4,17 +4,17 @@ exports.puzzle = P = {
 
     parseCrates: C => C.map(c => c.match(/.{3,4}/g).map(d => d.replace(/[ \[\]]/g, ''))),
 
-    transposeCrates: C => {
-        const o = C[0].map(c => [])
-        for (let c = 0; c < o.length; c++)
-            for (let r = C.length - 1; r >= 0; r--)
-                o[c][r] = C[r][c]
-        return o.map(D => D.reverse().filter(E => E))
-    },
+    transposeCrates: C => C[0].reduce((a, _, c) => {
+            a[c] = C.reduce((b, _, r) => {
+                b[C.length - r - 1] = C[r][c]
+                return b
+            }, []).filter(E => E)
+            return a
+        }, []),
 
-    parseMoves: M => M.map(m => m.split(/(move | from | to )/))
-        .filter(n => n.length > 6)
-        .map(n => [n[2], n[4], n[6]].map(o => Number.parseInt(o))),
+    parseMoves: M => M
+        .map(m => m.split(/move | from | to /).slice(1).map(o => Number.parseInt(o)))
+        .filter(n => n.length > 0),
 
     move1: (C, M) => {
         for (let i = 0; i < M[0]; i++)
@@ -33,7 +33,7 @@ exports.puzzle = P = {
     process: (T, move) => (([c, m]) => {
         const d = P.transposeCrates(P.parseCrates(c.slice(0, c.length - 1)))
         P.parseMoves(m).forEach(n => move(d, n))
-        return d.map(d => d.pop()).join('')
+        return d.map(d => d.at(-1)).join('')
     })(P.prep(T)),
 
     part_1: T => P.process(T, P.move1),
