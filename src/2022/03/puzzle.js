@@ -12,9 +12,9 @@ exports.puzzle = P = {
         return result
     },
 
-    prep1: T => T.split('\n').map(L => [L.substring(0, L.length / 2), L.substring(L.length / 2)]),
+    prep1: T => T.trim().split('\n').map(L => [L.substring(0, L.length / 2), L.substring(L.length / 2)]),
 
-    prep2: T => P.group(T.split('\n'), 3),
+    prep2: T => P.group(T.trim().split('\n'), 3),
 
     prio: A => (C => C > 95 ? C - 96 : C - 38)(A.charCodeAt(0)),
 

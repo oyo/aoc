@@ -1,6 +1,6 @@
 exports.puzzle = P = {
 
-    prep: T => T.split('\n').map(L => [L.charCodeAt(0) - 64, L.charCodeAt(2) - 87]),
+    prep: T => T.trim().split('\n').map(L => [L.charCodeAt(0) - 64, L.charCodeAt(2) - 87]),
 
     score: p => p.map(r => r[0] + r[1] * 3).reduce((a, b) => a + b),
 

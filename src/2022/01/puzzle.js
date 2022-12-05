@@ -1,6 +1,6 @@
 exports.puzzle = P = {
 
-    prep: T => T.split('\n\n').map(L => L.split('\n').reduce((a, c) => a + Number.parseInt(c), 0)),
+    prep: T => T.trim().split('\n\n').map(L => L.split('\n').reduce((a, c) => a + Number.parseInt(c), 0)),
 
     part_1: T => Math.max.apply(null, P.prep(T)),
 
