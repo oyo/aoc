@@ -1,9 +1,6 @@
 exports.puzzle = P = {
 
-    prep: T => T.trim(),
-
-    different: (T, n) => {
-        const p = P.prep(T)
+    different: (p, n) => {
         let i = 0
         for (let f = 0; i < p.length - n && f !== n; i++)
             f = [...new Set(p.substring(i, i + n))].length
