@@ -2,7 +2,7 @@ exports.puzzle = P = {
 
     different: (p, n) => {
         let i = 0
-        for (let f = 0; i < p.length - n && f !== n; i++)
+        for (let f = 0; f !== n; i++)
             f = [...new Set(p.substring(i, i + n))].length
         return i + n - 1
     },
