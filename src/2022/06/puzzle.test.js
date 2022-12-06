@@ -10,4 +10,4 @@ const INPUT = [
 
 it('solves 1', () => INPUT.forEach(m => expect(puzzle.part_1(m[0])).toEqual(m[1])))
 
-it('solves 1', () => INPUT.forEach(m => expect(puzzle.part_2(m[0])).toEqual(m[2])))
+it('solves 2', () => INPUT.forEach(m => expect(puzzle.part_2(m[0])).toEqual(m[2])))
