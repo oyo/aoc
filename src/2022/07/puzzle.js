@@ -1,6 +1,6 @@
 exports.puzzle = P = {
 
-    createTree: T => {
+    tree: T => {
         const data = T.trim().split('\n')
         const root = { c: [{ n: '/', s: 0, c: [] }] }
         let node = root
@@ -21,37 +21,37 @@ exports.puzzle = P = {
                 ptr--;
             }
         }
-        P.sumTree(root.c[0])
+        P.sum(root.c[0])
         return root.c[0]
     },
 
-    sumTree: node => {
+    sum: node => {
         if (node.c)
             for (let i = 0; i < node.c.length; i++)
-                node.s += P.sumTree(node.c[i])
+                node.s += P.sum(node.c[i])
         return node.s
     },
 
-    dirsToDelete: (dirs, node) => {
+    dirs: (dirs, node) => {
         if (node.c) {
             dirs.push(node.s)
             for (let i = 0; i < node.c.length; i++)
-                P.dirsToDelete(dirs, node.c[i])
+                P.dirs(dirs, node.c[i])
         }
         return dirs
     },
 
-    part_1: T => P.dirsToDelete([], P.createTree(T))
-        .filter(v => v < 100000)
+    part_1: T => P.dirs([], P.tree(T))
+        .filter(v => v < 1e5)
         .reduce((a, b) => a + b),
 
     part_2: T =>
         (root =>
             (free =>
-                P.dirsToDelete([], root)
-                    .filter(v => free + v > 30000000)
+                P.dirs([], root)
+                    .filter(v => free + v > 3e7)
                     .sort((a, b) => a - b)[0]
-            )(70000000 - root.s)
-        )(P.createTree(T))
+            )(7e7 - root.s)
+        )(P.tree(T))
 
 }
