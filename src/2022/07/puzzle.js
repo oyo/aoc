@@ -45,11 +45,8 @@ exports.puzzle = P = {
         .filter(v => v < 1e5)
         .reduce((a, b) => a + b),
 
-    part_2: T =>
-        (root =>
-            P.dirs([], root)
-                .filter(v => 4e7 > root.s - v)
-                .sort((a, b) => a - b)[0]
-        )(P.tree(T))
+    part_2: T => (root => Math.min(
+        ...P.dirs([], root).filter(v => 4e7 > root.s - v)
+    ))(P.tree(T))
 
 }
