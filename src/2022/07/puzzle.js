@@ -2,15 +2,15 @@ exports.puzzle = P = {
 
     createTree: T => {
         const data = T.trim().split('\n')
-        const root = { c: [{ n: '/', s: 0, c: [] }], s: 0 }
+        const root = { c: [{ n: '/', s: 0, c: [] }] }
         let node = root
         for (let ptr = 0; ptr < data.length;) {
             const c = data[ptr++]
-            if (c.match(/^\$ cd /)) {
+            if (c.match(/^\$ cd/)) {
                 const td = c.substring(5)
                 node = td === '..' ? node.p : node.c.filter(n => n.n === td)[0]
             } else if (c.match(/^\$ ls/)) {
-                for (; ptr < data.length && !data[ptr].match(/^\$ /); ptr++) {
+                for (; ptr < data.length && !data[ptr].match(/^\$/); ptr++) {
                     const item = data[ptr].split(' ')
                     node.c.push(
                         item[0] === 'dir'
