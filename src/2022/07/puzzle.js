@@ -2,8 +2,18 @@ exports.puzzle = P = {
 
     prep: T => T.trim().split('\n'),
 
-    process: (node, data, ptr) => {
-        for (; ptr < data.length;) {
+    sumTree: node => {
+        if (node.c)
+            for (let i = 0; i < node.c.length; i++)
+                node.s += P.sumTree(node.c[i])
+        return node.s
+    },
+
+    createTree: T => {
+        const data = P.prep(T)
+        const root = { c: [{ n: '/', s: 0, c: [] }], s: 0 }
+        let node = root
+        for (let ptr = 0; ptr < data.length;) {
             const c = data[ptr++]
             if (c.match(/^\$ cd /)) {
                 const td = c.substring(5)
@@ -21,31 +31,8 @@ exports.puzzle = P = {
                 ptr--;
             }
         }
-    },
-
-    sumTree: node => {
-        if (node.c)
-            for (let i = 0; i < node.c.length; i++)
-                node.s += P.sumTree(node.c[i])
-        return node.s
-    },
-
-    createTree: T => {
-        P.root = { c: [{ n: '/', s: 0, c: [] }], s: 0 }
-        P.process(P.root, P.prep(T), 0)
-        P.sumTree(P.root)
-        return P.root
-    },
-
-    sumToDelete: (node) => {
-        let s = 0
-        if (node.c) {
-            if (node.s <= 100000)
-                s += node.s
-            for (let i = 0; i < node.c.length; i++)
-                s += P.sumToDelete(node.c[i])
-        }
-        return s
+        P.sumTree(root.c[0])
+        return root.c[0]
     },
 
     dirsToDelete: (dirs, node) => {
@@ -54,16 +41,20 @@ exports.puzzle = P = {
             for (let i = 0; i < node.c.length; i++)
                 P.dirsToDelete(dirs, node.c[i])
         }
+        return dirs
     },
 
-    part_1: T => P.sumToDelete(P.createTree(T)),
+    part_1: T => P.dirsToDelete([], P.createTree(T))
+        .filter(v => v < 100000)
+        .reduce((a, b) => a + b),
 
-    part_2: T => {
-        P.createTree(T)
-        const free = 70000000 - P.root.s
-        const dirs = []
-        P.dirsToDelete(dirs, P.root)
-        return dirs.filter(v => free + v > 30000000).sort((a, b) => a - b)[0]
-    }
+    part_2: T =>
+        (root =>
+            (free =>
+                P.dirsToDelete([], root)
+                    .filter(v => free + v > 30000000)
+                    .sort((a, b) => a - b)[0]
+            )(70000000 - root.s)
+        )(P.createTree(T))
 
 }
