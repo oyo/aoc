@@ -18,7 +18,7 @@ exports.puzzle = P = {
                             : { s: Number.parseInt(item[0]) }
                     )
                 }
-                ptr--;
+                ptr--
             }
         }
         P.sum(root.c[0])
@@ -47,11 +47,9 @@ exports.puzzle = P = {
 
     part_2: T =>
         (root =>
-            (free =>
-                P.dirs([], root)
-                    .filter(v => free + v > 3e7)
-                    .sort((a, b) => a - b)[0]
-            )(7e7 - root.s)
+            P.dirs([], root)
+                .filter(v => 4e7 > root.s - v)
+                .sort((a, b) => a - b)[0]
         )(P.tree(T))
 
 }
