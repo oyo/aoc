@@ -1,16 +1,7 @@
 exports.puzzle = P = {
 
-    prep: T => T.trim().split('\n'),
-
-    sumTree: node => {
-        if (node.c)
-            for (let i = 0; i < node.c.length; i++)
-                node.s += P.sumTree(node.c[i])
-        return node.s
-    },
-
     createTree: T => {
-        const data = P.prep(T)
+        const data = T.trim().split('\n')
         const root = { c: [{ n: '/', s: 0, c: [] }], s: 0 }
         let node = root
         for (let ptr = 0; ptr < data.length;) {
@@ -21,18 +12,24 @@ exports.puzzle = P = {
             } else if (c.match(/^\$ ls/)) {
                 for (; ptr < data.length && !data[ptr].match(/^\$ /); ptr++) {
                     const item = data[ptr].split(' ')
-                    if (item[0] === 'dir')
-                        node.c.push({ n: item[1], s: 0, p: node, c: [] })
-                    else {
-                        const size = Number.parseInt(item[0])
-                        node.c.push({ n: item[1], s: size, p: node })
-                    }
+                    node.c.push(
+                        item[0] === 'dir'
+                            ? { n: item[1], s: 0, p: node, c: [] }
+                            : { s: Number.parseInt(item[0]) }
+                    )
                 }
                 ptr--;
             }
         }
         P.sumTree(root.c[0])
         return root.c[0]
+    },
+
+    sumTree: node => {
+        if (node.c)
+            for (let i = 0; i < node.c.length; i++)
+                node.s += P.sumTree(node.c[i])
+        return node.s
     },
 
     dirsToDelete: (dirs, node) => {
