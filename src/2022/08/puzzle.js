@@ -1,11 +1,8 @@
-const { kebabCase } = require('lodash')
 exports.puzzle = P = {
 
     prep: T => T.trim().split('\n').map(L => L.split('').map(n => Number.parseInt(n))),
 
     visible: (p, y, x) => {
-        if (y === 0 || x === 0 || y === p.length - 1 || x === p[y].length - 1)
-            return true
         const v = p[y][x]
         let visible = true
         for (let iy = y - 1; iy >= 0 && visible; iy--)
