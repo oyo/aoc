@@ -186,12 +186,13 @@ class Scene extends QuadModel {
 		const cb = { r: 0.9, g: 0.9, b: 0.2 }
 		const cw = { r: 0.8, g: 0.4, b: 0.2 }
 		const dz = p.length, dz2 = dz >> 1
+		const by = p[b[0]][b[1]]
 		for (let z = 0; z < dz; z++) {
 			for (let x = 0; x < p[z].length; x++) {
 				const y = p[z][x]
-				this.cubeAt(x - dz2, y, z - dz2, z === b[0] && x === b[1] ? cb : c)
+				this.cubeAt(x - b[1], y-by, z - b[0], z === b[0] && x === b[1] ? cb : c)
 				for (let iy=y-1; iy>=0; iy-- )
-					this.cubeAt(x - dz2, iy, z - dz2, cw)
+					this.cubeAt(x - b[1], iy-by, z - b[0], cw)
 			}
 		}
 		this.fireSceneChanged()
@@ -246,7 +247,7 @@ let gl
 class Simple3D {
 
 	cam = { fov: 50 }
-	pos = { x: 0, y: 8, z: -25 }
+	pos = { x: -0.5, y: -0.5, z: -8 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
 	col = { r: 0.7, g: 0.85, b: 1, a: 1 } //{ r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
@@ -401,7 +402,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -34, v: 18, w: 36, max: 70 }
+	mouse = { button: false, x: 0, y: 0, u: -38, v: 12, w: 12, max: 70 }
 	keyMask = 0
 	listener = []
 
