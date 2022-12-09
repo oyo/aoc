@@ -17,39 +17,9 @@ exports.puzzle = P = {
         console.log(s + '\n')
     },
 
-    part_1: T => {
+    process: (T, N) => {
         const p = P.prep(T)
-        const h = [0, 0]
-        const t = [0, 0]
-        const b = []
-        for (let i = 0; i < p.length; i++) {
-            const m = p[i]
-            for (let n = 0; n < m[1]; n++) {
-                switch (m[0]) {
-                    case 'R': h[0]++; break;
-                    case 'L': h[0]--; break;
-                    case 'U': h[1]++; break;
-                    case 'D': h[1]--; break;
-                }
-                const dx = h[0] - t[0]
-                const dy = h[1] - t[1]
-                if (dx > 1 && dy > 1) { t[0]++; t[1]++ }
-                else if (dx > 1 && dy < -1) { t[0]++; t[1]-- }
-                else if (dx < -1 && dy > 1) { t[0]--; t[1]++ }
-                else if (dx < -1 && dy < -1) { t[0]--; t[1]-- }
-                else if (dx > 1) { t[0]++; t[1] = h[1] }
-                else if (dx < -1) { t[0]--; t[1] = h[1] }
-                else if (dy > 1) { t[1]++; t[0] = h[0] }
-                else if (dy < -1) { t[1]--; t[0] = h[0] }
-                b.push(t[0] * 1000 + t[1])
-            }
-        }
-        return [...new Set(b)].length
-    },
-
-    part_2: T => {
-        const p = P.prep(T)
-        const r = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+        const r = new Array(N).fill(0).map(n => [0,0])
         const b = []
         for (let i = 0; i < p.length; i++) {
             const m = p[i]
@@ -61,7 +31,7 @@ exports.puzzle = P = {
                     case 'U': h[1]++; break;
                     case 'D': h[1]--; break;
                 }
-                for (let k = 1; k < r.length; k++) {
+                for (let k = 1; k < N; k++) {
                     let h = r[k - 1]
                     let t = r[k]
                     const dx = h[0] - t[0]
@@ -75,10 +45,14 @@ exports.puzzle = P = {
                     else if (dy > 1) { t[1]++; t[0] = h[0] }
                     else if (dy < -1) { t[1]--; t[0] = h[0] }
                 }
-                b.push(r[9][0] * 1000 + r[9][1])
+                b.push(r[N-1][0] * 1000 + r[N-1][1])
             }
         }
         return [...new Set(b)].length
-    }
+    },
+
+    part_1: T => P.process(T, 2),
+
+    part_2: T => P.process(T, 10)
 
 }
