@@ -61,7 +61,7 @@ const P = {
 			T = P.T
 		else
 			P.T = T
-		P.N = N = 10
+		P.N = N = 20
 		P.p = P.prep(T)
 		P.count = 0
 		P.move = 'R'
