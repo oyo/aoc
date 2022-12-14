@@ -33,7 +33,7 @@ exports.puzzle = P = {
         return b
     },
 
-    drop: b => {
+    drop1: b => {
         let x = 500 - P.X0
         let y = 0
         let fall = true
@@ -52,19 +52,39 @@ exports.puzzle = P = {
                 }
             }
             b[y][x] = 'o'
-            return y !== 1
+            return y !== 0
         } catch (e) {
             return false
         }
     },
 
+    drop2: b => {
+        let x = 500 - P.X0
+        let y = 0
+        let fall = true
+        for (; fall && y <= b.length;) {
+            if (b[y + 1][x] === '.') {
+                y++
+            } else if (b[y + 1][x - 1] === '.') {
+                y++
+                x--
+            } else if (b[y + 1][x + 1] === '.') {
+                y++
+                x++
+            } else {
+                fall = false
+            }
+        }
+        b[y][x] = 'o'
+        return y !== 0
+    },
+
     part_1: T => {
         P.X0 = 490
         P.W = 80
-        const ps = P.prep(T)
-        const b = P.createMap(ps)
+        const b = P.createMap(P.prep(T))
         let n = 0
-        for (; P.drop(b); n++)
+        for (; P.drop1(b); n++)
             ;
         P.dump(b)
         return n
@@ -73,10 +93,9 @@ exports.puzzle = P = {
     part_2: T => {
         P.X0 = 320
         P.W = 360
-        const ps = P.prep(T)
-        const b = P.createMap(ps, true)
+        const b = P.createMap(P.prep(T), true)
         let n = 0
-        for (; P.drop(b); n++)
+        for (; P.drop2(b); n++)
             ;
         P.dump(b)
         return n + 1
