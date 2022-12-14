@@ -33,45 +33,29 @@ exports.puzzle = P = {
         return b
     },
 
-    drop1: b => {
+    drop: b => {
         let x = 500 - P.X0
         let y = 0
         let fall = true
-        for (; fall;) {
-            if (b[y + 1][x] === '.') {
-                y++
-            } else if (b[y + 1][x - 1] === '.') {
-                y++
-                x--
-            } else if (b[y + 1][x + 1] === '.') {
-                y++
-                x++
-            } else {
-                fall = false
+        try {
+            for (; fall && y <= b.length;) {
+                if (b[y + 1][x] === '.') {
+                    y++
+                } else if (b[y + 1][x - 1] === '.') {
+                    y++
+                    x--
+                } else if (b[y + 1][x + 1] === '.') {
+                    y++
+                    x++
+                } else {
+                    fall = false
+                }
             }
+            b[y][x] = 'o'
+            return y !== 1
+        } catch (e) {
+            return false
         }
-        b[y][x] = 'o'
-    },
-
-    drop2: b => {
-        let x = 500 - P.X0
-        let y = 0
-        let fall = true
-        for (; fall && y <= b.length;) {
-            if (b[y + 1][x] === '.') {
-                y++
-            } else if (b[y + 1][x - 1] === '.') {
-                y++
-                x--
-            } else if (b[y + 1][x + 1] === '.') {
-                y++
-                x++
-            } else {
-                fall = false
-            }
-        }
-        b[y][x] = 'o'
-        return y !== 0
     },
 
     part_1: T => {
@@ -80,16 +64,10 @@ exports.puzzle = P = {
         const ps = P.prep(T)
         const b = P.createMap(ps)
         let n = 0
-        let nof = true
-        for (; nof; n++) {
-            try {
-                P.drop1(b)
-            } catch (e) {
-                nof = false
-            }
-        }
+        for (; P.drop(b); n++)
+            ;
         P.dump(b)
-        return n - 1
+        return n
     },
 
     part_2: T => {
@@ -98,7 +76,7 @@ exports.puzzle = P = {
         const ps = P.prep(T)
         const b = P.createMap(ps, true)
         let n = 0
-        for (; P.drop2(b); n++)
+        for (; P.drop(b); n++)
             ;
         P.dump(b)
         return n + 1
