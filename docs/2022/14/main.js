@@ -57,7 +57,11 @@ const P = {
 	getData: () => P.b,
 
 	step: () => {
-		P.drop(P.b)
+		const n = Math.floor(P.count/1000) + 1
+		for (let s=0; s<n; s++) {
+			P.drop(P.b)
+			P.count++
+		}
 	},
 
 	init: T => {
@@ -66,6 +70,7 @@ const P = {
 			T = P.T
 		else
 			P.T = T
+		P.count = 0
 		P.X0 = 320
 		P.W = 360
 		P.b = P.createMap(P.prep(T), true)	
