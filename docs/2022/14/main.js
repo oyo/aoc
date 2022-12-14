@@ -175,7 +175,7 @@ class Scene extends QuadModel {
 			for (let x=0; x<data[y].length; x++) {
 				const d = data[y][x]
 				if (d!=='.')
-					this.cubeAt(x-dx2, dy2-y, 0, d==='#' ? cb : cs)
+					this.cubeAt(x-dx2-25, dy2-y, 0, d==='#' ? cb : cs)
 			}
 		this.fireSceneChanged()
 	}
@@ -229,7 +229,7 @@ let gl
 class Simple3D {
 
 	cam = { fov: 50 }
-	pos = { x: -25, y: 0, z: -100 }
+	pos = { x: 0, y: 0, z: -100 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
 	col = { r: 0.7, g: 0.9, b: 1, a: 1 } //{ r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
