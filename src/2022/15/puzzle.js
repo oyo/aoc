@@ -6,7 +6,7 @@ exports.puzzle = P = {
         .map(L => L.split(/[^-\d]+/).slice(1).map(N => Number.parseInt(N)))
         .map(a => a.concat([Math.abs(a[0] - a[2]) + Math.abs(a[1] - a[3])])),
 
-    noBatY: (y, a) => (d => [a[0] - d, a[0] + d])(a[4] - Math.abs(y - a[1])),
+    exclude: (y, a) => (d => [a[0] - d, a[0] + d])(a[4] - Math.abs(y - a[1])),
 
     intersect: (a, b) =>
         (a[0] + 1 >= b[0] && a[0] - 1 <= b[1]) ||
@@ -16,25 +16,25 @@ exports.puzzle = P = {
         ? [Math.min(a[0], b[0]), Math.max(a[1], b[1])]
         : false,
 
-    intersectAny: (p0, s) => {
+    intersectAny: (p, s) => {
         let l0 = 0, l1 = 1
         while (l0 !== l1) {
             l0 = s.length
             for (let i = 0; i < s.length; i++) {
-                const inter = P.intersect(p0, s[i])
-                if (inter) {
-                    p0 = inter
+                const c = P.intersect(p, s[i])
+                if (c) {
+                    p = c
                     s.splice(i--, 1)
                 }
             }
             l1 = s.length
         }
-        return [...s, p0]
+        return [...s, p]
     },
 
     scan: (p, y) => {
-        let s = p.map(a => P.noBatY(y, a)).filter(b => b[0] <= b[1])
-        for (let r = 0; r < 2; r++)
+        let s = p.map(a => P.exclude(y, a)).filter(b => b[0] <= b[1])
+        for (let r = 0; r < 2 && s.length > 1; r++)
             s = P.intersectAny(s.shift(), s)
         return [y, s]
     },
