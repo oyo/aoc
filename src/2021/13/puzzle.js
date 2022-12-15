@@ -99,6 +99,7 @@ exports.puzzle = P = {
         // return P.toString(P.populate(d))
 
         // 2. parse the coordinates to letters
+        console.log(d)
         return P.parse(d)
 
         // 3. detect code using ocr image recognition (slow)
