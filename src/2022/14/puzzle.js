@@ -86,7 +86,7 @@ exports.puzzle = P = {
         let n = 0
         for (; P.drop1(b); n++)
             ;
-        P.dump(b)
+        //P.dump(b)
         return n
     },
 
@@ -97,7 +97,7 @@ exports.puzzle = P = {
         let n = 0
         for (; P.drop2(b); n++)
             ;
-        P.dump(b)
+        //P.dump(b)
         return n + 1
     }
 
