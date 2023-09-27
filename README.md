@@ -6,13 +6,15 @@ Helper utils and solutions for AoC
 ### Setup
 
 Install node and yarn then use yarn to install the required packages.
-Show the help message and try to run the first example 01/2015 and check the tests.
+Run some tests.
+Show the help message and try to run the first example 01/2015.
 
     brew install node yarn
     yarn install
+    yarn test 2020
     yarn solve help
+    export AOC_COOKIE=<see below how to get your AoC cookie>
     yarn solve 0 1 2015
-    yarn test
     yarn all
 
 

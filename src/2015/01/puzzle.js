@@ -1,23 +1,13 @@
-const _ = require('lodash');
-
 exports.puzzle = {
 
-    part_1: T => {
-        let floor = 0
-        _.each(T, c => floor += c==='(' ? 1 : -1)
-        return floor
-    },
+    part_1: T => T.split('').reduce((a, c) => a + (c === '(' ? 1 : -1), 0),
 
-    part_2: T => {
-        let floor = 0
-        let pos = 0
-        _.each(T, (c, i) => {
-            if ((floor += c==='(' ? 1 : -1) === -1) {
-                pos = i+1
-                return false
-            }
-        })
-        return pos
-    }
+    part_2: T => T.split('').reduce((a, c, i) => {
+        if (a[0] && (a[1] += c === '(' ? 1 : -1) === -1) {
+            a[2] = i + 1
+            a[0] = false
+        }
+        return a
+    }, [true, 0, 0])[2]
 
 }
