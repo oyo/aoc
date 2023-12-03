@@ -25,23 +25,21 @@ exports.puzzle = P = {
         ),
 
     part_1: T => P.prep(T)
-        .filter(s => s.slice(1).reduce((a, c) => a && (c[0] < 13 && c[1] < 14 && c[2] < 15), true))
-        .reduce((a, c) => a + N(c[0]), 0),
+        .filter(s => s.slice(1).reduce(
+            (a, c) => a && (c[0] < 13 && c[1] < 14 && c[2] < 15), true)
+        ).reduce((a, c) => a + N(c[0]), 0),
 
-    part_2: T => {
-        const p = P.prep(T).map(
-            g => g.slice(1).reduce(
-                (a, c) => {
-                    a[0].push(c[0])
-                    a[1].push(c[1])
-                    a[2].push(c[2])
-                    return a
-                }, [[], [], []]
-            )
-        ).reduce(
-            (a, c) => a + M(c[0]) * M(c[1]) * M(c[2]), 0
+    part_2: T => P.prep(T).map(
+        g => g.slice(1).reduce(
+            (a, c) => {
+                a[0].push(c[0])
+                a[1].push(c[1])
+                a[2].push(c[2])
+                return a
+            }, [[], [], []]
         )
-        return p
-    }
+    ).reduce(
+        (a, c) => a + M(c[0]) * M(c[1]) * M(c[2]), 0
+    )
 
 }
