@@ -1,4 +1,5 @@
 const N = Number.parseInt
+const wins = c => c[0].filter(value => c[1].includes(value))
 
 exports.puzzle = P = {
 
@@ -7,10 +8,18 @@ exports.puzzle = P = {
     ),
 
     part_1: T => P.prep(T)
-        .map(c => c.length === 2 ? c[0].filter(value => c[1].includes(value)) : [])
+        .map(wins)
         .filter(r => r.length > 0)
         .reduce((a, c) => a + 2 ** (c.length - 1), 0),
 
-    part_2: T => P.prep(T)
-
+    part_2: T => {
+        const s = P.prep(T).map(c => c.concat([1]))
+        for (let cards = 0, v = 0; (cards = wins(s[v]).length) > 0 && v<s.length; v++) {
+            for (let vw = 1; vw <= cards; vw++) {
+                s[v+vw][2] += s[v][2]
+            }
+            console.log(s.map(r => r[2]))
+        }
+        return s.reduce((a, c) => a+c[2], 0)
+    }
 }

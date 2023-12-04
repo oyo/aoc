@@ -10,4 +10,4 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11`
 
 it('solves 1', () => expect(puzzle.part_1(INPUT)).toEqual(13))
 
-//it('solves 2', () => expect(puzzle.part_2(INPUT)).toEqual(2))
+it('solves 2', () => expect(puzzle.part_2(INPUT)).toEqual(30))
