@@ -1,64 +1,64 @@
 const P = {
 
-    prep: T => T.trim().split('\n').map(L => L.split(' -> ').map(L => L.split(',').map(N => Number.parseInt(N)))),
+	prep: T => T.trim().split('\n').map(L => L.split(' -> ').map(L => L.split(',').map(N => Number.parseInt(N)))),
 
-    maxY: ps => Math.max(...ps.flat(2).filter((_, i) => i % 2 !== 0)),
+	maxY: ps => Math.max(...ps.flat(2).filter((_, i) => i % 2 !== 0)),
 
-    dump: b => console.log(b.map(r => r.join('')).join('\n')),
+	dump: b => console.log(b.map(r => r.join('')).join('\n')),
 
-    drawPath: (b, p) => {
-        for (let i = 1; i < p.length; i++) {
-            let x = x0 = p[i - 1][0]
-            let y = y0 = p[i - 1][1]
-            b[y][x - P.X0] = '#'
-            let x1 = p[i][0]
-            let y1 = p[i][1]
-            let hv = x0 === x1
-            let s = hv ? (y0 > y1 ? -1 : 1) : (x0 > x1 ? -1 : 1)
-            if (hv)
-                for (; y !== y1; y += s)
-                    b[y][x - P.X0] = '#'
-            else
-                for (; x !== x1; x += s)
-                    b[y][x - P.X0] = '#'
-            b[y][x - P.X0] = '#'
-        }
-    },
+	drawPath: (b, p) => {
+		for (let i = 1; i < p.length; i++) {
+			let x = x0 = p[i - 1][0]
+			let y = y0 = p[i - 1][1]
+			b[y][x - P.X0] = '#'
+			let x1 = p[i][0]
+			let y1 = p[i][1]
+			let hv = x0 === x1
+			let s = hv ? (y0 > y1 ? -1 : 1) : (x0 > x1 ? -1 : 1)
+			if (hv)
+				for (; y !== y1; y += s)
+					b[y][x - P.X0] = '#'
+			else
+				for (; x !== x1; x += s)
+					b[y][x - P.X0] = '#'
+			b[y][x - P.X0] = '#'
+		}
+	},
 
-    createMap: (ps, bottom) => {
-        const b = new Array(P.maxY(ps) + 2).fill().map(n => new Array(P.W).fill('.').slice())
-        if (bottom)
-            b.push(new Array(P.W).fill('#').slice())
-        ps.forEach(p => P.drawPath(b, p))
-        return b
-    },
+	createMap: (ps, bottom) => {
+		const b = new Array(P.maxY(ps) + 2).fill().map(n => new Array(P.W).fill('.').slice())
+		if (bottom)
+			b.push(new Array(P.W).fill('#').slice())
+		ps.forEach(p => P.drawPath(b, p))
+		return b
+	},
 
-    drop: b => {
-        let x = 500 - P.X0
-        let y = 0
-        let fall = true
-        for (; fall && y <= b.length;) {
-            if (b[y + 1][x] === '.') {
-                y++
-            } else if (b[y + 1][x - 1] === '.') {
-                y++
-                x--
-            } else if (b[y + 1][x + 1] === '.') {
-                y++
-                x++
-            } else {
-                fall = false
-            }
-        }
-        b[y][x] = 'o'
-        return y !== 0
-    },
+	drop: b => {
+		let x = 500 - P.X0
+		let y = 0
+		let fall = true
+		for (; fall && y <= b.length;) {
+			if (b[y + 1][x] === '.') {
+				y++
+			} else if (b[y + 1][x - 1] === '.') {
+				y++
+				x--
+			} else if (b[y + 1][x + 1] === '.') {
+				y++
+				x++
+			} else {
+				fall = false
+			}
+		}
+		b[y][x] = 'o'
+		return y !== 0
+	},
 
 	getData: () => P.b,
 
 	step: () => {
-		const n = Math.floor(P.count/1000) + 1
-		for (let s=0; s<n; s++) {
+		const n = Math.floor(P.count / 1000) + 1
+		for (let s = 0; s < n; s++) {
 			P.drop(P.b)
 			P.count++
 		}
@@ -73,7 +73,7 @@ const P = {
 		P.count = 0
 		P.X0 = 320
 		P.W = 360
-		P.b = P.createMap(P.prep(T), true)	
+		P.b = P.createMap(P.prep(T), true)
 		return P
 	}
 
@@ -95,7 +95,7 @@ class QuadModel {
 	}
 
 	quadXM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const y1 = y + 1, z1 = z + 1, f = this.shade.xm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y, z1, x, y1, z1, x, y, z, x, y1, z1, x, y1, z)
 		for (let i = 0; i < 6; i++)
@@ -103,7 +103,7 @@ class QuadModel {
 	}
 
 	quadXP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const y1 = y + 1, z1 = z + 1, f = this.shade.xp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z1, x, y, z1, x, y, z, x, y1, z, x, y1, z1)
 		for (let i = 0; i < 6; i++)
@@ -111,7 +111,7 @@ class QuadModel {
 	}
 
 	quadYM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, z1 = z + 1, f = this.shade.ym, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z, x1, y, z1, x, y, z, x1, y, z1, x, y, z1)
 		for (let i = 0; i < 6; i++)
@@ -119,7 +119,7 @@ class QuadModel {
 	}
 
 	quadYP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, z1 = z + 1, f = this.shade.yp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z1, x1, y, z, x, y, z, x, y, z1, x1, y, z1)
 		for (let i = 0; i < 6; i++)
@@ -127,7 +127,7 @@ class QuadModel {
 	}
 
 	quadZM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, y1 = y + 1, f = this.shade.zm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z, x1, y1, z, x, y, z, x1, y1, z, x1, y, z)
 		for (let i = 0; i < 6; i++)
@@ -135,7 +135,7 @@ class QuadModel {
 	}
 
 	quadZP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, y1 = y + 1, f = this.shade.zp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y1, z, x, y1, z, x, y, z, x1, y, z, x1, y1, z)
 		for (let i = 0; i < 6; i++)
@@ -176,11 +176,11 @@ class Scene extends QuadModel {
 		const cb = { r: 0.8, g: 0.8, b: 0.8 }
 		const cs = { r: 0.8, g: 0.5, b: 0.2 }
 		const dy = data.length, dy2 = dy >> 1, dx2 = data[0].length >> 1
-		for (let y=0; y<data.length; y++)
-			for (let x=0; x<data[y].length; x++) {
+		for (let y = 0; y < data.length; y++)
+			for (let x = 0; x < data[y].length; x++) {
 				const d = data[y][x]
-				if (d!=='.')
-					this.cubeAt(x-dx2-25, dy2-y, 0, d==='#' ? cb : cs)
+				if (d !== '.')
+					this.cubeAt(x - dx2 - 25, dy2 - y, 0, d === '#' ? cb : cs)
 			}
 		this.fireSceneChanged()
 	}
@@ -418,7 +418,7 @@ class UserInput {
 			default: return
 		}
 		var mouseEvent = document.createEvent('MouseEvent')
-		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX<<1, touch.screenY<<1, touch.clientX<<1, touch.clientY<<1, false, false, false, false, 0, null)
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX << 1, touch.screenY << 1, touch.clientX << 1, touch.clientY << 1, false, false, false, false, 0, null)
 		touch.target.dispatchEvent(mouseEvent)
 		evt.preventDefault()
 	}
