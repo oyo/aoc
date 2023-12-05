@@ -14,12 +14,13 @@ exports.puzzle = P = {
 
     part_2: T => {
         const s = P.prep(T).map(c => c.concat([1]))
-        for (let cards = 0, v = 0; (cards = wins(s[v]).length) > 0 && v<s.length; v++) {
+        for (let v = 0; v < s.length; v++) {
+            const cards = wins(s[v]).length
             for (let vw = 1; vw <= cards; vw++) {
-                s[v+vw][2] += s[v][2]
+                s[v + vw][2] += s[v][2]
             }
             console.log(s.map(r => r[2]))
         }
-        return s.reduce((a, c) => a+c[2], 0)
+        return s.reduce((a, c) => a + c[2], 0)
     }
 }
