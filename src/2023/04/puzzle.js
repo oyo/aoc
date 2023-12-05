@@ -21,7 +21,6 @@ exports.puzzle = P = {
             for (let vw = 1; vw <= cards; vw++) {
                 s[v + vw][2] += s[v][2]
             }
-            console.log(s.map(r => r[2]))
         }
         return s.reduce((a, c) => a + c[2], 0)
     }
