@@ -4,7 +4,9 @@ const wins = c => c[0].filter(value => c[1].includes(value))
 exports.puzzle = P = {
 
     prep: T => T.trim().split('\n').map(
-        L => L.split(/(Card\s+\d+: | \| )/).filter(l => l.match(/^(\s*\d+\s*)+$/g)).map(n => n.trim().split(/\s+/g).map(n => N(n)))
+        L => L.split(/(Card\s+\d+: | \| )/)
+            .filter(l => l.match(/^(\s*\d+\s*)+$/g))
+            .map(n => n.trim().split(/\s+/g).map(n => N(n)))
     ),
 
     part_1: T => P.prep(T)
