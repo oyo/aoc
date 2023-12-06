@@ -9,13 +9,15 @@ exports.puzzle = P = {
         .map(L => N(L.split(/\s+/).slice(1).join(''))),
 
     race: r => {
-        let w = 0
-        for (let h = 1; h < r[0]; h++) {
-            const d = (r[0]-h) * h
-            if (d > r[1])
-                ++w
-        }
-        return w
+        let hmin = 0
+        let hmax = 0
+        for (let h = 1; h < r[0] && hmin === 0; h++)
+            if ((r[0]-h) * h > r[1])
+                hmin = h
+        for (let h = r[0]-1; h > 0 && hmax === 0; h--)
+            if ((r[0]-h) * h > r[1])
+                hmax = h
+        return 1 + hmax - hmin
     },
 
     part_1: T => (
