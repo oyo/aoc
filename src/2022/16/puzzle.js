@@ -24,18 +24,19 @@ exports.puzzle = P = {
 
     part_1: T => {
         const p = P.prep(T)
-        console.log(p)
+        return '-'
+        //console.log(p)
         const N = new Map()
         p.forEach(v => N.set(v[0], v))
-        console.log(N)
+        //console.log(N)
         //const E = new Map()
         //p.forEach(v => E.set(v, v[2].map(w => [w,  N.get(w)[1]])))
         //console.log(E)
         //const F = E.sort((a,b) => b[0]-a[1])
         //console.log(F)
         const paths = P.traverse(N, [], [0, 'AA'])
-        console.log(paths)
-        return p
+        //console.log(paths)
+        return '-'
     },
 
     part_2: T => {
