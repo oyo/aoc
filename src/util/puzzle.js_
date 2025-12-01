@@ -1,5 +1,4 @@
-const _ = require('lodash')
-const N = Number.parseInt
+const N = n => Number.parseInt(n)
 
 exports.puzzle = P = {
 
