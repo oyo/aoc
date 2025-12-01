@@ -6,26 +6,42 @@ Helper utils and solutions for AoC
 ### Setup
 
 Install node and yarn then use yarn to install the required packages.
-Run some tests.
-Show the help message and try to run the first example 01/2015.
 
     brew install node yarn
     yarn install
-    yarn test 2020
+
+Run all tests or specify year or day
+
+    yarn test
+    yarn test 2025
+    yarn test 2025/01
+
+Show the help message and try to run the first example 01/2015.
+
     yarn solve help
     export AOC_COOKIE=<see below how to get your AoC cookie>
     yarn solve 0 1 2015
-    yarn all
+
+During an ongoing competition, this will create the puzzle
+boilerplate code and download your input for the current day
+
+    yarn solve
+
+and after you have filled it with a working solution this will
+run and submit the first part, etc...
+
+    yarn solve 1
 
 
 ### Prepare automatic download
 
 In order to run a real example with automatic input download follow these steps.
 Sign in from your browser and use the developer tools to retrieve your AoC session cookie.
-In Chrome open https://adventofcode.com/ an sign in, press "Ctrl-Shift-I" or "Command-Option-I" (Mac),
-select "network", reload the page, select the first entry and scroll down to the "Request Headers"
-section and find the value for "cookie". There you copy the string starting with "session=" until the
-next semicolon. Set this as environment variable AOC_COOKIE.
+In Chrome open https://adventofcode.com/ and [log in], then open the developer tools by
+pressing "Ctrl-Shift-I" or "Command-Option-I" (Mac), select "network", reload the page,
+select the first entry and scroll down to the "Request Headers" section and find the value
+for "cookie". There you copy the string starting with "session=" until the next semicolon.
+Set this as environment variable AOC_COOKIE.
 
     export AOC_COOKIE='session=34543c7465645f5fdf...4e436254bca92710;'
     curl https://adventofcode.com/2015/day/1/input --cookie $AOC_COOKIE
