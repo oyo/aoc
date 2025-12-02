@@ -4,10 +4,7 @@ exports.puzzle = P = {
 
     prep: T => T.trim().replaceAll('L', '-').replaceAll('R', '').split('\n').map(N),
 
-    stop0: (a, c) =>
-        (a[0] = (a[0] + c) % 100) === 0
-            ? (a[1]++, a)
-            : a,
+    stop0: (a, c) => (a[1] += !(a[0] = (a[0] + c) % 100), a),
 
     pass0: (a, c) => {
         a[1] += ~~(Math.abs(c) / 100)
