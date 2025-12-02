@@ -11,9 +11,10 @@ exports.puzzle = P = {
 
     pass0: (a, c) => {
         a[1] += ~~(Math.abs(c) / 100)
-        for (let i = 0; i < Math.abs(c % 100); i++)
-            if ((a[0] += Math.sign(c)) % 100 === 0)
-                a[1]++
+        const n = a[0] + c % 100
+        if (n > 99 || (n <= 0 && a[0] !== 0))
+            a[1]++
+        a[0] = (n + 100) % 100
         return a
     },
 
