@@ -4,15 +4,15 @@ exports.puzzle = P = {
 
     prep: T => T.trim().split('\n').map(L => L.split('').map(c => c === '@' ? 1 : 0)),
 
-    border: (p, n) => [Array(p[0].length + 2).fill(n)]
-        .concat(
-            p.map(r => [n].concat(r).concat([n]))
-        )
-        .concat(
-            [Array(p[0].length + 2).fill(n)]
-        ),
+    border: (p, n) => [
+        new Array(p[0].length + 2).fill(n),
+        ...p.map(r => [n, ...r, n]),
+        new Array(p[0].length + 2).fill(n)
+    ],
 
-    dup: b => new Array(b.length).fill(0).map((_, i) => new Array(b[i].length).fill(0)),
+    dup: (b, n) => new Array(b.length).fill(n).map(
+        (_, i) => new Array(b[i].length).fill(n)
+    ),
 
     //dump: b => console.log(b.map(r => r.join(' ').replaceAll('0', '.').replaceAll('1', '@')).join('\n')),
 
@@ -42,7 +42,7 @@ exports.puzzle = P = {
 
     part_2: T => {
         let p = P.border(P.prep(T), 0)
-        p = [p, P.dup(p)]
+        p = [p, P.dup(p, 0)]
         let s = 0
         for (
             let a = 1, q = p.shift(), r = p[0];
