@@ -13,6 +13,6 @@ const INPUT =
 17
 32`
 
-//it('solves 1', () => expect(puzzle.part_1(INPUT)).toEqual(3))
+it('solves 1', () => expect(puzzle.part_1(INPUT)).toEqual(3))
 
 it('solves 2', () => expect(puzzle.part_2(INPUT)).toEqual(14))
