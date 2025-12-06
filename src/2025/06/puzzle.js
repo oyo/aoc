@@ -1,9 +1,7 @@
 const N = n => Number.parseInt(n)
-const transpose = a => a[0].map((_, c) => a.map(r => r[c]))
+const transN = a => a[0].map((_, c) => a.map(r => N(r[c])))
 
 exports.puzzle = P = {
-
-    prep: T => T.trim().split('\n').map(L => L.trim().split(/ +/)),
 
     part_1: T => (
         p => (
@@ -15,9 +13,9 @@ exports.puzzle = P = {
 
                 ), 0)
         )(
-            p.pop(), transpose(p.map(l => l.map(N)))
+            p.pop(), transN(p)
         ))(
-            P.prep(T)
+            T.trim().split('\n').map(L => L.trim().split(/ +/))
         ),
 
     part_2: T => {
