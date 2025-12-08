@@ -211,7 +211,9 @@ class Scene extends QuadModel {
 	create() {
 		this.clear()
 		const data = this.model.getData()
-		console.log(data)
+		const s = new Set(data.r.map(x => [...x]).flat())
+		//console.log(data)
+		const cl = { r: 1, g: 1, b: 0.4 }
 		const cs = { r: 0.8, g: 0.5, b: 0.2 }
 		for (let i = 0; i < data.i; i++) {
 			//console.log(data.s[i])
@@ -227,7 +229,7 @@ class Scene extends QuadModel {
 		}
 		for (let c = 0; c < data.p.length; c++) {
 				const d = data.p[c]
-				this.cubeAt((d[0] - 50000)/1000 -0.5, (d[1] - 50000)/1000 -0.5, (d[2] - 50000)/1000 -0.5, cs)
+				this.cubeAt((d[0] - 50000)/1000 -0.5, (d[1] - 50000)/1000 -0.5, (d[2] - 50000)/1000 -0.5, s.has(c) ? cl : cs)
 		}
 		this.fireSceneChanged()
 	}
