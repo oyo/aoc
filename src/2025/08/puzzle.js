@@ -9,12 +9,9 @@ exports.puzzle = P = {
     part_1: (T, n = 1000) => {
         const p = P.prep(T)
         let q = []
-        for (let i = 0; i < p.length; i++) {
-            for (let j = i + 1; j < p.length; j++) {
-                let d = dist(p[i], p[j])
-                q.push([d, i, j])
-            }
-        }
+        for (let i = 0; i < p.length; i++)
+            for (let j = i + 1; j < p.length; j++)
+                q.push([dist(p[i], p[j]), i, j])
         const s = q.sort((a, b) => a[0] - b[0])
         const r = []
         for (let i = 0; i < n; i++) {
@@ -38,14 +35,10 @@ exports.puzzle = P = {
 
     part_2: T => {
         const p = P.prep(T)
-        let m = 1e9
         let q = []
-        for (let i = 0; i < p.length; i++) {
-            for (let j = i + 1; j < p.length; j++) {
-                let d = dist(p[i], p[j])
-                q.push([d, i, j])
-            }
-        }
+        for (let i = 0; i < p.length; i++)
+            for (let j = i + 1; j < p.length; j++)
+                q.push([dist(p[i], p[j]), i, j])
         const s = q.sort((a, b) => a[0] - b[0])
         const r = []
         let z = 0
@@ -70,6 +63,6 @@ exports.puzzle = P = {
             }
         }
         return z
-    },
+    }
 
 }

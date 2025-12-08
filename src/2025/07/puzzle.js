@@ -32,6 +32,11 @@ exports.puzzle = P = {
         return s
     },
 
+    // TODO:
+    // 1. not getting expected result for test input
+    // 2. out of memory for actual input - need to optimize:
+    //    a. only store previous row
+    //    a. use a DAG and calculate total number of paths
     part_2: T => {
         const p = P.prep(T)
         dump(p)
