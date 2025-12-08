@@ -51,7 +51,7 @@ exports.puzzle = P = {
             b.push([...by])
             c.push(cy)
         }
-        return c[p.length - 1].reduce((a, b) => a + b, 0)
+        return c.pop().reduce((a, b) => a + b, 0)
     }
 
 }
