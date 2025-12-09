@@ -211,9 +211,10 @@ class Scene extends QuadModel {
 		this.clear()
 		let { data, max1, max2 } = this.model.getData()
 		//console.log(max1, max2)
+		const cl = { r: .9, g: .9, b: .9 }
 		const cr = { r: .8, g: .2, b: .2 }
 		const cg = { r: .1, g: .5, b: .1 }
-		const cs = { r: .8, g: .5, b: .2 }
+		const cs = { r: .8, g: .5, b: .1 }
 		data = data.map(p => p.map(a => (a - 50000)/1000))
 		data.forEach((p,i) => {
 			const [y, x] = p
@@ -240,6 +241,8 @@ class Scene extends QuadModel {
 		this.cubeAt(x11, y11, 1, cs)
 		this.cubeAt(x20, y20, 2, cs)
 		this.cubeAt(x21, y21, 2, cs)
+
+		data.forEach(([y,x]) => this.cubeAt(x,y, -1, cl))
 		
 		this.fireSceneChanged()
 	}
@@ -292,8 +295,8 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
-	cam = { fov: 50 }
-	pos = { x: 0, y: 0, z: -30 }
+	cam = { fov: 16 }
+	pos = { x: 0, y: 0, z: -300 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
 	col = { r: 0.7, g: 0.9, b: 1, a: 1 } //{ r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
