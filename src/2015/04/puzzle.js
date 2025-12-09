@@ -1,17 +1,16 @@
-const crypto = require('crypto');
+const crypto = require('crypto')
 
-const P = {
+exports.puzzle = P = {
 
     hash: (T, l) => {
+        T = T.trim()
+        const p = new RegExp('^0{' + l + '}')
         const h = v => crypto.createHash('md5').update(v).digest('hex')
-        const z = new Array(l).fill('0').join('')
         let n = 0
-        while (true) {
-            const m = h(T + ++n)
-            if (m.substr(0,l) === z)
-                break;
-        }
-        return n;
+        while (true)
+            if (p.test(h(T + ++n)))
+                break
+        return n
     },
 
     part_1: T => P.hash(T, 5),
@@ -19,5 +18,3 @@ const P = {
     part_2: T => P.hash(T, 6)
 
 }
-
-exports.puzzle = P
