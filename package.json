@@ -12,7 +12,7 @@
     "requirements-check": "node src/util/check-version.js",
     "use-latest": "export PATH=$(echo $PATH | sed -e 's/node@14/node@17/')",
     "test": "jest",
-    "all": "node src/run",
+    "all": "node src/util/run",
     "solve": "NODE_OPTIONS=--no-deprecation node src/util/solve",
     "start": "yarn run open",
     "open": "concurrently \"cd docs && http-server -a localhost -p 1234\" \"open http://localhost:1234/\"",

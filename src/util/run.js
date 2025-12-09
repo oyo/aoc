@@ -20,7 +20,7 @@ years.forEach(y => {
     let sum = 0;
     [...Array(25).keys()].forEach(day => {
         const d = String(day + 1).padStart(2, '0')
-        const path = `${__dirname}/${y}/${d}`
+        const path = `${__dirname}/../${y}/${d}`
         if (!fs.existsSync(path))
             return
         try {
