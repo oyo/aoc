@@ -1,4 +1,4 @@
-const { puzzle } = require('./puzzle.js');
+const { puzzle } = require('./puzzle.js')
 
 it ('solves part_1', () => {
     expect(puzzle.part_1('(')).toEqual(1)

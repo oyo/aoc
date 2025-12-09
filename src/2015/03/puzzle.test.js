@@ -1,4 +1,4 @@
-const { puzzle } = require('./puzzle.js');
+const { puzzle } = require('./puzzle.js')
 
 const INPUT = '^v^v^v^v^v'
 

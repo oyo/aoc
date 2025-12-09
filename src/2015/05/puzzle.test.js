@@ -1,4 +1,4 @@
-const { puzzle } = require('./puzzle.js');
+const { puzzle } = require('./puzzle.js')
 
 it ('finds nice', () => {
     expect(puzzle.nice('ugknbfddgicrmopn')).toBe(true)

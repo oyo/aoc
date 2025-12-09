@@ -1,6 +1,4 @@
-const _ = require('lodash');
-
-const P = {
+exports.puzzle = P = {
 
     nice: s => 
         !s.match(/(ab|cd|pq|xy)/) &&
@@ -16,5 +14,3 @@ const P = {
     part_2: T => T.split('\n').filter(L => P.nicer(L)).length
 
 }
-
-exports.puzzle = P
