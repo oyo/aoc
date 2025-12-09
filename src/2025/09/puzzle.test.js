@@ -1,7 +1,7 @@
 const { puzzle } = require('./puzzle')
 
 const INPUT =
-  `7,1
+`7,1
 11,1
 11,7
 9,7

@@ -11,38 +11,38 @@ const P = {
 		p[1] > r1[1] &&
 		p[1] < r2[1],
 
-	checkIntersect: (r1, r2, l1, l2) => {
-		const minr = [Math.min(r1[0], r2[0]), Math.min(r1[1], r2[1])]
-		const maxr = [Math.max(r1[0], r2[0]), Math.max(r1[1], r2[1])]
-		const minl = [Math.min(l1[0], l2[0]), Math.min(l1[1], l2[1])]
-		const maxl = [Math.max(l1[0], l2[0]), Math.max(l1[1], l2[1])]
-		const l1i = P.isInsideRect(minr, maxr, l1)
-		const l2i = P.isInsideRect(minr, maxr, l2)
-		if (l1i || l2i) return true
-		if (minl[0] === maxl[0]) {
-			// horizontal line
-			let y = minl[0]
-			const c = (
-				(y > minr[0] && y < maxr[0]) &&
-				(minl[1] <= minr[1] && maxl[1] >= maxr[1])
-			)
-			//console.log(minr, maxr, minl, maxl, c)
-			return c
-		}
-		if (minl[1] === maxl[1]) {
-			// vertical line
-			let x = minl[1]
-			if (
-				(x > minr[1] && x < maxr[1]) &&
-				(minl[0] <= minr[0] && maxl[0] >= maxr[0])
-			) return true
-		}
-		return false
-	},
+    checkIntersect: (r1, r2, l1, l2) => {
+        const minr = [Math.min(r1[0], r2[0]), Math.min(r1[1], r2[1])]
+        const maxr = [Math.max(r1[0], r2[0]), Math.max(r1[1], r2[1])]
+        const minl = [Math.min(l1[0], l2[0]), Math.min(l1[1], l2[1])]
+        const maxl = [Math.max(l1[0], l2[0]), Math.max(l1[1], l2[1])]
+        const l1i = P.isInsideRect(minr, maxr, l1)
+        const l2i = P.isInsideRect(minr, maxr, l2)
+        if (l1i || l2i) return true
+        if (minl[0] === maxl[0]) {
+            // horizontal line
+            let y = minl[0]
+            const c = (
+                (y > minr[0] && y < maxr[0]) &&
+                (minl[1] <= minr[1] && maxl[1] >= maxr[1])
+            )
+            //console.log(minr, maxr, minl, maxl, c)
+            return c
+        }
+        if (minl[1] === maxl[1]) {
+            // vertical line
+            let x = minl[1]
+            if (
+                (x > minr[1] && x < maxr[1]) &&
+                (minl[0] <= minr[0] && maxl[0] >= maxr[0])
+            ) return true
+        }
+        return false
+    },
 
 	part_1: T => {
 		const p = P.prep(T)
-		let max = [-Infinity, 0, 0]
+		let max = [ -Infinity, 0, 0 ]
 		for (let i = 0; i < p.length; i++) {
 			for (let j = i + 1; j < p.length; j++) {
 				const [x1, y1] = p[i]
@@ -52,8 +52,8 @@ const P = {
 				let area = dx * dy
 				if (area > max[0]) {
 					max[0] = area
-					max[1] = p[i]
-					max[2] = p[j]
+					max[1] = i
+					max[2] = j
 				}
 			}
 		}
@@ -80,8 +80,8 @@ const P = {
 					}
 					if (!intersect) {
 						max[0] = area
-						max[1] = p[i]
-						max[2] = p[j]
+						max[1] = i
+						max[2] = j
 					}
 				}
 			}
@@ -209,36 +209,38 @@ class Scene extends QuadModel {
 
 	create() {
 		this.clear()
-		const { data, max1, max2 } = this.model.getData()
+		let { data, max1, max2 } = this.model.getData()
 		//console.log(max1, max2)
 		const cr = { r: .8, g: .2, b: .2 }
 		const cg = { r: .1, g: .5, b: .1 }
 		const cs = { r: .8, g: .5, b: .2 }
-		for (let i = 0; i < data.length; i++) {
-			const [y, x] = data[i]
+		data = data.map(p => p.map(a => (a - 50000)/1000))
+		data.forEach((p,i) => {
+			const [y, x] = p
 			const [y1, x1] = data[(i + 1) % data.length]
-			this.line((x - 50000) / 1000, (y - 50000) / 1000, 0, (x1 - 50000) / 1000, (y1 - 50000) / 1000, 0, cs)
-		}
-		const [y10, x10] = max1[1]
-		const [y11, x11] = max1[2]
-		const [y20, x20] = max2[1]
-		const [y21, x21] = max2[2]
+			this.line(x,y, 0, x1,y1, 0, cs)
+		})
+		const [y10, x10] = data[max1[1]]
+		const [y11, x11] = data[max1[2]]
+		const [y20, x20] = data[max2[1]]
+		const [y21, x21] = data[max2[2]]
 		{
-			this.line((x10 - 50000) / 1000, (y10 - 50000) / 1000, 1, (x10 - 50000) / 1000, (y11 - 50000) / 1000, 1, cg)
-			this.line((x10 - 50000) / 1000, (y11 - 50000) / 1000, 1, (x11 - 50000) / 1000, (y11 - 50000) / 1000, 1, cg)
-			this.line((x11 - 50000) / 1000, (y11 - 50000) / 1000, 1, (x11 - 50000) / 1000, (y10 - 50000) / 1000, 1, cg)
-			this.line((x11 - 50000) / 1000, (y10 - 50000) / 1000, 1, (x10 - 50000) / 1000, (y10 - 50000) / 1000, 1, cg)
+			this.line(x10, y10, 1, x10, y11, 1, cg)
+			this.line(x10, y11, 1, x11, y11, 1, cg)
+			this.line(x11, y11, 1, x11, y10, 1, cg)
+			this.line(x11, y10, 1, x10, y10, 1, cg)
 		}
 		{
-			this.line((x20 - 50000) / 1000, (y20 - 50000) / 1000, 2, (x20 - 50000) / 1000, (y21 - 50000) / 1000, 2, cr)
-			this.line((x20 - 50000) / 1000, (y21 - 50000) / 1000, 2, (x21 - 50000) / 1000, (y21 - 50000) / 1000, 2, cr)
-			this.line((x21 - 50000) / 1000, (y21 - 50000) / 1000, 2, (x21 - 50000) / 1000, (y20 - 50000) / 1000, 2, cr)
-			this.line((x21 - 50000) / 1000, (y20 - 50000) / 1000, 2, (x20 - 50000) / 1000, (y20 - 50000) / 1000, 2, cr)
+			this.line(x20, y20, 2, x20, y21, 2, cr)
+			this.line(x20, y21, 2, x21, y21, 2, cr)
+			this.line(x21, y21, 2, x21, y20, 2, cr)
+			this.line(x21, y20, 2, x20, y20, 2, cr)
 		}
-		this.cubeAt((x10 - 50000) / 1000, (y10 - 50000) / 1000, 1, cs)
-		this.cubeAt((x11 - 50000) / 1000, (y11 - 50000) / 1000, 1, cs)
-		this.cubeAt((x20 - 50000) / 1000, (y20 - 50000) / 1000, 2, cs)
-		this.cubeAt((x21 - 50000) / 1000, (y21 - 50000) / 1000, 2, cs)
+		this.cubeAt(x10, y10, 1, cs)
+		this.cubeAt(x11, y11, 1, cs)
+		this.cubeAt(x20, y20, 2, cs)
+		this.cubeAt(x21, y21, 2, cs)
+		
 		this.fireSceneChanged()
 	}
 
