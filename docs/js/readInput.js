@@ -95,5 +95,5 @@ const readClipboard = async () => {
 }
 
 fetch('input')
-  .then(response => response.text())
+  .then(response => response.ok ? response.text() : '')
   .then(data => setInput(data))
