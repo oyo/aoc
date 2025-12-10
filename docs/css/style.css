@@ -1,0 +1,60 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #def;
+  overflow: hidden;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  background: #0f0f23;
+  z-index: 999;
+}
+
+.drag {
+  opacity: 0.5;
+  background-color: #858140;
+}
+
+.inputarea {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 50%;
+}
+
+.inputarea > span {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.inputarea>textarea {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background: #222;
+  color: #eee;
+  font-family: monospace;
+  font-size: 16px;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
+#start {
+  width: 120px;
+  height: 40px;
+  margin: 0 auto;
+  font-family: monospace;
+  font-size: 24px;
+}
