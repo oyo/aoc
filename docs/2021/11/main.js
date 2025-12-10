@@ -581,7 +581,3 @@ class Game {
 	}
 
 }
-
-fetch('input')
-	.then(response => response.text())
-	.then(data => new Game(P.init(data)))
