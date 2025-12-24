@@ -32,6 +32,10 @@ class Game {
   constructor() {
     const gnode = document.createElement('div')
     document.body.appendChild(gnode)
+    const graph = P.getData().graph
+    const num = graph.pathsBetweenCount('you', 'out')
+    console.log(num)
+    const pv = graph.pathsVisited.reduce((a, c) => a | c, 0n)
     this.graph = new ForceGraph3D(gnode)
       .linkDirectionalArrowLength(3.5)
       .linkDirectionalArrowRelPos(1)
@@ -40,9 +44,17 @@ class Game {
           ? '#88ff88'
           : (['fft', 'dac'].includes(n.name)
             ? '#ff8888'
-            : '#444444'
+            : (((pv >> n.id) & 1n)
+              ? '#aaaaaa'
+              : '#222222'
+            )
           )
       )
-      .graphData(P.getData().graph.getAsFDL())
+      .linkColor((e) =>
+        (((pv >> e.source) & 1n) & ((pv >> e.target) & 1n))
+          ? '#aaaaaa'
+          : '#222222'
+      )
+      .graphData(graph.getAsFDL())
   }
 }

@@ -6,10 +6,13 @@ class Graph {
     this.nodeMap = new Map()
     this.nodes = new Array()
     this.edges = new Array()
+    this.nodesVisited = 0n
+    this.edgesVisited = 0n
+    this.pathsVisited = new Array()
   }
 
   addNode(n) {
-    const id = typeof n === 'number' ? n : this.nodes.length
+    const id = BigInt((typeof n === 'number' || typeof n === 'bigint') ? n : this.nodes.length)
     const node = {
       id,
       name: n.toString(),
@@ -25,14 +28,14 @@ class Graph {
     return this
   }
 
-  addEdge([v, w, uni]) {
-    const vi = typeof v === 'string' ? this.nodeMap.get(v).id : v
-    const wi = typeof w === 'string' ? this.nodeMap.get(w).id : w
-    const edge = [vi, wi, uni]
+  addEdge([a, b, uni]) {
+    const ai = typeof a === 'string' ? this.nodeMap.get(a).id : a
+    const bi = typeof b === 'string' ? this.nodeMap.get(b).id : b
+    const edge = [ai, bi, uni]
     this.edges.push(edge)
-    this.nodes[vi].edges.push(edge)
+    this.nodes[ai].edges.push(edge)
     if (!uni)
-      this.nodes[wi].edges.push(edge)
+      this.nodes[bi].edges.push(edge)
     return this
   }
 
@@ -85,29 +88,36 @@ class Graph {
     this.dfsRek(start, visited)
   }
 
-  pathsBetween(a, b) {
-    const v = {}
+  pathsBetweenCount(a, b) {
+    const ai = typeof a === 'string' ? this.nodeMap.get(a).id : BigInt(a)
+    const bi = typeof b === 'string' ? this.nodeMap.get(b).id : BigInt(b)
+    this.pathsVisited = new Array()
+    let v = 0n
     let s = 0
     const count = (c) => {
-      if (c === b) {
+      if (c === bi) {
+        this.pathsVisited.push(v)
         s++
         return
       }
-      v[c] = true
-      let neighbors = this.nodes.get(c)
-      for (let n of neighbors)
-        if (!v[n])
-          count(n)
-      v[c] = false
+      v |= (1n << c)
+      let edges = this.nodes[c].edges
+      for (let e of edges)
+        if (!((v >> e[1]) & 1n))
+          count(e[1])
+      v &= ~(1n << c);
     }
-    count(a)
+    count(ai)
+    console.log(this.pathsVisited.map(w => w.toString(2)).join('\n'))
+    this.nodesVisited = v
     return s
   }
 
   getAsFDL() {
     return {
       nodes: this.nodes,
-      links: this.edges.map(e => ({
+      links: this.edges.map((e, i) => ({
+        id: i,
         source: e[0],
         target: e[1]
       }))
