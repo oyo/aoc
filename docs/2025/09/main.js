@@ -4,7 +4,6 @@ const P = {
 
 	prep: T => T.trim().split('\n').map(L => L.split(',').map(N)),
 
-
 	isInsideRect: (r1, r2, p) =>
 		p[0] > r1[0] &&
 		p[0] < r2[0] &&
@@ -306,7 +305,7 @@ class Simple3D {
 	constructor() {
 		this.canvas = document.createElement('canvas')
 		try {
-			gl = this.canvas.getContext('webgl')
+			gl = this.canvas.getContext('webgl2')
 		} catch (e) {
 			alert('WebGL not initialized!')
 		}
@@ -324,18 +323,22 @@ class Simple3D {
 	initShaders() {
 		const sh = gl.createProgram()
 		gl.attachShader(sh, this.getShader(gl, gl.VERTEX_SHADER,
-			`attribute vec3 aPos;
-attribute vec4 aCol;
+			`#version 300 es
+in vec3 aPos;
+in vec4 aCol;
 uniform mat4 uMVMatrix,uPMatrix;
-varying vec4 vColor;
+out vec4 vColor;
 void main(void) {
   gl_Position = uPMatrix * uMVMatrix * vec4(aPos, 1.0);
   vColor = aCol;
 }`))
 		gl.attachShader(sh, this.getShader(gl, gl.FRAGMENT_SHADER,
-			`varying lowp vec4 vColor;
+			`#version 300 es
+precision mediump float;
+in vec4 vColor;
+out vec4 fragColor;
 void main(void) {
-	gl_FragColor = vColor;
+    fragColor = vColor;
 }`))
 		gl.linkProgram(sh)
 		if (!gl.getProgramParameter(sh, gl.LINK_STATUS))
