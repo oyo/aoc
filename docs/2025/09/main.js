@@ -1,6 +1,6 @@
 const N = n => Number.parseInt(n)
 
-const P = {
+export const P = {
 
 	prep: T => T.trim().split('\n').map(L => L.split(',').map(N)),
 
@@ -46,8 +46,8 @@ const P = {
 			for (let j = i + 1; j < p.length; j++) {
 				const [x1, y1] = p[i]
 				const [x2, y2] = p[j]
-				dx = Math.abs(x2 - x1) + 1
-				dy = Math.abs(y2 - y1) + 1
+				let dx = Math.abs(x2 - x1) + 1
+				let dy = Math.abs(y2 - y1) + 1
 				let area = dx * dy
 				if (area > max[0]) {
 					max[0] = area
@@ -66,8 +66,8 @@ const P = {
 			for (let j = i + 1; j < p.length; j++) {
 				const [x1, y1] = p[i]
 				const [x2, y2] = p[j]
-				dx = Math.abs(x2 - x1) + 1
-				dy = Math.abs(y2 - y1) + 1
+				let dx = Math.abs(x2 - x1) + 1
+				let dy = Math.abs(y2 - y1) + 1
 				let area = dx * dy
 				if (area > max[0]) {
 					let intersect = false
@@ -615,7 +615,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)

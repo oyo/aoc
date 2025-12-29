@@ -5,15 +5,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>AoC 2025 day 09</title>
+  <title>AoC 2025 day 1</title>
   <link rel="stylesheet" href="../../css/style.css" />
 </head>
 
 <body>
   <script type="module">
     import readInput from '../../js/readInput.js'
-    import { Game, P } from './main.js'
-    new Game(P.init(await readInput()))
+    import showOutput from '../../js/showOutput.js'
+    import puzzleCPU from './puzzleCPU.js'
+    import puzzleGPU from './puzzleGPU.js'
+    const input = await readInput()
+    showOutput([
+      ['CPU', await puzzleCPU.exec(input)],
+      ['GPU', await puzzleGPU.exec(input)],
+    ])
   </script>
 </body>
 

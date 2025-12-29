@@ -2,7 +2,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #def;
+  background-color: #0f0f23;
+  color: white;
   overflow: hidden;
 }
 
@@ -57,4 +58,20 @@ body {
   margin: 0 auto;
   font-family: monospace;
   font-size: 24px;
+}
+
+table {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 20px;
+  font-family: monospace;
+}
+
+th {
+  color: #ffff66
+}
+
+td {
+  padding: 5px;
 }

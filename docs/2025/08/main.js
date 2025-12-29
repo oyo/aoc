@@ -1,6 +1,6 @@
 const N = n => Number.parseInt(n)
 const dist = (a, b) => Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
-const P = {
+export const P = {
 
     prep: T => T.trim().split('\n').map(L => L.split(',').map(N)),
 
@@ -603,7 +603,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)
