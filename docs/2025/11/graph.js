@@ -1,6 +1,6 @@
 // implementation for graphs where nodes and edges are added only, never removed
 
-class Graph {
+export class Graph {
 
   constructor() {
     this.nodeMap = new Map()
@@ -108,7 +108,7 @@ class Graph {
       v &= ~(1n << c);
     }
     count(ai)
-    console.log(this.pathsVisited.map(w => w.toString(2)).join('\n'))
+    //console.log(this.pathsVisited.map(w => w.toString(2)).join('\n'))
     this.nodesVisited = v
     return s
   }

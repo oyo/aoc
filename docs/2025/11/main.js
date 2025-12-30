@@ -1,4 +1,6 @@
-const P = {
+import { Graph } from './graph.js'
+
+export const P = {
 
   prep: T => T.trim().split('\n').map(L => L.split(': ')).map(L => [L[0], L[1].split(' ')]),
 
@@ -11,28 +13,28 @@ const P = {
     return g.pathsBetween('you', 'out')
   },
 
-  getData: () => this.data,
+  getData: () => P.data,
 
   init: raw => {
     const prep = P.prep(raw)
     const graph = new Graph()
       .addNodes(prep.map(n => n[0]).concat('out'))
     prep.forEach(n => graph.addEdges(n[1].map(e => [n[0], e, true])))
-    this.data = {
+    P.data = {
       raw,
       prep,
       graph
     }
-    return this
+    return P
   }
 
 }
 
-class Game {
-  constructor() {
+export class Game {
+  constructor(puzzle) {
     const gnode = document.createElement('div')
     document.body.appendChild(gnode)
-    const graph = P.getData().graph
+    const graph = puzzle.getData().graph
     const num = graph.pathsBetweenCount('you', 'out')
     console.log(num)
     const pv = graph.pathsVisited.reduce((a, c) => a | c, 0n)
