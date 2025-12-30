@@ -16,8 +16,10 @@ export default (data) =>
           N('td', row[0]),
           N('td', row[1].result[0]),
           N('td', row[1].result[1]),
-          N('td', Math.round(row[1].time*1e12) / 1e12),
+          N('td', Math.round(row[1].time * 1e3) / 1e3),
         ])
       )),
-    ])
+    ],
+      { className: 'output' }
+    )
   )
