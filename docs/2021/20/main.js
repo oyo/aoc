@@ -1,4 +1,4 @@
-const P = {
+export const P = {
 
 	prep: T => {
 		const s = T.trim().split('\n\n')
@@ -69,7 +69,7 @@ const P = {
 
 	step: () => {
 		const p = P.p
-		console.log(P.doStep(p))
+		P.doStep(p)
 		P.count++
 		//console.log(P.count)
 		//console.log(P.toString(P.board))
@@ -202,7 +202,7 @@ class Scene extends QuadModel {
 
 class AnimatedScene extends Scene {
 
-	speed = 1000
+	speed = 500
 
 	constructor() {
 		super()
@@ -223,6 +223,7 @@ class AnimatedScene extends Scene {
 	step() {
 		if (!this.model)
 			return this
+		this.model.step()
 		this.model.step()
 		this.create()
 		this.fireSceneChanged()
@@ -391,7 +392,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -40, v: 42, w: 42, max: 70 }
+	mouse = { button: false, x: 0, y: 0, u: -40, v: 22, w: 180, max: 70 }
 	keyMask = 0
 	listener = []
 
@@ -551,7 +552,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)

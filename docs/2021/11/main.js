@@ -1,4 +1,4 @@
-const P = {
+export const P = {
 
 	prep: T => P.addBorder(T.trim().split('\n').map(L => L.split('').map(n => n * 1)), 1, 1e4),
 
@@ -548,7 +548,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)

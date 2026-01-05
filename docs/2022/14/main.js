@@ -1,4 +1,4 @@
-const P = {
+export const P = {
 
 	prep: T => T.trim().split('\n').map(L => L.split(' -> ').map(L => L.split(',').map(N => Number.parseInt(N)))),
 
@@ -7,7 +7,7 @@ const P = {
 	dump: b => console.log(b.map(r => r.join('')).join('\n')),
 
 	drawPath: (b, p) => {
-		for (let i = 1; i < p.length; i++) {
+		for (let x0, y0, i = 1; i < p.length; i++) {
 			let x = x0 = p[i - 1][0]
 			let y = y0 = p[i - 1][1]
 			b[y][x - P.X0] = '#'
@@ -65,7 +65,6 @@ const P = {
 	},
 
 	init: T => {
-		console.log('init')
 		if (!T)
 			T = P.T
 		else
@@ -549,7 +548,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)

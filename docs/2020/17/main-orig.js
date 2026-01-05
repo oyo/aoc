@@ -1,79 +1,122 @@
 export const P = {
 
-	prep: T => P.addBorder(T.split('\n').map(L => L.split('').map(n => n * 1)), 1, 10),
+	prep: T => T.split('\n'),
 
-	addBorder: (p, o, d) =>
-		new Array(p.length + (o << 1)).fill().map((_, y) =>
-			new Array(p[0].length + (o << 1)).fill().map((_, x) =>
-				p[y - o] !== undefined && p[y - o][x - o] !== undefined ? p[y - o][x - o] : d)),
+	prepEmpty: d => new Array(d+2).fill(true).map(z => new Array(d+2).fill(true).map(y => new Array(d+2).fill('.'))),
 
-	clone: b => b.slice().map(y => y.slice()),
-	// keep for debug purposes
-	toString: b => b.reduce((o, y) => o + y.reduce((o, x) => o + x + ' ', '') + '\n', ''),
-
-	lowPoint: (b, y, x) =>
-		b[y][x] < b[y - 1][x] &&
-			b[y][x] < b[y + 1][x] &&
-			b[y][x] < b[y][x - 1] &&
-			b[y][x] < b[y][x + 1]
-			? b[y][x] + 1
-			: 0,
-
-	lowPoints: p => {
-		const r = { sum: 0, low: [] }
-		for (let y = 1; y < p.length - 1; y++)
-			for (let x = 1; x < p[y].length - 1; x++) {
-				const l = P.lowPoint(p, y, x)
-				if (l > 0) {
-					r.sum += l
-					r.low.push({ x: x, y: y, z: l - 1 })
-				}
+	populate: (dim, p) => {
+		const board = P.prepEmpty(dim)
+		const z0 = (dim >> 1) + 1
+		const o = z0 - (p.length >> 1)
+		for (let y = 0; y < p.length; y++) {
+			for (let x = 0; x < p.length; x++) {
+				board[z0][o + y][o + x] = p[y][x]
 			}
-		return r
+		}
+		return board
 	},
 
-	fillRek: (p, c, h) => {
-		if (p[c.y][c.x] >= h)
-			return 0
-		p[c.y][c.x] = h
-		return 1
-			+ P.fillRek(p, { x: c.x + 1, y: c.y }, h)
-			+ P.fillRek(p, { x: c.x - 1, y: c.y }, h)
-			+ P.fillRek(p, { x: c.x, y: c.y - 1 }, h)
-			+ P.fillRek(p, { x: c.x, y: c.y + 1 }, h)
+	clone: (board) => board.slice().map(y => y.slice().map(x => x.slice())),
+
+	count: z => z.reduce((a, y) => a + y.reduce((b, x) => b + x.filter(c => c === '#').length,0),0),
+
+	adjacentCount: (p, z, y, x) =>
+		(p[z - 1][y - 1][x - 1] === '#' ? 1 : 0) +
+		(p[z - 1][y - 1][x] === '#' ? 1 : 0) +
+		(p[z - 1][y - 1][x + 1] === '#' ? 1 : 0) +
+		(p[z - 1][y][x - 1] === '#' ? 1 : 0) +
+		(p[z - 1][y][x] === '#' ? 1 : 0) +
+		(p[z - 1][y][x + 1] === '#' ? 1 : 0) +
+		(p[z - 1][y + 1][x - 1] === '#' ? 1 : 0) +
+		(p[z - 1][y + 1][x] === '#' ? 1 : 0) +
+		(p[z - 1][y + 1][x + 1] === '#' ? 1 : 0) +
+		(p[z][y - 1][x - 1] === '#' ? 1 : 0) +
+		(p[z][y - 1][x] === '#' ? 1 : 0) +
+		(p[z][y - 1][x + 1] === '#' ? 1 : 0) +
+		(p[z][y][x - 1] === '#' ? 1 : 0) +
+
+		(p[z][y][x + 1] === '#' ? 1 : 0) +
+		(p[z][y + 1][x - 1] === '#' ? 1 : 0) +
+		(p[z][y + 1][x] === '#' ? 1 : 0) +
+		(p[z][y + 1][x + 1] === '#' ? 1 : 0) +
+		(p[z + 1][y - 1][x - 1] === '#' ? 1 : 0) +
+		(p[z + 1][y - 1][x] === '#' ? 1 : 0) +
+		(p[z + 1][y - 1][x + 1] === '#' ? 1 : 0) +
+		(p[z + 1][y][x - 1] === '#' ? 1 : 0) +
+		(p[z + 1][y][x] === '#' ? 1 : 0) +
+		(p[z + 1][y][x + 1] === '#' ? 1 : 0) +
+		(p[z + 1][y + 1][x - 1] === '#' ? 1 : 0) +
+		(p[z + 1][y + 1][x] === '#' ? 1 : 0) +
+		(p[z + 1][y + 1][x + 1] === '#' ? 1 : 0),
+
+	step: (counter, transposer) => {
+		const board = P.board
+		board.push(board.shift())
+		const p = board[0]
+		const p1 = board[1]
+		for (let z = 1; z < P.D.z - 1; z++)
+			for (let y = 1; y < P.D.y - 1; y++)
+				for (let x = 1; x < P.D.x - 1; x++)
+					p[z][y][x] = P.rule(p1[z][y][x], P.adjacentCount(p1, z, y, x))
 	},
 
-	fillTo: (p, h) => P
-		.lowPoints(p).low
-		.filter(c => c.z < h)
-		.map(c => P.fillRek(p, c, h))
-		.sort((a, b) => b - a)
-		.slice(0, 3)
-		.reduce((o, s) => o * s, 1),
+	renderstep: (counter, transposer) => {
+		P.stepN++
+		P.step(P.board, counter, transposer)
+		//P.step(P.board, counter, transposer)
+		console.log(P.stepN + ' ' + P.count(P.board[0]))
+		if (P.count(P.board[0]) === P.count(P.board[1])) {
+			clearInterval(P.timer)
+			P.init(P.T)
+		}
+	},
 
-	part_1: T => P.lowPoints(P.prep(T)).sum,
-
-	part_2: T => P.fillTo(P.prep(T), 9),
+	rule: (s, c) =>
+		s === '#' && (c < 2 || c > 3)
+			? '.'
+			: (
+				c === 3
+					? '#'
+					: s
+			),
 
 	getData: () => P.board,
 
-	step: () => {
-		P.board[1] = P.clone(P.board[0])
-		P.level = (P.level + 1) % 10
-		const r = P.fillTo(P.board[1], P.level)
-		if (P.level === 9)
-			console.log(`part 2: ${r}`)
-	},
-
 	init: T => {
-		const p = P.prep(T)
-		console.log(`part 1: ${P.lowPoints(p).sum}`)
-		P.board = [p, P.clone(p)]
-		P.level = -1
+		const dim = 32
+		const E = [
+			'.#.',
+			'..#',
+			'###',
+		].join('\n')
+
+		P.T = T ?? [
+			'###...#.',
+			'.##.####',
+			'.####.##',
+			'###.###.',
+			'.##.####',
+			'#.##..#.',
+			'##.####.',
+			'.####.#.',
+		].join('\n')
+
+
+		const p = P.prep(P.T)
+		let board = P.populate(dim - 2, p)
+		P.orig = board
+		P.D = {
+			z: board.length - 2,
+			y: board[0].length - 2,
+			x: board[0][0].length - 2
+		}
+		P.board = [P.clone(P.orig), P.clone(P.orig)]
+		P.stepN = 0
 		return P
 	}
 
 }
+
 
 class QuadModel {
 
@@ -90,7 +133,7 @@ class QuadModel {
 	}
 
 	quadXM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const y1 = y + 1, z1 = z + 1, f = this.shade.xm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y, z1, x, y1, z1, x, y, z, x, y1, z1, x, y1, z)
 		for (let i = 0; i < 6; i++)
@@ -98,7 +141,7 @@ class QuadModel {
 	}
 
 	quadXP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const y1 = y + 1, z1 = z + 1, f = this.shade.xp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z1, x, y, z1, x, y, z, x, y1, z, x, y1, z1)
 		for (let i = 0; i < 6; i++)
@@ -106,7 +149,7 @@ class QuadModel {
 	}
 
 	quadYM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, z1 = z + 1, f = this.shade.ym, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z, x1, y, z1, x, y, z, x1, y, z1, x, y, z1)
 		for (let i = 0; i < 6; i++)
@@ -114,7 +157,7 @@ class QuadModel {
 	}
 
 	quadYP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, z1 = z + 1, f = this.shade.yp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y, z1, x1, y, z, x, y, z, x, y, z1, x1, y, z1)
 		for (let i = 0; i < 6; i++)
@@ -122,7 +165,7 @@ class QuadModel {
 	}
 
 	quadZM(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, y1 = y + 1, f = this.shade.zm, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x, y1, z, x1, y1, z, x, y, z, x1, y1, z, x1, y, z)
 		for (let i = 0; i < 6; i++)
@@ -130,7 +173,7 @@ class QuadModel {
 	}
 
 	quadZP(x, y, z, c) {
-		c = c || this.col
+		c ||= this.col
 		const x1 = x + 1, y1 = y + 1, f = this.shade.zp, s = [f * c.r, f * c.g, f * c.b]
 		this.v.push(x, y, z, x1, y1, z, x, y1, z, x, y, z, x1, y, z, x1, y1, z)
 		for (let i = 0; i < 6; i++)
@@ -165,19 +208,23 @@ class Scene extends QuadModel {
 
 	create() {
 		this.clear()
-		const board = this.model.getData()
-		const p = board[0]
-		const p1 = board[1]
-		const cg = { r: 1, g: 0.7, b: 0.5 }
-		const cw = { r: 0, g: 0.784, b: 1 }
-		const dz = p.length, dz2 = dz >> 1
-		for (let z = 0; z < dz; z++) {
-			for (let x = 0; x < p[z].length; x++) {
-				if (p[z][x] < 10) {
-					this.cubeAt(x - (p[z].length >> 1), p[z][x], z - dz2, cg)
-					if (p[z][x] < p1[z][x])
-						for (let h = 0; h < p1[z][x] - p[z][x]; h++)
-							this.cubeAt(x - (p[z].length >> 1), p1[z][x] - h, z - dz2, cw)
+		const dat = this.model.getData()[0]
+		const cb = { r: 0.8, g: 0.8, b: 0.8 }
+		const cs = { r: 0.8, g: 0.5, b: 0.2 }
+
+		var time = Date.now(),
+			x, y, z, x0, y0, z0, x1, y1, z1,
+			c, d = 32, d2 = d / 2,
+			m = new QuadModel();
+		for (x = 0; x < d; x++) {
+			x0 = x - d2; x1 = x0 + 1;
+			for (y = 0; y < d; y++) {
+				y0 = y - d2; y1 = y0 + 1;
+				for (z = 0; z < d; z++) {
+					z0 = z - d2; z1 = z0 + 1;
+						if (dat[z][y][x] === '#') {
+							this.cubeAt(x0, y0, z0, cb);
+					}
 				}
 			}
 		}
@@ -199,7 +246,7 @@ class Scene extends QuadModel {
 
 class AnimatedScene extends Scene {
 
-	speed = 500
+	speed = 1000
 
 	constructor() {
 		super()
@@ -232,10 +279,10 @@ class AnimatedScene extends Scene {
 let gl
 class Simple3D {
 
-	cam = { fov: 60 }
-	pos = { x: 0, y: 10, z: -30 }
+	cam = { fov: 50 }
+	pos = { x: 0, y: 0, z: -30 }
 	rot = { x: 0, y: 0/*, z: 0*/ }
-	col = { r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
+	col = { r: 0.7, g: 0.9, b: 1, a: 1 } //{ r: 0.059, g: 0.059, b: 0.137, a: 1 }//{ r: 0, g: 0.1, b: 0.25, a: 1 } // { r: 0.9, g: 0.95, b: 1, a: 1 }
 	rMatrix = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	mode = true
 	uniRM = false
@@ -388,7 +435,7 @@ void main(void) {
 
 class UserInput {
 
-	mouse = { button: false, x: 0, y: 0, u: -37, v: 32, w: 40, max: 50 }
+	mouse = { button: false, x: 0, y: 0, u: 20, v: 8, w: 10, max: 70 }
 	keyMask = 0
 	listener = []
 
@@ -401,7 +448,25 @@ class UserInput {
 		document.addEventListener('keyup', this.keyUp.bind(this))
 		document.addEventListener('DOMMouseScroll', this.mouseWheel.bind(this))
 		document.addEventListener('mousewheel', this.mouseWheel.bind(this))
+		document.addEventListener('touchstart', this.touch2Mouse.bind(this), true);
+		document.addEventListener('touchmove', this.touch2Mouse.bind(this), true);
+		document.addEventListener('touchend', this.touch2Mouse.bind(this), true);
 		this.mouseUp()
+	}
+
+	touch2Mouse(evt) {
+		const touch = evt.changedTouches[0]
+		let mouseEv
+		switch (evt.type) {
+			case 'touchstart': mouseEv = 'mousedown'; break
+			case 'touchend': mouseEv = 'mouseup'; break
+			case 'touchmove': mouseEv = 'mousemove'; break
+			default: return
+		}
+		var mouseEvent = document.createEvent('MouseEvent')
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX << 1, touch.screenY << 1, touch.clientX << 1, touch.clientY << 1, false, false, false, false, 0, null)
+		touch.target.dispatchEvent(mouseEvent)
+		evt.preventDefault()
 	}
 
 	mouseWheel(evt) {

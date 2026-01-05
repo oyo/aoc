@@ -1,84 +1,84 @@
-const P = {
+export const P = {
 
-    prep: T => T.trim().split('\n').map(L => L.split('').map(n => Number.parseInt(n))),
+	prep: T => T.trim().split('\n').map(L => L.split('').map(n => Number.parseInt(n))),
 
-    visible: (p, y, x) => {
-        const v = p[y][x]
-        let visible = true
-        for (let iy = y - 1; iy >= 0 && visible; iy--)
-            visible = p[iy][x] < v
-        if (visible)
-            return true
-        visible = true
-        for (let iy = y + 1; iy < p.length && visible; iy++)
-            visible = p[iy][x] < v
-        if (visible)
-            return true
-        visible = true
-        for (let ix = x - 1; ix >= 0 && visible; ix--)
-            visible = p[y][ix] < v
-        if (visible)
-            return true
-        visible = true
-        for (let ix = x + 1; ix < p.length && visible; ix++)
-            visible = p[y][ix] < v
-        if (visible)
-            return true
-    },
+	visible: (p, y, x) => {
+		const v = p[y][x]
+		let visible = true
+		for (let iy = y - 1; iy >= 0 && visible; iy--)
+			visible = p[iy][x] < v
+		if (visible)
+			return true
+		visible = true
+		for (let iy = y + 1; iy < p.length && visible; iy++)
+			visible = p[iy][x] < v
+		if (visible)
+			return true
+		visible = true
+		for (let ix = x - 1; ix >= 0 && visible; ix--)
+			visible = p[y][ix] < v
+		if (visible)
+			return true
+		visible = true
+		for (let ix = x + 1; ix < p.length && visible; ix++)
+			visible = p[y][ix] < v
+		if (visible)
+			return true
+	},
 
-    score: (p, y, x) => {
-        const v = p[y][x]
-        const d = [1, 1, 1, 1]
-        let visible = true
-        let iy = y - 1
-        for (; iy >= 0 && visible; iy--)
-            visible = p[iy][x] < v
-        d[0] = y - iy - 1
-        visible = true
-        iy = y + 1
-        for (; iy < p.length && visible; iy++)
-            visible = p[iy][x] < v
-        d[1] = iy - y - 1
-        visible = true
-        let ix = x - 1
-        for (; ix >= 0 && visible; ix--)
-            visible = p[y][ix] < v
-        d[2] = x - ix - 1
-        visible = true
-        ix = x + 1
-        for (; ix < p.length && visible; ix++)
-            visible = p[y][ix] < v
-        d[3] = ix - x - 1
-        return d.reduce((a, b) => a * b, 1)
-    },
+	score: (p, y, x) => {
+		const v = p[y][x]
+		const d = [1, 1, 1, 1]
+		let visible = true
+		let iy = y - 1
+		for (; iy >= 0 && visible; iy--)
+			visible = p[iy][x] < v
+		d[0] = y - iy - 1
+		visible = true
+		iy = y + 1
+		for (; iy < p.length && visible; iy++)
+			visible = p[iy][x] < v
+		d[1] = iy - y - 1
+		visible = true
+		let ix = x - 1
+		for (; ix >= 0 && visible; ix--)
+			visible = p[y][ix] < v
+		d[2] = x - ix - 1
+		visible = true
+		ix = x + 1
+		for (; ix < p.length && visible; ix++)
+			visible = p[y][ix] < v
+		d[3] = ix - x - 1
+		return d.reduce((a, b) => a * b, 1)
+	},
 
-    part_1: T => {
-        const p = P.prep(T)
-        let s = 0
-        for (let y = 0; y < p.length; y++)
-            for (let x = 0; x < p[y].length; x++)
-                s += P.visible(p, y, x) ? 1 : 0
-        return s
-    },
+	part_1: T => {
+		const p = P.prep(T)
+		let s = 0
+		for (let y = 0; y < p.length; y++)
+			for (let x = 0; x < p[y].length; x++)
+				s += P.visible(p, y, x) ? 1 : 0
+		return s
+	},
 
-    part_2: p => {
-        let s = 0
+	part_2: p => {
+		let s = 0
 		P.best = [0, 0]
-        for (let y = 0; y < p.length; y++)
-            for (let x = 0; x < p[y].length; x++) {
-                const vs = P.score(p, y, x)
-                if (vs > s) {
-                    s = vs
+		for (let y = 0; y < p.length; y++)
+			for (let x = 0; x < p[y].length; x++) {
+				const vs = P.score(p, y, x)
+				if (vs > s) {
+					s = vs
 					P.best[0] = y
 					P.best[1] = x
 				}
-            }
-        return s
-    },
+			}
+		return s
+	},
 
 	getData: () => ({ p: P.p, b: P.best }),
 
-	step: () => {},
+	step: () => { },
 
 	init: T => {
 		const p = P.p = P.prep(T)
@@ -190,9 +190,9 @@ class Scene extends QuadModel {
 		for (let z = 0; z < dz; z++) {
 			for (let x = 0; x < p[z].length; x++) {
 				const y = p[z][x]
-				this.cubeAt(x - b[1], y-by, z - b[0], z === b[0] && x === b[1] ? cb : c)
-				for (let iy=y-1; iy>=0; iy-- )
-					this.cubeAt(x - b[1], iy-by, z - b[0], cw)
+				this.cubeAt(x - b[1], y - by, z - b[0], z === b[0] && x === b[1] ? cb : c)
+				for (let iy = y - 1; iy >= 0; iy--)
+					this.cubeAt(x - b[1], iy - by, z - b[0], cw)
 			}
 		}
 		this.fireSceneChanged()
@@ -431,7 +431,7 @@ class UserInput {
 			default: return
 		}
 		var mouseEvent = document.createEvent('MouseEvent')
-		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX<<1, touch.screenY<<1, touch.clientX<<1, touch.clientY<<1, false, false, false, false, 0, null)
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX << 1, touch.screenY << 1, touch.clientX << 1, touch.clientY << 1, false, false, false, false, 0, null)
 		touch.target.dispatchEvent(mouseEvent)
 		evt.preventDefault()
 	}
@@ -562,7 +562,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)

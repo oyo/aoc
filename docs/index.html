@@ -2,52 +2,69 @@
 <html>
 
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>AoC visualizations</title>
-    <style>
-body, html {
-    background: #0f0f23;
-    color: #cccccc;
-    font-family: "Source Code Pro", monospace;
-    font-size: 14pt;
-    min-width: 60em;
-}
-a {
-    text-decoration: none;
-    color: #009900;
-}
-a:hover {
-    color: #00ff00;
-}
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>AoC visualizations</title>
+  <link rel="icon" href="img/favicon.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    ul {
+      line-height: 1em;
+    }
+  </style>
 </head>
 
 <body>
-    <h3>Advent of Code visualizations</h3>
-    <p>
-        Some selected examples from my Advent of Code solutions
-    </p>
-    <p>
-        <a href="https://oyo.github.io/">[home]</a> <a href="https://github.com/oyo/aoc">[source]</a>
-    </p>
-    <ul>
-        <li><a target="input" href="https://adventofcode.com/2025/day/11/input">[input->]</a> <a href="2025/11/">[2025 Day 11: Reactor]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2025/day/9/input">[input->]</a> <a href="2025/09/">[2025 Day 09: Movie Theater]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2025/day/8/input">[input->]</a> <a href="2025/08/">[2025 Day 08: Playground]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2022/day/14/input">[input->]</a> <a href="2022/14/">[2022 Day 14: Regolith Reservoir]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2022/day/9/input">[input->]</a> <a href="2022/09/">[2022 Day 09: Rope Bridge]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2022/day/8/input">[input->]</a> <a href="2022/08/">[2022 Day 08: Treetop Tree House]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2021/day/20/input">[input->]</a> <a href="2021/20/">[2021 Day 20: Trench Map]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2021/day/11/input">[input->]</a> <a href="2021/11/">[2021 Day 11: Dumbo Octopus]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2021/day/9/input">[input->]</a> <a href="2021/09/">[2021 Day 09: Smoke Basin]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2020/day/17/input">[input->]</a> <a href="2020/17/part1/index.html">[2020 Day 17: Conway Cubes - part 1]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2020/day/11/input">[input->]</a> <a href="2020/11/part2/index.html">[2020 Day 11: Seating System - part 2]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2020/day/11/input">[input->]</a> <a href="2020/11/part1/index.html">[2020 Day 11: Seating System - part 1]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2020/day/7/input">[input->]</a> <a href="2020/07/part2/index.html">[2020 Day 07: Handy Haversacks - part 2]</a></li>
-        <li><a target="input" href="https://adventofcode.com/2020/day/7/input">[input->]</a> <a href="2020/07/part1/index.html">[2020 Day 07: Handy Haversacks - part 1]</a></li>
-    </ul>
+  <h2>Advent of Code visualizations</h2>
+  <p style="color: lightgray;">
+    Selected examples from my Advent of Code solutions
+  </p>
+  <p>
+    <a href="https://oyo.github.io/">[Home]</a>
+    <a href="https://github.com/oyo/aoc/">[Source]</a>
+    <a href="https://adventofcode.com/">[AoC]</a>
+  </p>
+  <ul>
+  </ul>
+  <p style="color: gray; max-width: 700px; font-size: 0.58em;">
+    Since we are
+    <a href="https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/inputs/">not supposed</a>
+    to share input files,
+    <a href="https://adventofcode.com/2025/auth/login" target="aoc">log in to Advent of Code</a>
+    and copy your personal input from the first link.
+    Then open the second link and paste your input there.
+  </p>
+  <script>
+    const ul = document.getElementsByTagName('ul')[0]
+    const createItem = (YEAR, DAY, NAME) => {
+      const li = document.createElement('li')
+      li.style = 'color: lightgray;'
+      li.innerHTML = `<a target="aoc" href="https://adventofcode.com/${YEAR}/day/${DAY}/input">[input]</a>
+<span style="font-size: 1em; margin-right: .125em; position: relative; top: 0; left: .2em">
+□<span style="position: absolute; top: .3em; left: -.2em">■</span></span>
+→
+<span style="font-size: 1.4em; position: relative; top: .15em; ">
+□<span style="font-size: 0.4em; position: absolute; top: .7em; left: .45em">■</span></span>
+<a href="${YEAR}/${String(DAY).padStart(2, 0)}/">[${YEAR} Day ${String(DAY).padStart(2, '\u00A0')}: ${NAME}]</a>`;
+      return li
+    }
+    [
+      [2025, 11, 'Reactor'],
+      [2025, 9, 'Movie Theater'],
+      [2025, 8, 'Playground'],
+      [2025, 4, 'Printing Department'],
+      [2022, 14, 'Regolith Reservoir'],
+      [2022, 9, 'Rope Bridge'],
+      [2022, 8, 'Treetop Tree House'],
+      [2021, 20, 'Trench Map'],
+      [2021, 11, 'Dumbo Octopus'],
+      [2021, 9, 'Smoke Basin'],
+      [2020, 17, 'Conway Cubes'],
+    ]
+      .map(puzzle => createItem(...puzzle))
+      .forEach(element => ul.append(element))
+  </script>
 </body>
 
 </html>

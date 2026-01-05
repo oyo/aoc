@@ -8,10 +8,8 @@ export default async () =>
 <div class="inputarea">
   <span>
     <input type="file" id="file" />
-    <span>
-      <button id="paste">paste</button>
-      <button id="clear">clear</button>
-    </span>
+    <button id="paste">paste</button>
+    <button id="clear">clear</button>
   </span>
   <textarea id="text" placeholder="paste puzzle input or drop input file"></textarea>
   <span>

@@ -1,8 +1,8 @@
-const P = {
+export const P = {
 
-    prep: T => T.trim().split('\n').map(L => ((a) => [a[0], Number.parseInt(a[1])])(L.split(' '))),
+	prep: T => T.trim().split('\n').map(L => ((a) => [a[0], Number.parseInt(a[1])])(L.split(' '))),
 
-    process: () => {
+	process: () => {
 		const N = P.N
 		const r = P.data.r
 		const b = P.data.b
@@ -27,12 +27,12 @@ const P = {
 			else if (dy > 1) { t[1]++; t[0] = h[0] }
 			else if (dy < -1) { t[1]--; t[0] = h[0] }
 		}
-		b.push((r[N-1][0]+500) * 1000 + r[N-1][1] + 500)
-    },
+		b.push((r[N - 1][0] + 500) * 1000 + r[N - 1][1] + 500)
+	},
 
-    part_1: T => P.process(T, 2),
+	part_1: T => P.process(T, 2),
 
-    part_2: T => P.process(T, 10),
+	part_2: T => P.process(T, 10),
 
 	getData: () => P.data,
 
@@ -45,10 +45,10 @@ const P = {
 				const m = P.p[P.count++]
 				//console.log('now', m)
 				P.move = m[0]
-				P.movecount = m[1]-1
+				P.movecount = m[1] - 1
 			}
 			P.process()
-			P.data.rb = P.data.r.map(c => c[0]*1000 + c[1])
+			P.data.rb = P.data.r.map(c => c[0] * 1000 + c[1])
 			P.data.b = [...new Set(P.data.b)]
 		} catch (e) {
 			P.init()
@@ -56,20 +56,19 @@ const P = {
 	},
 
 	init: T => {
-		console.log('init')
 		if (!T)
 			T = P.T
 		else
 			P.T = T
-		P.N = N = 20
+		let N = P.N = 20
 		P.p = P.prep(T)
 		P.count = 0
 		P.move = 'R'
 		P.movecount = 0
-        P.data = {
-			r: new Array(N).fill(0).map(n => [0,0]),
-        	rb: new Array(N).fill(0),
-        	b: []
+		P.data = {
+			r: new Array(N).fill(0).map(n => [0, 0]),
+			rb: new Array(N).fill(0),
+			b: []
 		}
 		return P
 	}
@@ -175,15 +174,15 @@ class Scene extends QuadModel {
 		const cw = { r: 0.8, g: 0.4, b: 0.2 }
 		const dz = p.length, dz2 = dz >> 1
 		for (let i = 0; i < b.length; i++) {
-			const y = b[i]%1000
-			const x = Math.round((b[i]-y)/1000)
-			this.cubeAt(x-500, -1, -(y-500), cb)
+			const y = b[i] % 1000
+			const x = Math.round((b[i] - y) / 1000)
+			this.cubeAt(x - 500, -1, -(y - 500), cb)
 		}
-		for (let i = 1; i < p.length-1; i++) {
+		for (let i = 1; i < p.length - 1; i++) {
 			this.cubeAt(p[i][0], 0, -p[i][1], cw)
 		}
 		this.cubeAt(p[0][0], 0, -p[0][1], ch)
-		this.cubeAt(p[p.length-1][0], 0, -p[p.length-1][1], ct)
+		this.cubeAt(p[p.length - 1][0], 0, -p[p.length - 1][1], ct)
 		this.fireSceneChanged()
 	}
 
@@ -420,7 +419,7 @@ class UserInput {
 			default: return
 		}
 		var mouseEvent = document.createEvent('MouseEvent')
-		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX<<1, touch.screenY<<1, touch.clientX<<1, touch.clientY<<1, false, false, false, false, 0, null)
+		mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, touch.screenX << 1, touch.screenY << 1, touch.clientX << 1, touch.clientY << 1, false, false, false, false, 0, null)
 		touch.target.dispatchEvent(mouseEvent)
 		evt.preventDefault()
 	}
@@ -551,7 +550,7 @@ class UserInput {
 }
 
 
-class Game {
+export class Game {
 
 	constructor(model) {
 		this.input = new UserInput().addListener(this)
