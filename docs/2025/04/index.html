@@ -11,21 +11,18 @@
 </head>
 
 <body>
-  <canvas></canvas>
   <script type="module">
-    import readInput from '../../js/readInput.js'
-    import showOutput from '../../js/showOutput.js'
+    import readInput from '../../lib/aoc/readInput.js'
+    import showOutput from '../../lib/aoc/showOutput.js'
     import puzzleCPU from './puzzleCPU.js'
-    import puzzleGPU from './puzzleGPU.js'
+    //import puzzleGPU from './puzzleGPU.js'
     import visualGPU from './visualGPU.js'
     const input = await readInput()
     visualGPU(input)
-    /*
     showOutput([
       ['CPU', await puzzleCPU.exec(input)],
-      ['GPU', await puzzleGPU.exec(input)],
+      //['GPU', await puzzleGPU.exec(input)],
     ])
-    */    
   </script>
 </body>
 

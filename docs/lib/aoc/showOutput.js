@@ -8,7 +8,7 @@ export default (data) =>
           N('th', ''),
           N('th', '*'),
           N('th', '**'),
-          N('th', 'time (ms)'),
+          N('th', 'ms'),
         ])
       ),
       N('tbody', data.map(row =>
@@ -20,6 +20,6 @@ export default (data) =>
         ])
       )),
     ],
-      { className: 'output' }
+      { class: 'output' }
     )
   )

@@ -1,4 +1,4 @@
-import { arrN } from '../../js/execGPU.js'
+import { arrN } from '../../lib/aoc/execGPU.js'
 
 const WGSL = /* WGSL */ `
 struct InputData {

@@ -1,6 +1,6 @@
 // credits to https://codelabs.developers.google.com/your-first-webgpu-app
 
-const prep = T => T.trim().split('\n').map(L => L.split('').map(c => c === '@' ? 1 : 0))
+const prep = T => T.trim().split('\n').map(L => L.split('').map(c => c === 'L' ? 1 : 0))
 
 const border = (p, n) => [
   new Array(p[0].length + 2).fill(n),
@@ -11,11 +11,14 @@ const border = (p, n) => [
 export default async (T) => {
 
   const b = border(prep(T), 0)
+  const GRID_SIZE = b[0].length
+  const GRID_Y = b.length
+  b.push(new Array(GRID_SIZE).fill(0))
+  b.push(new Array(GRID_SIZE).fill(0))
+  b.push(new Array(GRID_SIZE).fill(0))
   const bflat = b.reverse().flat()
-
-  const GRID_SIZE = b.length
   const WORKGROUP_SIZE = 8
-  const UPDATE_INTERVAL = 30
+  const UPDATE_INTERVAL = 100
   let step = 0
 
   const adapter = await navigator.gpu?.requestAdapter()
@@ -69,30 +72,40 @@ export default async (T) => {
               (x % u32(grid.x));
     }
 
-    fn cellActive(x: u32, y: u32) -> u32 {
-      return cellStateIn[cellIndex(x, y)];
+    fn cellAdjacent(x: u32, y: u32) -> u32 {
+      if (cellStateIn[cellIndex(x, y)] == 2u) {
+        return 1u;
+      }
+      return 0u;
+    }
+
+    fn adjacentCount(x: u32, y: u32) -> u32 {
+      return cellAdjacent(x+1, y+1) +
+        cellAdjacent(x+1, y) +
+        cellAdjacent(x+1, y-1) +
+        cellAdjacent(x,   y-1) +
+        cellAdjacent(x,   y+1) +
+        cellAdjacent(x-1, y-1) +
+        cellAdjacent(x-1, y) +
+        cellAdjacent(x-1, y+1);
+    }
+
+    fn part1Rule(s: u32, c: u32) -> u32 {
+      if (s == 1u && c == 0u) {
+        return 2u;
+      }
+      if (s == 2u && c > 3u) {
+        return 1u;
+      }
+      return s;
     }
 
     @compute @workgroup_size(${WORKGROUP_SIZE}, ${WORKGROUP_SIZE})
     fn computeMain(@builtin(global_invocation_id) cell: vec3u) {
-      var n = 0u;
       let i = cellIndex(cell.x, cell.y);
       let d = cellStateIn[i];
-      if (d == 1) {
-        n = cellActive(cell.x+1, cell.y+1) +
-            cellActive(cell.x+1, cell.y) +
-            cellActive(cell.x+1, cell.y-1) +
-            cellActive(cell.x, cell.y-1) +
-            cellActive(cell.x-1, cell.y-1) +
-            cellActive(cell.x-1, cell.y) +
-            cellActive(cell.x-1, cell.y+1) +
-            cellActive(cell.x, cell.y+1);
-      }
-      if (n > 0 && (d == 0 || n > 3)) {
-        cellStateOut[i] = 1;
-      } else {
-        cellStateOut[i] = 0;
-      }
+      let n = adjacentCount(cell.x, cell.y);
+      cellStateOut[i] = part1Rule(d, n);
     }
   `
   })
@@ -118,7 +131,7 @@ fn vertexMain(@location(0) pos: vec2f,
               @builtin(instance_index) instance: u32) -> VertexOutput {
   let i = f32(instance);
   let cell = vec2f(i % grid.x, floor(i / grid.x));
-  let state = f32(cellState[instance]);
+  let state = f32(cellState[instance]/2);
 
   let cellOffset = cell / grid * 2;
   let gridPos = (pos*state+1) / grid - 1 + cellOffset;
@@ -152,6 +165,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   for (let i = 0; i < cellStateArray.length; ++i)
     cellStateArray[i] = bflat[i]
   device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray)
+  device.queue.writeBuffer(cellStateStorage[1], 0, cellStateArray)
 
   const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE])
   const uniformBuffer = device.createBuffer({
@@ -277,7 +291,9 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   function update() {
     const encoder = device.createCommandEncoder()
     compute(encoder)
+    step++
     render(encoder)
+    compute(encoder)
     step++
     device.queue.submit([encoder.finish()])
   }
